@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="139" width="414" height="667"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TodoTVC" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TodoTVC" rowHeight="113" id="2LH-VN-LfG" customClass="TodoTVC" customModule="TDT" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TodoTVC" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodoTVC" rowHeight="113" id="2LH-VN-LfG" customClass="TodoTVC" customModule="TDT" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="113"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2LH-VN-LfG" id="bVo-Uh-T5H">
@@ -39,9 +39,16 @@
                                                     <rect key="frame" x="20" y="-7.5" width="240" height="128"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                                    <gestureRecognizers/>
+                                                    <connections>
+                                                        <outletCollection property="gestureRecognizers" destination="NOb-zW-hDU" appends="YES" id="9xW-89-fOF"/>
+                                                    </connections>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XHB-ZV-n5U">
-                                                    <rect key="frame" x="43" y="11" width="286" height="57"/>
+                                                    <rect key="frame" x="43" y="11" width="270" height="57"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="270" id="xaA-V5-Ik8"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -50,7 +57,6 @@
                                             <constraints>
                                                 <constraint firstItem="XHB-ZV-n5U" firstAttribute="top" secondItem="bVo-Uh-T5H" secondAttribute="topMargin" id="4xd-D9-O50"/>
                                                 <constraint firstItem="XHB-ZV-n5U" firstAttribute="leading" secondItem="bVo-Uh-T5H" secondAttribute="leadingMargin" constant="23" id="D82-3O-IcM"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="XHB-ZV-n5U" secondAttribute="trailing" constant="65" id="Ii9-fg-TqZ"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="XHB-ZV-n5U" secondAttribute="bottom" constant="34" id="sgf-vY-4T3"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -107,10 +113,16 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="longPressGesture" destination="NOb-zW-hDU" id="EPz-Rp-MlB"/>
                         <outlet property="wholeTV" destination="K95-Yr-f9a" id="UeK-u8-Fil"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AQc-l2-blr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" numberOfTapsRequired="1" id="NOb-zW-hDU">
+                    <connections>
+                        <action selector="longPressAction:" destination="Ww2-g9-m5I" id="dbN-dH-g0g"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="113.04347826086958" y="136.60714285714286"/>
         </scene>

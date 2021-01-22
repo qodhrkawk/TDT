@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xje-cz-EYP">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--AlertVC-->
+        <scene sceneID="3wB-7x-kLB">
+            <objects>
+                <viewController storyboardIdentifier="AlertVC" title="AlertVC" id="xje-cz-EYP" customClass="AlertVC" customModule="TDT" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ITm-Vj-Gh6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xxh-rc-L0f">
+                                <rect key="frame" x="23" y="802" width="368" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="JCo-pI-E5x"/>
+                                </constraints>
+                                <state key="normal" title="취소"/>
+                                <connections>
+                                    <action selector="cancelButtonAction:" destination="xje-cz-EYP" eventType="touchUpInside" id="iG6-p4-kNc"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="VTT-bo-i6K">
+                                <rect key="frame" x="23" y="670" width="368" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="439-1q-8UG">
+                                        <rect key="frame" x="0.0" y="0.0" width="368" height="60"/>
+                                        <state key="normal" title="수정"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nIP-Vx-J1l">
+                                        <rect key="frame" x="0.0" y="60" width="368" height="60"/>
+                                        <state key="normal" title="삭제"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="mi4-Sp-p1c"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="NuP-Ba-FiA"/>
+                        <color key="backgroundColor" systemColor="labelColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Xxh-rc-L0f" secondAttribute="bottom" constant="34" id="1Rp-3o-Zbx"/>
+                            <constraint firstItem="VTT-bo-i6K" firstAttribute="leading" secondItem="NuP-Ba-FiA" secondAttribute="leading" constant="23" id="Bzb-R1-xYc"/>
+                            <constraint firstItem="NuP-Ba-FiA" firstAttribute="trailing" secondItem="Xxh-rc-L0f" secondAttribute="trailing" constant="23" id="ERp-UV-Mqg"/>
+                            <constraint firstItem="Xxh-rc-L0f" firstAttribute="top" secondItem="VTT-bo-i6K" secondAttribute="bottom" constant="12" id="FWj-aj-6Hk"/>
+                            <constraint firstItem="Xxh-rc-L0f" firstAttribute="leading" secondItem="NuP-Ba-FiA" secondAttribute="leading" constant="23" id="lAV-KJ-2cO"/>
+                            <constraint firstItem="NuP-Ba-FiA" firstAttribute="trailing" secondItem="VTT-bo-i6K" secondAttribute="trailing" constant="23" id="oKk-Oc-vy0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="Xxh-rc-L0f" id="u3h-qR-YPj"/>
+                        <outlet property="changeButton" destination="439-1q-8UG" id="Ohk-gM-ROS"/>
+                        <outlet property="deleteButton" destination="nIP-Vx-J1l" id="wBN-8J-UIf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z4S-OJ-c5z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-336" y="113"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
