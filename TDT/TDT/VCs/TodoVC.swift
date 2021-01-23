@@ -7,41 +7,175 @@
 
 import UIKit
 
+
 class TodoVC: UIViewController {
     
     //    var myStr = "왼쪽으로 밀어서 완료 상태로 만들어 보세요.141414141414141414141414141414141414141414141414141414141414141414141414"
     var myStr = "왼쪽으로밀어서완료aaaaaaanaa"
     
-    var strs = ["왼쪽으로 밀어서 완료 상태로 만들어 보세요.ㅋ","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요."]
-    var isinit = true
+//    var strs = ["왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요."]
+//
+//    var isImportant = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+    var strs: [String] = []
     
+    var isImportant: [Bool] = []
+    var currentStatus = 1
+    static var mainColor: UIColor = .greenishCyan
+    
+    @IBOutlet weak var editView: UIView!
     @IBOutlet weak var wholeTV: UITableView!
     
-    @IBOutlet var longPressGesture: UILongPressGestureRecognizer!
+    @IBOutlet weak var wholeTVBottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var headerView: UIView!
+    
+    @IBOutlet weak var newTextField: UITextField!
+    
+    @IBOutlet weak var sendButton: UIButton!
+    
+    var feedbackGenerator: UIImpactFeedbackGenerator?
     override func viewDidLoad() {
         super.viewDidLoad()
         wholeTV.delegate = self
         wholeTV.dataSource = self
-        self.view.backgroundColor = .veryLightPink
-        wholeTV.backgroundColor = .veryLightPink
-        
-        
+        self.view.backgroundColor = .veryLightPinkTwo
+        headerView.backgroundColor = .veryLightPinkTwo
+        headerView.alpha = 0.95
+        setWholeTV()
+        setItems()
+
+        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        self.feedbackGenerator?.prepare()
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(_ animated: Bool) {
-        isinit = true
+       
+        currentStatus = 1
+        registerForKeyboardNotifications()
     }
     override func viewDidAppear(_ animated: Bool) {
-        isinit = false
+        currentStatus = 0
+      
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        unregisterForKeyboardNotifications()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
     
-    @IBAction func longPressAction(_ sender: Any) {
-       
-       
+    func setItems(){
+        newTextField.addLeftPadding(left: 7)
+        newTextField.addRightPadding(right: 40)
+        newTextField.placeholder = "해야 할 일을 입력해주세요."
+        newTextField.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
+        newTextField.delegate = self
+        newTextField.addTarget(self, action: #selector(textFieldDidChange(sender:)), for: .editingChanged)
+        newTextField.backgroundColor = .veryLightPink30
+        
+        editView.setBorder(borderColor: .veryLightPinkFour, borderWidth: 1.0)
+        
+        
     }
     
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow(_:)), name:
+            UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name:
+            UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func unregisterForKeyboardNotifications() {
+           NotificationCenter.default.removeObserver(self, name:
+            UIResponder.keyboardWillShowNotification, object: nil)
+           NotificationCenter.default.removeObserver(self, name:
+            UIResponder.keyboardWillHideNotification, object: nil)
+       }
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        
+     
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                                as? NSValue)?.cgRectValue {
+        
+            UIView.animate(withDuration: 0.3, animations: {
+                self.editView.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+                self.wholeTV.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+            })
+            
+            self.view.layoutIfNeeded()
+            
+            
+            
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        
+        
+        UIView.animate(withDuration: 1.0, animations: {
+            
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                                    as? NSValue)?.cgRectValue {
+                
+                    UIView.animate(withDuration: 0.3, animations: {
+                        self.editView.transform = .identity
+                        self.wholeTV.transform = .identity
+                    })
+                    
+                    self.view.layoutIfNeeded()
+                    
+                
+            }
+        })
+        
+        self.view.layoutIfNeeded()
+    }
+    
+  
+    
+    func setWholeTV(){
+        wholeTV.isUserInteractionEnabled = true
+        wholeTV.backgroundColor = .veryLightPinkTwo
+        let tableViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTouched))
+        
+        wholeTV.addGestureRecognizer(tableViewTapGesture)
+        
+    }
+    
+    
+    
+    @objc func tableViewTouched(){
+        self.view.endEditing(true)
+    }
+    
+    @objc func textFieldDidChange(sender:UITextField) {
+        
+        if let text = sender.text {
+            // 초과되는 텍스트 제거
+            if text.count >= 1 {
+                sendButton.setImage(UIImage(named: "btnSendActive"), for: .normal)
+            }
+            else{
+                sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+
+            }
+            
+        }
+        
+    }
+    @IBAction func sendButtonAction(_ sender: Any) {
+        if newTextField.text != ""{
+            strs.append(newTextField.text!)
+            isImportant.append(false)
+            newTextField.text = ""
+            wholeTV.reloadData()
+            currentStatus = 2
+        }
+        
+    }
     
 }
 
@@ -51,71 +185,59 @@ extension TodoVC: UITableViewDelegate{
         
         
         //                cell.alpha = 0.5
-        if isinit{
-            //            let transformLayer = CATransformLayer()
-            //            var perspective = CATransform3DIdentity
-            ////            perspective.m34 = -1 / 500
-            //            transformLayer.transform = perspective
-            //            transformLayer.position = CGPoint(x: tableView.bounds.midX, y: tableView.bounds.midY)
-            //            transformLayer.position = CGPoint(x: tableView.bounds.midX, y: tableView.bounds.midY)
-            //            transformLayer.addSublayer(cell.layer)
-            //            tableView.layer.addSublayer(transformLayer)
-            ////            cell.layer.transform = CATransform3DMakeRotation(-0.5, 1, 0, 0)
+        
+        switch currentStatus {
+            
+        // 뷰 처음 등장할때 오른쪽에서 왼쪽 가는 애니메이션
+        case 1:
             cell.alpha = 0.2
             let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 250, 0, 0)
-            //                cell.layer.transform = rotate
-            //            cell.layer.transform = rotationTransform
-            //            UIView.animate(withDuration: 0.9 - 0.07 * Double(indexPath.row),delay: 0.07 * Double(indexPath.row),options: .curveEaseOut, animations: {
-            //                cell.alpha = 1
-            //                cell.layer.transform = CATransform3DIdentity
-            //            })
+     
             cell.layer.transform = rotationTransform
             UIView.animate(withDuration: 0.4 ,delay: 0.05 * Double(indexPath.row),options: .curveEaseOut, animations: {
                 cell.alpha = 1
                 cell.layer.transform = CATransform3DIdentity
             })
+            
+            
+        // 텍스트 추가될때 애니메이션
+        case 2:
+            let lastIndexPath = IndexPath(row: tableView.numberOfRows(inSection: tableView.numberOfSections - 1) - 1, section: tableView.numberOfSections - 1)
+
+            tableView.scrollToRow(at: lastIndexPath, at: .top, animated: false)
+            let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 0, 250, 0)
+            let yMove = CGAffineTransform(translationX: 0, y: 300)
+
+//            cell.layer.transform = rotationTransform
+            cell.transform = yMove
+            view.bringSubviewToFront(cell)
+            if indexPath == lastIndexPath{
+                UIView.animate(withDuration: 0.5 ,delay: 0 ,options: .curveEaseOut, animations: {
+                    cell.alpha = 1
+//                    cell.layer.transform = CATransform3DIdentity
+                    cell.transform = .identity
+                },completion: { finish in
+                    self.currentStatus = 0
+
+                })
+
+            }
+        return
+            
+            
+        default:
+            return
+        
         }
         
-    }
-    
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TodoTVC else { return UISwipeActionsConfiguration()}
-        cell.showDelete()
-        
-        
-        
-        print("callled")
-        let deleteAction = UIContextualAction(style: .destructive, title:  "", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-
-            view.backgroundColor = .veryLightPink
-            self.strs.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            success(true)
-
-        })
-        
-        
-        deleteAction.image = UIImage(named: "imgDoggyThinking")
-        deleteAction.backgroundColor = .veryLightPink
-        let config = UISwipeActionsConfiguration(actions: [deleteAction])
        
-            
-
-        return UISwipeActionsConfiguration(actions:[deleteAction])
-
+        
     }
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//
-//
-//    }
     
+    
+   
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        self.view.endEditing(true)
     }
     
 }
@@ -129,6 +251,9 @@ extension TodoVC: UITableViewDataSource{
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTVC.identifier) as? TodoTVC else {return UITableViewCell()}
         cell.textBoxDelegate = self
         cell.setLabel(str: strs[indexPath.row])
+        cell.myIndexpath = indexPath
+        cell.isImportant = isImportant[indexPath.row]
+        cell.setItems()
         return cell
     }
     
@@ -137,12 +262,85 @@ extension TodoVC: UITableViewDataSource{
 }
 
 extension TodoVC: TextBoxDelegate {
-    func longTapped() {
+    func longTapped(idx: IndexPath) {
+        feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
-      
         
+        vcName.myText = strs[idx.row]
+        vcName.idx = idx
+        vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
         self.present(vcName, animated: false, completion: nil)
+    }
+    
+    func leftSwiped(idx: IndexPath) {
+       
+            myDeleteRow(idx: idx)
+     
+
+    }
+    
+    func doubleTapped(idx: IndexPath) {
+      
+        isImportant[idx.row] = !isImportant[idx.row]
+        print(isImportant)
+        wholeTV.reloadData()
+    }
+    
+    func myDeleteRow(idx: IndexPath){
+        wholeTV.beginUpdates()
+        self.strs.remove(at: idx.row)
+        wholeTV.deleteRows(at: [idx], with: .fade)
+        wholeTV.endUpdates()
+        
+        print("숫자")
+        
+        print(wholeTV.numberOfRows(inSection: 0))
+        for sec in idx.section...wholeTV.numberOfSections-1{
+            if sec == idx.section{
+                if wholeTV.numberOfRows(inSection: sec) > idx.row {
+                    for row in idx.row...wholeTV.numberOfRows(inSection: sec)-1{
+                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
+                        cell.myIndexpath = IndexPath(row: row, section: sec)
+                    }
+                }
+                
+                
+            }
+            else{
+                if wholeTV.numberOfRows(inSection: sec) > 0 {
+                    for row in 0...wholeTV.numberOfRows(inSection: sec)-1{
+                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
+                        cell.myIndexpath = IndexPath(row: row, section: sec)
+                    }
+                }
+            }
+            
+        }
+        
+    }
+    
+}
+
+
+extension TodoVC: UITextFieldDelegate{
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        
+    }
+    
+}
+
+extension TodoVC: ToDoDelegate{
+    func delete(idx: IndexPath){
+        myDeleteRow(idx: idx)
+        self.showToast(text: "삭제되었어요.",withDelay: 0.6)
+    }
+    func modify(idx: IndexPath,str: String){
+        
+        strs[idx.row] = str
+        wholeTV.reloadData()
+        self.showToast(text: "수정되었어요",withDelay: 0.3)
     }
     
 }

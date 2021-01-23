@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import AudioToolbox
 
 class TodoTVC: UITableViewCell {
     static let identifier = "TodoTVC"
@@ -20,17 +21,36 @@ class TodoTVC: UITableViewCell {
     var indexPathRow = 0
     var isImportant = false
     var textBoxDelegate: TextBoxDelegate?
+    var containViewOrigin: CGFloat?
+    var todoLabelOrigin: CGFloat?
+    var myIndexpath: IndexPath?
+    var feedbackGenerator: UIImpactFeedbackGenerator?
+    
+    var dragInitX : CGFloat?
+    var dragInitial = true
+    var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+    var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+    var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     
     let highLightView = UIView().then {
-        $0.backgroundColor = .cyan
+        $0.backgroundColor = TodoVC.mainColor
+        $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
     }
 
     
     override func awakeFromNib() {
         super.awakeFromNib()
         todoLabel.setLinespace(spacing: 8)
-        self.backgroundColor = .veryLightPink
+        self.backgroundColor = .veryLightPinkTwo
         setItems()
+        
+        todoLabelOrigin = todoLabel.center.x
+        containViewOrigin = containView.center.x
+        deleteImage.alpha = 0
+        
+        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        self.feedbackGenerator?.prepare()
+        
         // Initialization code
     }
     
@@ -39,24 +59,33 @@ class TodoTVC: UITableViewCell {
       
         // Configure the view for the selected state
     }
-    
-    override func layoutSubviews() {
-//        print(containView.frame)
+    override func prepareForReuse() {
+        
+        
     }
-    
+
     func setItems(){
         containView.backgroundColor = .white
         containView.makeRounded(cornerRadius: 3)
+        self.makeRounded(cornerRadius: 3)
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(showDelete(_notification:)), name: "123", object: nil)
-    
-       
+
         containView.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        let longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
-        tap.numberOfTapsRequired = 2
-        containView.addGestureRecognizer(tap)
+     
+        
+        doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+        longtap.minimumPressDuration = 0.5
+        
+        leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
+        
+        leftSwipe.direction = .left
+        
+        doubletap.numberOfTapsRequired = 2
+        containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(longtap)
+        self.addGestureRecognizer(leftSwipe)
+//        containView.addGestureRecognizer(panTap)
         self.addSubview(highLightView)
         highLightView.snp.makeConstraints{
             $0.leading.top.bottom.equalTo(containView)
@@ -65,25 +94,89 @@ class TodoTVC: UITableViewCell {
         if !isImportant {
             highLightView.alpha = 0
         }
-       
-        
+        else{
+            highLightView.alpha = 1
+        }
+      
     }
     
-    @objc func doubleTapped(){
-        print("더블클릭")
+
+    func changeImportant(){
+        print("callled")
         if isImportant {
-            highLightView.alpha = 0
+            UIView.animate(withDuration: 0.5, animations: {
+                self.highLightView.alpha = 0
+            })
+           
             isImportant = false
         }
         else{
-            highLightView.alpha = 1
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                self.highLightView.alpha = 1
+            })
             isImportant = true
         }
+        
+    }
+    @objc func doubleTapped(){
+        print("더블클릭")
+        feedbackGenerator?.impactOccurred()
+        
+        
+     
+        textBoxDelegate?.doubleTapped(idx: myIndexpath!)
+       
+    }
+    @objc func leftSwiped(){
+        print("왼스와이프")
+        print(myIndexpath!)
+       
+        UIView.animate(withDuration: 0.4, animations: {
+            self.deleteImage.alpha = 1
+            self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
+            self.todoLabel.transform = CGAffineTransform(translationX: -50, y: 0)
+            self.deleteImage.transform = CGAffineTransform(translationX: -50, y: 0)
+            self.highLightView.transform = CGAffineTransform(translationX: -50, y: 0)
+            
+            
+        }, completion: { finish in
+          
+        })
+        UIView.animate(withDuration: 0.3,delay: 0.3,options: .curveEaseIn, animations: {
+            
+            self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
+            self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
+            self.deleteImage.transform = CGAffineTransform(translationX: -400, y: 0)
+            self.highLightView.transform = CGAffineTransform(translationX: -400, y: 0)
+            
+        }, completion: { finish in
+            self.textBoxDelegate?.leftSwiped(idx: self.myIndexpath!)
+            UIView.animate(withDuration: 0,delay: 0.3, animations: {
+                self.deleteImage.alpha = 0
+                self.containView.transform = .identity
+                self.todoLabel.transform = .identity
+                self.deleteImage.transform = .identity
+                self.highLightView.transform = .identity
+            })
+          
+            
+        })
+
+       
     }
     
+   
     @objc func longTapped(){
         print("long tapped")
-        textBoxDelegate?.longTapped()
+        if longtap.state == UIGestureRecognizer.State.began{
+            textBoxDelegate?.longTapped(idx: myIndexpath!)
+        }
+       
+//        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+//        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
+
+        
         
     }
     func setLabel(str: String){
@@ -94,17 +187,9 @@ class TodoTVC: UITableViewCell {
         
         let viewWidth = todoLabel.intrinsicContentSize.width
         
+        todoLabel.textColor = .brownGreyTwo
         
-        
-        
-        print(viewWidth)
-        print(todoLabel.intrinsicContentSize.height)
-        
-        
-        
-        
-        
-        
+ 
         
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-19)
@@ -114,8 +199,7 @@ class TodoTVC: UITableViewCell {
             
             
             var maximumIntrinsic = CGFloat(0.0)
-            
-            print(getLinesArrayFromLabel(label: todoLabel))
+       
             var strArr = getLinesArrayFromLabel(label: todoLabel)
             var tmpLabel = UILabel()
             tmpLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
@@ -125,8 +209,7 @@ class TodoTVC: UITableViewCell {
                 tmpLabel.text = str.replacingOccurrences(of: "\n", with: "")
                 maximumIntrinsic = max(maximumIntrinsic,tmpLabel.intrinsicContentSize.width)
             }
-            print("dkdk")
-            print(maximumIntrinsic)
+    
             if maximumIntrinsic > 306 - 38{
                 $0.width.equalTo(306)
             }
@@ -137,16 +220,14 @@ class TodoTVC: UITableViewCell {
             }
             
             
-            
-            
-            print("maximum")
-            print(todoLabel.calculateMaxLines())
-            print(todoLabel.frame.height)
+         
             
             
             $0.height.equalTo(27 + 18 + 25 * (todoLabel.calculateMaxLines()-1))
             
         }
+        todoLabelOrigin = todoLabel.center.x
+        containViewOrigin = containView.center.x
         
         
         

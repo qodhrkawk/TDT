@@ -8,6 +8,8 @@
 import Foundation
 
 protocol TextBoxDelegate {
-    func longTapped()
+    func longTapped(idx: IndexPath)
+    func leftSwiped(idx: IndexPath)
+    func doubleTapped(idx: IndexPath)
     
 }
