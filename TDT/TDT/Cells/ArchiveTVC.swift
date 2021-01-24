@@ -1,22 +1,19 @@
 //
-//  TodoTVC.swift
+//  ArchiveTVC.swift
 //  TDT
 //
-//  Created by Yunjae Kim on 2021/01/22.
+//  Created by Yunjae Kim on 2021/01/24.
 //
 
 import UIKit
-import Then
-import SnapKit
-import AudioToolbox
 
-class TodoTVC: UITableViewCell {
-    static let identifier = "TodoTVC"
+class ArchiveTVC: UITableViewCell {
+    static let identifier = "ArchiveTVC"
     
     @IBOutlet weak var containView: UIView!
-    
-    @IBOutlet weak var deleteImage: UIImageView!
     @IBOutlet weak var todoLabel: UILabel!
+    @IBOutlet weak var deleteImage: UIImageView!
+    
     var todo: String?
     var indexPathRow = 0
     var isImportant = false
@@ -26,12 +23,11 @@ class TodoTVC: UITableViewCell {
     var myIndexpath: IndexPath?
     var feedbackGenerator: UIImpactFeedbackGenerator?
     
-    var dragInitX : CGFloat?
-    var dragInitial = true
+
     var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
     var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
-    var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
+    var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     
     let highLightView = UIView().then {
         $0.backgroundColor = TodoVC.mainColor
@@ -75,7 +71,7 @@ class TodoTVC: UITableViewCell {
     }
 
     func setItems(){
-        containView.backgroundColor = .white
+        containView.backgroundColor = .subgrey
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         
@@ -88,17 +84,19 @@ class TodoTVC: UITableViewCell {
         longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
         longtap.minimumPressDuration = 0.5
         
-        leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
         rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
+        leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
         
-        leftSwipe.direction = .left
         rightSwipe.direction = .right
+        leftSwipe.direction = .left
+        
+        
         
         doubletap.numberOfTapsRequired = 2
         containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(longtap)
-        self.addGestureRecognizer(leftSwipe)
         self.addGestureRecognizer(rightSwipe)
+        self.addGestureRecognizer(leftSwipe)
 //        containView.addGestureRecognizer(panTap)
         self.addSubview(highLightView)
         highLightView.snp.makeConstraints{
@@ -145,15 +143,19 @@ class TodoTVC: UITableViewCell {
        
     }
     @objc func leftSwiped(){
-        print("왼스와이프")
+        self.textBoxDelegate?.shouldMove()
+    }
+    
+    @objc func rightSwiped(){
+        print("오른스와이프")
         print(myIndexpath!)
-        deleteImage.image = UIImage(named: "icnDone")
+        deleteImage.image = UIImage(named: "imgOops")
         UIView.animate(withDuration: 0.4, animations: {
             self.deleteImage.alpha = 1
-            self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
-            self.todoLabel.transform = CGAffineTransform(translationX: -50, y: 0)
-            self.deleteImage.transform = CGAffineTransform(translationX: -50, y: 0)
-            self.highLightView.transform = CGAffineTransform(translationX: -50, y: 0)
+            self.containView.transform = CGAffineTransform(translationX: 50, y: 0)
+            self.todoLabel.transform = CGAffineTransform(translationX: 50, y: 0)
+            self.deleteImage.transform = CGAffineTransform(translationX: 50, y: 0)
+            self.highLightView.transform = CGAffineTransform(translationX: 50, y: 0)
             
             
         }, completion: { finish in
@@ -161,10 +163,10 @@ class TodoTVC: UITableViewCell {
         })
         UIView.animate(withDuration: 0.3,delay: 0.3,options: .curveEaseIn, animations: {
             
-            self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
-            self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
-            self.deleteImage.transform = CGAffineTransform(translationX: -400, y: 0)
-            self.highLightView.transform = CGAffineTransform(translationX: -400, y: 0)
+            self.containView.transform = CGAffineTransform(translationX: 400, y: 0)
+            self.todoLabel.transform = CGAffineTransform(translationX: 400, y: 0)
+            self.deleteImage.transform = CGAffineTransform(translationX: 400, y: 0)
+            self.highLightView.transform = CGAffineTransform(translationX: 400, y: 0)
             
         }, completion: { finish in
             self.textBoxDelegate?.leftSwiped(idx: self.myIndexpath!)
@@ -180,10 +182,6 @@ class TodoTVC: UITableViewCell {
         })
 
        
-    }
-    @objc func rightSwiped(){
-        self.textBoxDelegate?.shouldMove()
-        
     }
     
    

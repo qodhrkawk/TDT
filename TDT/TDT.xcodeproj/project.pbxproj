@@ -18,6 +18,15 @@
 		EC9D7B5325BB36A500453FE8 /* Alert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B5225BB36A500453FE8 /* Alert.storyboard */; };
 		EC9D7B5625BB36B400453FE8 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B5525BB36B400453FE8 /* AlertVC.swift */; };
 		EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B5925BB394D00453FE8 /* TextBoxDelegate.swift */; };
+		ECA1000425BD71CF005BA8D1 /* Archive.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECA1000325BD71CF005BA8D1 /* Archive.storyboard */; };
+		ECA1000725BD71E8005BA8D1 /* ArchiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */; };
+		ECA1000B25BD739A005BA8D1 /* ArchiveTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1000A25BD739A005BA8D1 /* ArchiveTVC.swift */; };
+		ECA1001025BD7C43005BA8D1 /* Control.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECA1000F25BD7C43005BA8D1 /* Control.storyboard */; };
+		ECA1001325BD7C74005BA8D1 /* ControlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001225BD7C74005BA8D1 /* ControlVC.swift */; };
+		ECA1001625BD7CCA005BA8D1 /* ControlPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */; };
+		ECA1001925BD8273005BA8D1 /* ControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */; };
+		ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
+		ECA1002125BD981C005BA8D1 /* FirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */; };
 		ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730825B9BD250096E766 /* AppDelegate.swift */; };
 		ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730A25B9BD250096E766 /* SceneDelegate.swift */; };
 		ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730C25B9BD250096E766 /* ViewController.swift */; };
@@ -47,6 +56,15 @@
 		EC9D7B5225BB36A500453FE8 /* Alert.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Alert.storyboard; sourceTree = "<group>"; };
 		EC9D7B5525BB36B400453FE8 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		EC9D7B5925BB394D00453FE8 /* TextBoxDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBoxDelegate.swift; sourceTree = "<group>"; };
+		ECA1000325BD71CF005BA8D1 /* Archive.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Archive.storyboard; sourceTree = "<group>"; };
+		ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveVC.swift; sourceTree = "<group>"; };
+		ECA1000A25BD739A005BA8D1 /* ArchiveTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveTVC.swift; sourceTree = "<group>"; };
+		ECA1000F25BD7C43005BA8D1 /* Control.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Control.storyboard; sourceTree = "<group>"; };
+		ECA1001225BD7C74005BA8D1 /* ControlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlVC.swift; sourceTree = "<group>"; };
+		ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPVC.swift; sourceTree = "<group>"; };
+		ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlDelegate.swift; sourceTree = "<group>"; };
+		ECA1001C25BD8677005BA8D1 /* TodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoData.swift; sourceTree = "<group>"; };
+		ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHeaderView.swift; sourceTree = "<group>"; };
 		ECF8730525B9BD250096E766 /* TDT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF8730825B9BD250096E766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ECF8730A25B9BD250096E766 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -107,8 +125,17 @@
 			children = (
 				EC9D7B5925BB394D00453FE8 /* TextBoxDelegate.swift */,
 				ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */,
+				ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		ECA1001B25BD8663005BA8D1 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				ECA1001C25BD8677005BA8D1 /* TodoData.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		ECF872FC25B9BD250096E766 = {
@@ -132,6 +159,7 @@
 		ECF8730725B9BD250096E766 /* TDT */ = {
 			isa = PBXGroup;
 			children = (
+				ECA1001B25BD8663005BA8D1 /* Data */,
 				ECFDFA0425BC91BD001C4D5E /* CustomViews */,
 				EC9D7B5825BB393800453FE8 /* Protocols */,
 				EC9D7B4725BB09FB00453FE8 /* SupportFiles */,
@@ -154,7 +182,9 @@
 			isa = PBXGroup;
 			children = (
 				ECF8732325B9BDC80096E766 /* Todo.storyboard */,
+				ECA1000325BD71CF005BA8D1 /* Archive.storyboard */,
 				EC9D7B5225BB36A500453FE8 /* Alert.storyboard */,
+				ECA1000F25BD7C43005BA8D1 /* Control.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -163,7 +193,10 @@
 			isa = PBXGroup;
 			children = (
 				ECF8732625B9BDDC0096E766 /* TodoVC.swift */,
+				ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */,
 				EC9D7B5525BB36B400453FE8 /* AlertVC.swift */,
+				ECA1001225BD7C74005BA8D1 /* ControlVC.swift */,
+				ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -172,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				EC778C2625BC0B4100EAE775 /* TodoTVC.swift */,
+				ECA1000A25BD739A005BA8D1 /* ArchiveTVC.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -193,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */,
+				ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -265,6 +300,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECA1001025BD7C43005BA8D1 /* Control.storyboard in Resources */,
+				ECA1000425BD71CF005BA8D1 /* Archive.storyboard in Resources */,
 				ECF8732425B9BDC80096E766 /* Todo.storyboard in Resources */,
 				ECF8731525B9BD270096E766 /* LaunchScreen.storyboard in Resources */,
 				EC9D7B5025BB0A1E00453FE8 /* GmarketSansTTFMedium.ttf in Resources */,
@@ -330,11 +367,18 @@
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
 				ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */,
+				ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */,
+				ECA1000725BD71E8005BA8D1 /* ArchiveVC.swift in Sources */,
 				EC778C2725BC0B4100EAE775 /* TodoTVC.swift in Sources */,
 				ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */,
+				ECA1001925BD8273005BA8D1 /* ControlDelegate.swift in Sources */,
+				ECA1002125BD981C005BA8D1 /* FirstHeaderView.swift in Sources */,
+				ECA1001625BD7CCA005BA8D1 /* ControlPVC.swift in Sources */,
 				ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */,
 				ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */,
+				ECA1000B25BD739A005BA8D1 /* ArchiveTVC.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertVC.swift in Sources */,
+				ECA1001325BD7C74005BA8D1 /* ControlVC.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
 				ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */,
 				ECF8732725B9BDDC0096E766 /* TodoVC.swift in Sources */,

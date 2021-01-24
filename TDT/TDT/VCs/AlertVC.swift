@@ -39,6 +39,8 @@ class AlertVC: UIViewController {
     var todoDelegate: ToDoDelegate?
     var idx: IndexPath?
     
+    var fromArchive = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
@@ -46,6 +48,8 @@ class AlertVC: UIViewController {
         lineView.backgroundColor = .veryLightPinkThree
         stackView.makeRounded(cornerRadius: 3)
         setItems()
+        
+    
         
         // Do any additional setup after loading the view.
     }
@@ -105,6 +109,12 @@ class AlertVC: UIViewController {
 //        editTextView.delegate = self
     }
     
+    func disableChangeButton(){
+       
+        
+        
+        
+    }
     
     func setButtons(){
         //        cancelButton.makeRounded(cornerRadius: 6)
@@ -118,14 +128,16 @@ class AlertVC: UIViewController {
         deleteButton.backgroundColor = .subgrey
         deleteButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
         deleteButton.setTitleColor(.warmPink, for: .normal)
-        
+        if fromArchive {
+            changeButton.setTitleColor(.brownGreyFour, for: .normal)
+        }
         
         
         cancelButton.backgroundColor = .subgrey
         cancelButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
         cancelButton.setTitleColor(.brownGreyThree, for: .normal)
         cancelButton.makeRounded(cornerRadius: 3)
-        
+     
         
         deleteCancelButton.backgroundColor = .veryLightPinkTwo
         deleteCancelButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
@@ -214,7 +226,10 @@ class AlertVC: UIViewController {
     }
     
     @IBAction func changeButtonAction(_ sender: Any) {
-        editTextView.becomeFirstResponder()
+        if !fromArchive{
+            editTextView.becomeFirstResponder()
+        }
+       
     }
     
     @IBAction func deleteCancelButtonAction(_ sender: Any) {
