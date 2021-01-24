@@ -37,13 +37,13 @@ class TodoTVC: UITableViewCell {
         $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
     }
 
+    var wasLongTapped = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        todoLabel.setLinespace(spacing: 8)
+        
         self.backgroundColor = .veryLightPinkTwo
         setItems()
-        
         todoLabelOrigin = todoLabel.center.x
         containViewOrigin = containView.center.x
         deleteImage.alpha = 0
@@ -60,7 +60,16 @@ class TodoTVC: UITableViewCell {
         // Configure the view for the selected state
     }
     override func prepareForReuse() {
+        wasLongTapped = false
+        self.backgroundColor = .veryLightPinkTwo
+        setItems()
         
+        todoLabelOrigin = todoLabel.center.x
+        containViewOrigin = containView.center.x
+        deleteImage.alpha = 0
+        
+        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        self.feedbackGenerator?.prepare()
         
     }
 
@@ -68,6 +77,7 @@ class TodoTVC: UITableViewCell {
         containView.backgroundColor = .white
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
+        
         
 
         containView.isUserInteractionEnabled = true
@@ -91,12 +101,14 @@ class TodoTVC: UITableViewCell {
             $0.leading.top.bottom.equalTo(containView)
             $0.width.equalTo(7)
         }
+        
         if !isImportant {
             highLightView.alpha = 0
         }
         else{
             highLightView.alpha = 1
         }
+       
       
     }
     
@@ -131,7 +143,7 @@ class TodoTVC: UITableViewCell {
     @objc func leftSwiped(){
         print("왼스와이프")
         print(myIndexpath!)
-       
+        deleteImage.image = UIImage(named: "icnDone")
         UIView.animate(withDuration: 0.4, animations: {
             self.deleteImage.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
@@ -169,10 +181,15 @@ class TodoTVC: UITableViewCell {
    
     @objc func longTapped(){
         print("long tapped")
-        if longtap.state == UIGestureRecognizer.State.began{
+//        if longtap.state == UIGestureRecognizer.State.began{
+//            textBoxDelegate?.longTapped(idx: myIndexpath!)
+//        }
+        if !wasLongTapped{
+            wasLongTapped = true
             textBoxDelegate?.longTapped(idx: myIndexpath!)
+            
         }
-       
+        
 //        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
 //        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
 
@@ -182,8 +199,9 @@ class TodoTVC: UITableViewCell {
     func setLabel(str: String){
         todoLabel.text = str
         todoLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
-        todoLabel.addCharacterSpacing(kernValue: -1)
         todoLabel.lineBreakMode = .byCharWrapping
+        
+        todoLabel.setSpacing(spacing: 8, kernValue: -1)
         
         let viewWidth = todoLabel.intrinsicContentSize.width
         

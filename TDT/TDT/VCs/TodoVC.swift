@@ -13,12 +13,12 @@ class TodoVC: UIViewController {
     //    var myStr = "왼쪽으로 밀어서 완료 상태로 만들어 보세요.141414141414141414141414141414141414141414141414141414141414141414141414"
     var myStr = "왼쪽으로밀어서완료aaaaaaanaa"
     
-//    var strs = ["왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요."]
+    var strs = ["왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요."]
+
+    var isImportant = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+//    var strs: [String] = []
 //
-//    var isImportant = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
-    var strs: [String] = []
-    
-    var isImportant: [Bool] = []
+//    var isImportant: [Bool] = []
     var currentStatus = 1
     static var mainColor: UIColor = .greenishCyan
     
@@ -32,7 +32,7 @@ class TodoVC: UIViewController {
     @IBOutlet weak var newTextField: UITextField!
     
     @IBOutlet weak var sendButton: UIButton!
-    
+    var nowOffset = CGPoint(x: 0, y: 0)
     var feedbackGenerator: UIImpactFeedbackGenerator?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,10 +99,18 @@ class TodoVC: UIViewController {
      
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
                                 as? NSValue)?.cgRectValue {
-        
+            
             UIView.animate(withDuration: 0.3, animations: {
                 self.editView.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
-                self.wholeTV.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+//                self.wholeTV.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+//                self.wholeTVBottomConstraint.constant = 90 + keyboardSize.height-29
+               
+                self.nowOffset = self.wholeTV.contentOffset
+                print(self.nowOffset)
+                self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: self.nowOffset.y + keyboardSize.height-29), animated: false)
+                self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                
             })
             
             self.view.layoutIfNeeded()
@@ -115,23 +123,32 @@ class TodoVC: UIViewController {
     @objc func keyboardWillHide(_ notification: NSNotification) {
         
         
-        UIView.animate(withDuration: 1.0, animations: {
+       
             
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
                                     as? NSValue)?.cgRectValue {
-                
-                    UIView.animate(withDuration: 0.3, animations: {
+            
+                UIView.animate(withDuration: 0.3, animations: {
                         self.editView.transform = .identity
-                        self.wholeTV.transform = .identity
+//                        self.wholeTVBottomConstraint.constant = 90
+//                    self.nowOffset = self.wholeTV.contentOffset
+                    
+                    let goY = self.nowOffset.y > 2 * keyboardSize.height-29 ? self.nowOffset.y - 2*(keyboardSize.height - 29) : 0
+                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: goY), animated: true)
+
+                    
+                    self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                    self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                    
+
+                       
                     })
-                    
-                    self.view.layoutIfNeeded()
-                    
+                self.view.layoutIfNeeded()
                 
             }
-        })
+       
         
-        self.view.layoutIfNeeded()
+       
     }
     
   
@@ -254,6 +271,8 @@ extension TodoVC: UITableViewDataSource{
         cell.myIndexpath = indexPath
         cell.isImportant = isImportant[indexPath.row]
         cell.setItems()
+
+        
         return cell
     }
     
@@ -270,6 +289,8 @@ extension TodoVC: TextBoxDelegate {
         vcName.idx = idx
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
+        
+      
         self.present(vcName, animated: false, completion: nil)
     }
     
@@ -334,13 +355,35 @@ extension TodoVC: UITextFieldDelegate{
 extension TodoVC: ToDoDelegate{
     func delete(idx: IndexPath){
         myDeleteRow(idx: idx)
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+       
+        cell.wasLongTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
     }
     func modify(idx: IndexPath,str: String){
-        
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+       
+        cell.wasLongTapped = false
         strs[idx.row] = str
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
+    }
+    
+    func disMissed(idx: IndexPath) {
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+        print("왜?")
+        cell.wasLongTapped = false
+    }
+    
+}
+
+
+extension TodoVC: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        nowOffset = scrollView.contentOffset
+        print(self.nowOffset)
     }
     
 }

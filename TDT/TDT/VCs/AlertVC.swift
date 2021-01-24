@@ -73,6 +73,7 @@ class AlertVC: UIViewController {
                 self.cancelButton.transform = CGAffineTransform(translationX: 0, y: 200)
                 self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
             },completion: {finished in
+                self.todoDelegate?.disMissed(idx: self.idx!)
                 self.dismiss(animated: false, completion: nil)
             })
             
@@ -198,6 +199,7 @@ class AlertVC: UIViewController {
             self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
             
         },completion: {finished in
+            self.todoDelegate?.disMissed(idx: self.idx!)
             self.dismiss(animated: false, completion: nil)
         })
         
@@ -216,6 +218,7 @@ class AlertVC: UIViewController {
     }
     
     @IBAction func deleteCancelButtonAction(_ sender: Any) {
+        todoDelegate?.disMissed(idx: idx!)
         self.dismiss(animated: false, completion: nil)
     }
     
@@ -227,6 +230,7 @@ class AlertVC: UIViewController {
     
     
     @IBAction func editCancelButtonAction(_ sender: Any) {
+        todoDelegate?.disMissed(idx: idx!)
         self.dismiss(animated: false, completion: nil)
     }
     
