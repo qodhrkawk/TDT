@@ -86,9 +86,18 @@
                                             <action selector="archiveButtonAction:" destination="Ww2-g9-m5I" eventType="touchUpInside" id="0Zd-Hl-uVH"/>
                                         </connections>
                                     </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imgLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Ctj-CF-kxx">
+                                        <rect key="frame" x="26" y="73" width="72" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="3DB-xE-bKE"/>
+                                            <constraint firstAttribute="height" constant="25" id="waB-f9-D1g"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="Ctj-CF-kxx" firstAttribute="top" secondItem="p1W-Xe-Znr" secondAttribute="top" constant="73" id="BYU-il-ZiC"/>
+                                    <constraint firstItem="Ctj-CF-kxx" firstAttribute="leading" secondItem="p1W-Xe-Znr" secondAttribute="leading" constant="26" id="NBt-aj-oyu"/>
                                     <constraint firstAttribute="height" constant="120" id="UzU-eS-04N"/>
                                     <constraint firstItem="EIY-6q-6cV" firstAttribute="top" secondItem="p1W-Xe-Znr" secondAttribute="top" constant="58" id="WWJ-UX-WXD"/>
                                     <constraint firstAttribute="trailing" secondItem="EIY-6q-6cV" secondAttribute="trailing" constant="13" id="Zk0-HY-cLK"/>
@@ -160,6 +169,7 @@
     <resources>
         <image name="btnArchive" width="40" height="40"/>
         <image name="btnSendInactive" width="40" height="40"/>
+        <image name="imgLogo" width="72" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

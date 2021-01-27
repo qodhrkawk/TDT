@@ -64,9 +64,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sP8-8P-aha">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LPY-xB-rln">
-                                        <rect key="frame" x="32" y="44" width="160" height="68"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imgArchive" translatesAutoresizingMaskIntoConstraints="NO" id="LPY-xB-rln">
+                                        <rect key="frame" x="26" y="73" width="103" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="103" id="Fxa-qS-Ncq"/>
+                                            <constraint firstAttribute="height" constant="28" id="xYa-XK-C5J"/>
+                                        </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aig-DE-Go6">
                                         <rect key="frame" x="361" y="58" width="40" height="40"/>
@@ -82,9 +85,11 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="LPY-xB-rln" firstAttribute="leading" secondItem="sP8-8P-aha" secondAttribute="leading" constant="26" id="4r4-Ei-V7C"/>
                                     <constraint firstItem="Aig-DE-Go6" firstAttribute="top" secondItem="sP8-8P-aha" secondAttribute="top" constant="58" id="SaB-1H-Tbf"/>
                                     <constraint firstAttribute="height" constant="120" id="TZ3-Fk-JVg"/>
                                     <constraint firstAttribute="trailing" secondItem="Aig-DE-Go6" secondAttribute="trailing" constant="13" id="W7r-bW-zD2"/>
+                                    <constraint firstItem="LPY-xB-rln" firstAttribute="top" secondItem="sP8-8P-aha" secondAttribute="top" constant="73" id="vZM-60-UEB"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -114,6 +119,7 @@
     </scenes>
     <resources>
         <image name="btnMain" width="40" height="40"/>
+        <image name="imgArchive" width="103" height="22.5"/>
         <image name="imgOops" width="47" height="44.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

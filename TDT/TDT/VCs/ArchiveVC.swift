@@ -203,6 +203,7 @@ extension ArchiveVC: UITableViewDataSource{
 extension ArchiveVC: TextBoxDelegate {
     func longTapped(idx: IndexPath) {
         feedbackGenerator?.impactOccurred()
+        self.view.endEditing(true)
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
         
         vcName.myText = strs[idx.row]

@@ -24,7 +24,7 @@ class TodoVC: UIViewController {
     var dateInfo: [String] = []
     
     var currentStatus = 1
-    static var mainColor: UIColor = .greenishCyan
+    static var mainColor: UIColor = .maincolor
     
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var wholeTV: UITableView!
@@ -110,12 +110,11 @@ class TodoVC: UIViewController {
         print(self.wholeData)
         
         if wholeData!.dict.count > 0 {
-            for i in 0...wholeData!.dict.count-1 {
-                let dateIdx = "date"+String(i)
-                if let tmpDate = defaults.string(forKey: dateIdx) {
-                    dateInfo.append(tmpDate)
-                }
+
+            if let tmpDate = defaults.stringArray(forKey: "dates") {
+                dateInfo = tmpDate
             }
+            
             print(dateInfo)
             
         }
@@ -218,22 +217,24 @@ class TodoVC: UIViewController {
 
 
             if wholeData!.dict.count > 0  {
-                let dateKey = "date"+String(wholeData!.dict.count-1)
-                print(dateKey)
-                if let myDate = defaults.string(forKey: dateKey) {
+              
+                if let myDate = defaults.stringArray(forKey: "dates") {
                     
-                   
-                    if myDate == dateString{
+                    
+                    if dateInfo[wholeData!.dict.count-1] == dateString {
                         print("heeeeeee")
                         wholeData!.dict[wholeData!.dict.count-1]?.append(TodoData(date: dateString, todo: todo, isImportant: false))
                     }
                     else{
-                        let dateKey = "date"+String(wholeData!.dict.count)
-                        defaults.setValue(dateString, forKey: dateKey)
+                        var tmpDate = myDate
+                        tmpDate.append(dateString)
+                        defaults.setValue(tmpDate, forKey: "dates")
                         dateInfo.append(dateString)
                         wholeData!.dict[wholeData!.dict.count] = [TodoData(date: dateString, todo: todo, isImportant: false)]
                     }
-                    
+                   
+                   
+                   
                     
                     
                     
@@ -241,8 +242,9 @@ class TodoVC: UIViewController {
 
             }
             else{
-                let dateKey = "date"+String(wholeData!.dict.count)
-                defaults.setValue(dateString, forKey: dateKey)
+                let newDate = [dateString]
+               
+                defaults.setValue(newDate, forKey: "dates")
                 
                 wholeData!.dict[0] = [TodoData(date: dateString, todo: todo, isImportant: false)]
                 dateInfo.append(dateString)
@@ -397,7 +399,11 @@ extension TodoVC: UITableViewDelegate{
 
 extension TodoVC: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return wholeData!.dict[section]!.count
+        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: section)
+        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return 0}
+        print("난희?")
+
+        return keys.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -406,10 +412,12 @@ extension TodoVC: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTVC.identifier) as? TodoTVC else {return UITableViewCell()}
+        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: indexPath.section)
+        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return UITableViewCell()}
         cell.textBoxDelegate = self
-        cell.setLabel(str: wholeData!.dict[indexPath.section]![indexPath.row].todo)
+        cell.setLabel(str: keys[indexPath.row].todo)
         cell.myIndexpath = indexPath
-        cell.isImportant = wholeData!.dict[indexPath.section]![indexPath.row].isImportant
+        cell.isImportant = keys[indexPath.row].isImportant
         cell.setItems()
         
         
@@ -425,7 +433,7 @@ extension TodoVC: TextBoxDelegate {
     func longTapped(idx: IndexPath) {
         feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
-        
+        self.view.endEditing(true)
         vcName.myText = wholeData!.dict[idx.section]![idx.row].todo
         vcName.idx = idx
         vcName.todoDelegate = self
@@ -446,52 +454,70 @@ extension TodoVC: TextBoxDelegate {
     }
     
     func doubleTapped(idx: IndexPath) {
+        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
+        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
         
-        wholeData!.dict[idx.section]![idx.row].isImportant = !wholeData!.dict[idx.section]![idx.row].isImportant
+        keys![idx.row].isImportant = !keys![idx.row].isImportant
+        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
         wholeTV.reloadData()
     }
     
     func myDeleteRow(idx: IndexPath,isEnd: Bool){
+        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
+        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
+        
         wholeTV.beginUpdates()
-        self.wholeData!.dict[idx.section]!.remove(at: idx.row)
+        keys!.remove(at: idx.row)
         
         
         // 삭제 (날짜 + 데이터)
-        if wholeData!.dict[idx.section]!.count == 0{
+        if keys!.count == 0{
+            wholeData!.dict.removeValue(forKey: wholeData!.dict.keys[index])
+            
+            print(wholeData!.dict)
             
         }
         
         defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
         
+        if wholeTV.numberOfRows(inSection: idx.section) == 1 {
+            dateInfo.remove(at: idx.section)
+            defaults.setValue(dateInfo, forKey: "dates")
+            wholeTV.deleteSections([idx.section], with: .fade)
+        }
+        else{
+            wholeTV.deleteRows(at: [idx], with: .fade)
+        }
         
-        wholeTV.deleteRows(at: [idx], with: .fade)
+        
         wholeTV.endUpdates()
         
         print("숫자")
         
         print(wholeTV.numberOfRows(inSection: 0))
-        for sec in idx.section...wholeTV.numberOfSections-1{
-            if sec == idx.section{
-                if wholeTV.numberOfRows(inSection: sec) > idx.row {
-                    for row in idx.row...wholeTV.numberOfRows(inSection: sec)-1{
-                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
-                        cell.myIndexpath = IndexPath(row: row, section: sec)
-                    }
-                }
-                
-                
-            }
-            else{
-                if wholeTV.numberOfRows(inSection: sec) > 0 {
-                    for row in 0...wholeTV.numberOfRows(inSection: sec)-1{
-                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
-                        cell.myIndexpath = IndexPath(row: row, section: sec)
-                    }
-                }
-            }
-            
-        }
+//        for sec in idx.section...wholeTV.numberOfSections-1{
+//            if sec == idx.section{
+//                if wholeTV.numberOfRows(inSection: sec) > idx.row {
+//                    for row in idx.row...wholeTV.numberOfRows(inSection: sec)-1{
+//                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
+//                        cell.myIndexpath = IndexPath(row: row, section: sec)
+//                    }
+//                }
+//
+//
+//            }
+//            else{
+//                if wholeTV.numberOfRows(inSection: sec) > 0 {
+//                    for row in 0...wholeTV.numberOfRows(inSection: sec)-1{
+//                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
+//                        cell.myIndexpath = IndexPath(row: row, section: sec)
+//                    }
+//                }
+//            }
+//
+//        }
         
+        wholeTV.reloadData()
     }
     
 }
@@ -501,6 +527,15 @@ extension TodoVC: UITextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
         
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text!.count >= 1 {
+            sendButton.setImage(UIImage(named: "btnSendActive"), for: .normal)
+        }
+        else{
+            sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+            
+        }
     }
     
 }
@@ -517,7 +552,9 @@ extension TodoVC: ToDoDelegate{
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
         
         cell.wasLongTapped = false
-        wholeData!.dict[idx.section]![idx.row].todo = str
+        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
+        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
+        keys![idx.row].todo = str
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
     }
