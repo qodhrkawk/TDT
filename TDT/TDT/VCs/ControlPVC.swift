@@ -35,10 +35,10 @@ class ControlPVC: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        if let firstVC = VCArray.first{
-            setViewControllers([firstVC], direction: .forward, animated: true, completion: nil)
-        }
-
+//        if let firstVC = VCArray.first{
+//            setViewControllers([firstVC], direction: .forward, animated: true, completion: nil)
+//        }
+        setViewControllers([VCArray[1]], direction: .forward, animated: true, completion: nil)
         // Do any additional setup after loading the view.
     }
 }

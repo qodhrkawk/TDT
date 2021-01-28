@@ -98,7 +98,7 @@ class TodoTVC: UITableViewCell {
         containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(longtap)
         self.addGestureRecognizer(leftSwipe)
-        self.addGestureRecognizer(rightSwipe)
+//        self.addGestureRecognizer(rightSwipe)
 //        containView.addGestureRecognizer(panTap)
         self.addSubview(highLightView)
         highLightView.snp.makeConstraints{
@@ -182,7 +182,7 @@ class TodoTVC: UITableViewCell {
        
     }
     @objc func rightSwiped(){
-        self.textBoxDelegate?.shouldMove()
+//        self.textBoxDelegate?.shouldMove()
         
     }
     

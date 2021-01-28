@@ -10,18 +10,15 @@ import UIKit
 
 class TodoVC: UIViewController {
     
-    //    var myStr = "왼쪽으로 밀어서 완료 상태로 만들어 보세요.141414141414141414141414141414141414141414141414141414141414141414141414"
+
     var myStr = "왼쪽으로밀어서완료aaaaaaanaa"
     let defaults = UserDefaults.standard
-//    var strs = ["왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.","왼쪽으로","두번 탭해서 중요 표시를 해 보세요.","길게 클릭해서 메모를 삭제하거나 수정할 수 있어요."]
-//
-//    var isImportant = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
-    //    var strs: [String] = []
-    //
-    //    var isImportant: [Bool] = []
-    
-    var wholeData: WholeData?
+
     var dateInfo: [String] = []
+    
+    var todoDatas: [[TodoData]] = []
+
+    var delaySection = -1
     
     var currentStatus = 1
     static var mainColor: UIColor = .maincolor
@@ -38,9 +35,10 @@ class TodoVC: UIViewController {
     @IBOutlet weak var sendButton: UIButton!
     var nowOffset = CGPoint(x: 0, y: 0)
     var feedbackGenerator: UIImpactFeedbackGenerator?
-    
+    var keyboardFlag = false
     var controlDelegate: ControlDelegate?
-    
+    var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
+    var emptyView = FlickEmptyView()
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -63,7 +61,7 @@ class TodoVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         print("todoviewwillapp")
         currentStatus = 1
-        
+        setData()
         wholeTV.reloadData()
         registerForKeyboardNotifications()
     }
@@ -86,31 +84,20 @@ class TodoVC: UIViewController {
     }
     
     func setData(){
-        
-        if let wholeData = defaults.value(forKey: "wholeData") as? Data{
-            let originalData = try? PropertyListDecoder().decode(Dictionary<Int,[TodoData]>.self, from: wholeData)
-     
+        if let savedData = defaults.value(forKey: "TodoDatas") as? Data{
+            let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
+            
             
             if originalData != nil{
-           
-                self.wholeData = WholeData(dict: originalData!)
+                
+                self.todoDatas = originalData!
             }
             
         }
-        else {
+        
+        
+        if todoDatas.count > 0 {
             
-            let emptyDict: Dictionary<Int,[TodoData]> = [:]
-            defaults.setValue(emptyDict, forKey: "wholeData")
-            self.wholeData = WholeData(dict: emptyDict)
-        }
-       
-        
-        
-        wholeTV.reloadData()
-        print(self.wholeData)
-        
-        if wholeData!.dict.count > 0 {
-
             if let tmpDate = defaults.stringArray(forKey: "dates") {
                 dateInfo = tmpDate
             }
@@ -118,7 +105,9 @@ class TodoVC: UIViewController {
             print(dateInfo)
             
         }
-       
+        wholeTV.reloadData()
+        
+   
         
     }
     
@@ -133,8 +122,10 @@ class TodoVC: UIViewController {
         newTextField.backgroundColor = .veryLightPink30
         
         editView.setBorder(borderColor: .veryLightPinkFour, borderWidth: 1.0)
-        
-        
+        rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
+        self.view.isUserInteractionEnabled = true
+        rightSwipe.direction = .right
+        self.view.addGestureRecognizer(rightSwipe)
     }
     
     func registerForKeyboardNotifications() {
@@ -152,112 +143,128 @@ class TodoVC: UIViewController {
                                                     UIResponder.keyboardWillHideNotification, object: nil)
     }
     @objc func keyboardWillShow(_ notification: NSNotification) {
+        print("키보드 보임")
         
-        
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
-                                as? NSValue)?.cgRectValue {
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                self.editView.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
-                //                self.wholeTV.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
-                //                self.wholeTVBottomConstraint.constant = 90 + keyboardSize.height-29
+        if keyboardFlag == false {
+            keyboardFlag = true
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                                    as? NSValue)?.cgRectValue {
                 
-                self.nowOffset = self.wholeTV.contentOffset
-                print(self.nowOffset)
-                self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: self.nowOffset.y + keyboardSize.height-29), animated: false)
-                self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
-                self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                print(keyboardSize.height)
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.editView.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+ 
+                    self.nowOffset = self.wholeTV.contentOffset
+                    print(self.nowOffset)
+                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: self.nowOffset.y + keyboardSize.height-29), animated: false)
+                    self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                    self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                    
+                })
                 
-            })
-            
-            self.view.layoutIfNeeded()
-            
+                self.view.layoutIfNeeded()
+                
+                
+                
+            }
             
             
         }
+        
+     
     }
     
     @objc func keyboardWillHide(_ notification: NSNotification) {
         
         
-        
-        
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
-                                as? NSValue)?.cgRectValue {
+        print("키보드 숨김")
+        if keyboardFlag == true {
+            keyboardFlag = false
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                                    as? NSValue)?.cgRectValue {
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.editView.transform = .identity
+                    //                        self.wholeTVBottomConstraint.constant = 90
+                    //                    self.nowOffset = self.wholeTV.contentOffset
+                    
+                    let goY = self.nowOffset.y > keyboardSize.height-29 ? self.nowOffset.y - (keyboardSize.height - 29) : 0
+                 
+//                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: ), animated: true)
+                    
+                    self.wholeTV.contentInset = UIEdgeInsets(top: keyboardSize.height-29, left: 0, bottom: 0, right: 0)
+                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: goY), animated: true)
+                    self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                    
+                    
+                    
+                })
+                self.view.layoutIfNeeded()
+                self.wholeTV.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
+            }
             
-            UIView.animate(withDuration: 0.3, animations: {
-                self.editView.transform = .identity
-                //                        self.wholeTVBottomConstraint.constant = 90
-                //                    self.nowOffset = self.wholeTV.contentOffset
-                
-                let goY = self.nowOffset.y > 2 * keyboardSize.height-29 ? self.nowOffset.y - 2*(keyboardSize.height - 29) : 0
-                self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: goY), animated: true)
-                
-                
-                self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                
-                
-                
-            })
-            self.view.layoutIfNeeded()
             
         }
+       
         
         
-        
+    }
+    @objc func rightSwiped() {
+    
+        controlDelegate?.moveTo(idx: 0)
     }
     
     
     func addData(todo: String){
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
-            let date = Date()
-            let dateString = dateFormatter.string(from: date)
-
-
-            if wholeData!.dict.count > 0  {
-              
-                if let myDate = defaults.stringArray(forKey: "dates") {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
+        let date = Date()
+        let dateString = dateFormatter.string(from: date)
+        
+        // 기존 데이터가 1개 이상
+        if todoDatas.count > 0 {
+            if let myDate = defaults.stringArray(forKey: "dates") {
+                
+                // 마지막이 같은 날짜이면
+                if dateInfo[todoDatas.count-1] == dateString {
+                    print("heeeeeee")
+//                    wholeData!.dict[wholeData!.dict.count-1]?.append(TodoData(date: dateString, todo: todo, isImportant: false))
+                    todoDatas[todoDatas.count-1].append(TodoData(date: dateString, todo: todo, isImportant: false))
                     
-                    
-                    if dateInfo[wholeData!.dict.count-1] == dateString {
-                        print("heeeeeee")
-                        wholeData!.dict[wholeData!.dict.count-1]?.append(TodoData(date: dateString, todo: todo, isImportant: false))
-                    }
-                    else{
-                        var tmpDate = myDate
-                        tmpDate.append(dateString)
-                        defaults.setValue(tmpDate, forKey: "dates")
-                        dateInfo.append(dateString)
-                        wholeData!.dict[wholeData!.dict.count] = [TodoData(date: dateString, todo: todo, isImportant: false)]
-                    }
-                   
-                   
-                   
-                    
-                    
-                    
+                }
+                // 날짜 추가
+                else{
+                    var tmpDate = myDate
+                    tmpDate.append(dateString)
+                    defaults.setValue(tmpDate, forKey: "dates")
+                    dateInfo.append(dateString)
+//                    wholeData!.dict[wholeData!.dict.count] = [TodoData(date: dateString, todo: todo, isImportant: false)]
+                    todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
                 }
 
             }
-            else{
-                let newDate = [dateString]
-               
-                defaults.setValue(newDate, forKey: "dates")
-                
-                wholeData!.dict[0] = [TodoData(date: dateString, todo: todo, isImportant: false)]
-                dateInfo.append(dateString)
-               
-
-
-            }
+            
+            
+        }
+        else{
+            let newDate = [dateString]
+            
+            defaults.setValue(newDate, forKey: "dates")
+            
+//            wholeData!.dict[0] = [TodoData(date: dateString, todo: todo, isImportant: false)]
+            todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
+            
+            dateInfo.append(dateString)
+            
+            
+            
+        }
         
+        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+//        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
         
-        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
-    
         wholeTV.reloadData()
-        
+
         
     }
     
@@ -310,23 +317,64 @@ class TodoVC: UIViewController {
 
 
 extension TodoVC: UITableViewDelegate{
+    
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        switch currentStatus {
+        
+        // 뷰 처음 등장할때 오른쪽에서 왼쪽 가는 애니메이션
+        case 1:
+            view.alpha = 0.2
+            let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 250, 0, 0)
+            if delaySection == -1 {
+                delaySection = section
+            }
+            
+            view.layer.transform = rotationTransform
+            let delay = 0.1 + 0.05 * Double(abs(section-delaySection))
+            
+            UIView.animate(withDuration: 0.4 ,delay: delay,options: .curveEaseOut, animations: {
+                view.alpha = 1
+                view.layer.transform = CATransform3DIdentity
+            },completion: { f in
+                self.delaySection = -1
+            })
+            
+            
+            
+            
+        default:
+            return
+            
+        }
+        
+        
+        
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        
-        //                cell.alpha = 0.5
-        
+
         switch currentStatus {
         
         
         // 뷰 처음 등장할때 오른쪽에서 왼쪽 가는 애니메이션
         case 1:
             cell.alpha = 0.2
-            let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 250, 0, 0)
             
+            
+            let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 250, 0, 0)
+            if delaySection == -1 {
+                delaySection = indexPath.section
+            }
+            
+            let delay = 0.1 + 0.05 * Double(abs(indexPath.section-delaySection)) + 0.02 * Double(indexPath.row)
             cell.layer.transform = rotationTransform
-            UIView.animate(withDuration: 0.4 ,delay: 0.05 * Double(indexPath.row),options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 0.4 ,delay: delay,options: .curveEaseOut, animations: {
                 cell.alpha = 1
                 cell.layer.transform = CATransform3DIdentity
+            },completion: { f in
+                self.delaySection = -1
             })
             
             
@@ -337,8 +385,7 @@ extension TodoVC: UITableViewDelegate{
             tableView.scrollToRow(at: lastIndexPath, at: .top, animated: false)
             let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 0, 250, 0)
             let yMove = CGAffineTransform(translationX: 0, y: 300)
-            
-            //            cell.layer.transform = rotationTransform
+
             cell.transform = yMove
             view.bringSubviewToFront(cell)
             if indexPath == lastIndexPath{
@@ -370,61 +417,75 @@ extension TodoVC: UITableViewDelegate{
         self.view.endEditing(true)
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
+        
         switch section {
-          case 0:
-              let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 65))
-              view.setDate(date: dateInfo[section])
-              return view
-          default:
-              let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
-                
-              view.setDate(date: dateInfo[section])
-              return view
-          }
+        case 0:
+            let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 65))
+            view.setDate(date: dateInfo[section])
+            return view
+        default:
+            let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+            
+            view.setDate(date: dateInfo[section])
+            return view
+        }
         
         
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-          case 0:
-             return 65
-          default:
-              return 30
-          }
+        case 0:
+            return 65
+        default:
+            return 30
+        }
     }
-  
+    
     
 }
 
 extension TodoVC: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: section)
-        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return 0}
-        print("난희?")
-
-        return keys.count
+//        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: section)
+//        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return 0}
+//        print("난희?")
+//
+        return todoDatas[section].count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return wholeData!.dict.count
+        if todoDatas.count == 0 {
+            self.view.addSubview(emptyView)
+            
+            self.emptyView.snp.makeConstraints{
+                $0.center.equalToSuperview()
+                $0.width.equalToSuperview()
+                $0.height.equalTo(62)
+            }
+        }
+        else {
+            
+            emptyView.removeFromSuperview()
+            
+        }
+        
+        return todoDatas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTVC.identifier) as? TodoTVC else {return UITableViewCell()}
-        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: indexPath.section)
-        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return UITableViewCell()}
+
         cell.textBoxDelegate = self
-        cell.setLabel(str: keys[indexPath.row].todo)
+        cell.setLabel(str: todoDatas[indexPath.section][indexPath.row].todo)
         cell.myIndexpath = indexPath
-        cell.isImportant = keys[indexPath.row].isImportant
+        cell.isImportant = todoDatas[indexPath.section][indexPath.row].isImportant
         cell.setItems()
         
         
         return cell
     }
     
-   
+    
     
     
 }
@@ -434,7 +495,8 @@ extension TodoVC: TextBoxDelegate {
         feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
         self.view.endEditing(true)
-        vcName.myText = wholeData!.dict[idx.section]![idx.row].todo
+        vcName.myText = todoDatas[idx.section][idx.row].todo
+        
         vcName.idx = idx
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
@@ -454,31 +516,81 @@ extension TodoVC: TextBoxDelegate {
     }
     
     func doubleTapped(idx: IndexPath) {
-        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
-        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
+      
         
-        keys![idx.row].isImportant = !keys![idx.row].isImportant
-        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
+        todoDatas[idx.section][idx.row].isImportant = !todoDatas[idx.section][idx.row].isImportant
+        defaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         wholeTV.reloadData()
     }
     
     func myDeleteRow(idx: IndexPath,isEnd: Bool){
-        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
-        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
-        
+
         wholeTV.beginUpdates()
-        keys!.remove(at: idx.row)
         
-        
-        // 삭제 (날짜 + 데이터)
-        if keys!.count == 0{
-            wholeData!.dict.removeValue(forKey: wholeData!.dict.keys[index])
-            
-            print(wholeData!.dict)
-            
+        if isEnd {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
+            let date = Date()
+            let dateString = dateFormatter.string(from: date)
+            if let savedData = defaults.value(forKey: "ArchiveDatas") as? Data{
+                let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
+                
+                var archiveTmpData = originalData
+                
+                if let archiveDate = defaults.stringArray(forKey: "ArchiveDates") {
+                    var archiveTmpDate = archiveDate
+                    if archiveDate.count > 0 {
+                        var flag = false
+                        for i in 0...archiveDate.count-1 {
+                            
+                            // 원래 있던 날짜
+                            if dateString == archiveDate[i] {
+                                flag = true
+                                archiveTmpData![i].append(todoDatas[idx.section][idx.row])
+                            }
+                        }
+                        
+                        // 날짜 추가해야함
+                        if !flag {
+                            archiveTmpData!.insert([todoDatas[idx.section][idx.row]], at: 0)
+                            archiveTmpDate.insert(dateString, at: 0)
+
+                        }
+                        
+                    }
+                    else {
+                        print("이거이거")
+                        archiveTmpData = [[todoDatas[idx.section][idx.row]]]
+                        archiveTmpDate = [dateString]
+                        
+                        defaults.setValue([dateString], forKey: "ArchiveDates")
+                        
+                    }
+                    defaults.setValue(archiveTmpDate, forKey: "ArchiveDates")
+                    
+                }
+                
+                defaults.set(try? PropertyListEncoder().encode(archiveTmpData),forKey: "ArchiveDatas")
+                
+            }
+            // 기존에 archive data 없음
+            else {
+                print("이거이거")
+                defaults.set(try? PropertyListEncoder().encode([[todoDatas[idx.section][idx.row]]]),forKey: "ArchiveDatas")
+                defaults.setValue([dateString], forKey: "ArchiveDates")
+            }
+
         }
         
-        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
+        todoDatas[idx.section].remove(at: idx.row)
+     
+        // 삭제 (날짜 + 데이터)
+        if todoDatas[idx.section].count == 0{
+            //            wholeData!.dict.removeValue(forKey: wholeData!.dict.keys[index])
+            todoDatas.remove(at: idx.section)
+        }
+        
+        defaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         
         if wholeTV.numberOfRows(inSection: idx.section) == 1 {
             dateInfo.remove(at: idx.section)
@@ -489,34 +601,7 @@ extension TodoVC: TextBoxDelegate {
             wholeTV.deleteRows(at: [idx], with: .fade)
         }
         
-        
         wholeTV.endUpdates()
-        
-        print("숫자")
-        
-        print(wholeTV.numberOfRows(inSection: 0))
-//        for sec in idx.section...wholeTV.numberOfSections-1{
-//            if sec == idx.section{
-//                if wholeTV.numberOfRows(inSection: sec) > idx.row {
-//                    for row in idx.row...wholeTV.numberOfRows(inSection: sec)-1{
-//                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
-//                        cell.myIndexpath = IndexPath(row: row, section: sec)
-//                    }
-//                }
-//
-//
-//            }
-//            else{
-//                if wholeTV.numberOfRows(inSection: sec) > 0 {
-//                    for row in 0...wholeTV.numberOfRows(inSection: sec)-1{
-//                        guard let cell = wholeTV.cellForRow(at: IndexPath(row: row, section: sec)) as? TodoTVC else { continue}
-//                        cell.myIndexpath = IndexPath(row: row, section: sec)
-//                    }
-//                }
-//            }
-//
-//        }
-        
         wholeTV.reloadData()
     }
     
@@ -552,11 +637,11 @@ extension TodoVC: ToDoDelegate{
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
         
         cell.wasLongTapped = false
-        let index =  wholeData!.dict.index( wholeData!.dict.startIndex, offsetBy: idx.section)
-        var keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData]
-        keys![idx.row].todo = str
+        
+        todoDatas[idx.section][idx.row].todo = str
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
+        wholeTV.scrollToRow(at: idx, at: .middle, animated: true)
     }
     
     func disMissed(idx: IndexPath) {
@@ -574,6 +659,8 @@ extension TodoVC: UIScrollViewDelegate {
         
         nowOffset = scrollView.contentOffset
         print(self.nowOffset)
+        print("aa")
+        print(wholeTV.contentInset.bottom)
     }
     
 }

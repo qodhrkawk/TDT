@@ -71,7 +71,10 @@ class ArchiveTVC: UITableViewCell {
     }
 
     func setItems(){
+        
         containView.backgroundColor = .subgrey
+        
+        
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         
@@ -96,7 +99,7 @@ class ArchiveTVC: UITableViewCell {
         containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(longtap)
         self.addGestureRecognizer(rightSwipe)
-        self.addGestureRecognizer(leftSwipe)
+//        self.addGestureRecognizer(leftSwipe)
 //        containView.addGestureRecognizer(panTap)
         self.addSubview(highLightView)
         highLightView.snp.makeConstraints{
@@ -212,15 +215,20 @@ class ArchiveTVC: UITableViewCell {
         let viewWidth = todoLabel.intrinsicContentSize.width
         
         todoLabel.textColor = .brownGreyTwo
+       
+        
+        if myIndexpath != nil {
+            if myIndexpath!.section != 0 {
+                todoLabel.textColor = .brownGreyThreeBlur
+            }
+        }
         
  
         
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-19)
             $0.top.equalTo(todoLabel.snp.top).offset(-16)
-            //            $0.trailing.equalTo(todoLabel.snp.trailing).offset(19)
-            //            $0.bottom.equalTo(todoLabel.snp.bottom).offset(16)
-            
+
             
             var maximumIntrinsic = CGFloat(0.0)
        
