@@ -76,7 +76,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EIY-6q-6cV">
-                                        <rect key="frame" x="361" y="58" width="40" height="40"/>
+                                        <rect key="frame" x="361" y="65.5" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="NNE-S1-YJl"/>
                                             <constraint firstAttribute="height" constant="40" id="nss-OB-Hi1"/>
@@ -99,8 +99,8 @@
                                     <constraint firstItem="Ctj-CF-kxx" firstAttribute="top" secondItem="p1W-Xe-Znr" secondAttribute="top" constant="73" id="BYU-il-ZiC"/>
                                     <constraint firstItem="Ctj-CF-kxx" firstAttribute="leading" secondItem="p1W-Xe-Znr" secondAttribute="leading" constant="26" id="NBt-aj-oyu"/>
                                     <constraint firstAttribute="height" constant="120" id="UzU-eS-04N"/>
-                                    <constraint firstItem="EIY-6q-6cV" firstAttribute="top" secondItem="p1W-Xe-Znr" secondAttribute="top" constant="58" id="WWJ-UX-WXD"/>
                                     <constraint firstAttribute="trailing" secondItem="EIY-6q-6cV" secondAttribute="trailing" constant="13" id="Zk0-HY-cLK"/>
+                                    <constraint firstItem="EIY-6q-6cV" firstAttribute="centerY" secondItem="Ctj-CF-kxx" secondAttribute="centerY" id="mOW-sF-jqZ"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzE-xC-ok5">

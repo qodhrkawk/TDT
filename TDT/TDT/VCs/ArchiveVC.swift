@@ -281,20 +281,27 @@ extension ArchiveVC: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        switch section {
-        case 0:
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let date = Date()
+        let dateString = dateFormatter.string(from: date)
+        
+        if dateInfo[section] == dateString {
             let view = ArchiveFirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100))
             view.setDate(date: dateInfo[section]+" 한 일")
             view.startAnimation()
      
             
             return view
-        default:
+        }
+        else {
             let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
             
             view.setDate(date: dateInfo[section]+" 한 일")
             return view
         }
+        
+     
         
         
     }
@@ -413,6 +420,7 @@ extension ArchiveVC: ToDoDelegate{
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? ArchiveTVC else { return}
         
         cell.wasLongTapped = false
+        
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
         
     }

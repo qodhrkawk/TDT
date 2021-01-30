@@ -217,7 +217,7 @@ class TodoVC: UIViewController {
     
     func addData(todo: String){
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
+        dateFormatter.dateFormat = "yyyy.MM.dd"
         let date = Date()
         let dateString = dateFormatter.string(from: date)
         
@@ -529,7 +529,7 @@ extension TodoVC: TextBoxDelegate {
         
         if isEnd {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
+            dateFormatter.dateFormat = "yyyy.MM.dd"
             let date = Date()
             let dateString = dateFormatter.string(from: date)
             if let savedData = defaults.value(forKey: "ArchiveDatas") as? Data{
@@ -632,6 +632,7 @@ extension TodoVC: ToDoDelegate{
         
         cell.wasLongTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
+        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     func modify(idx: IndexPath,str: String){
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
@@ -642,6 +643,7 @@ extension TodoVC: ToDoDelegate{
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
         wholeTV.scrollToRow(at: idx, at: .middle, animated: true)
+        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     
     func disMissed(idx: IndexPath) {

@@ -73,7 +73,7 @@
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aig-DE-Go6">
-                                        <rect key="frame" x="361" y="58" width="40" height="40"/>
+                                        <rect key="frame" x="361" y="68" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="9cF-2O-7cH"/>
                                             <constraint firstAttribute="width" constant="40" id="RQC-4H-rJB"/>
@@ -87,9 +87,9 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="LPY-xB-rln" firstAttribute="leading" secondItem="sP8-8P-aha" secondAttribute="leading" constant="26" id="4r4-Ei-V7C"/>
-                                    <constraint firstItem="Aig-DE-Go6" firstAttribute="top" secondItem="sP8-8P-aha" secondAttribute="top" constant="58" id="SaB-1H-Tbf"/>
                                     <constraint firstAttribute="height" constant="120" id="TZ3-Fk-JVg"/>
                                     <constraint firstAttribute="trailing" secondItem="Aig-DE-Go6" secondAttribute="trailing" constant="13" id="W7r-bW-zD2"/>
+                                    <constraint firstItem="Aig-DE-Go6" firstAttribute="centerY" secondItem="LPY-xB-rln" secondAttribute="centerY" id="awd-6P-huX"/>
                                     <constraint firstItem="LPY-xB-rln" firstAttribute="top" secondItem="sP8-8P-aha" secondAttribute="top" constant="73" id="vZM-60-UEB"/>
                                 </constraints>
                             </view>
