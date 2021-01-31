@@ -144,7 +144,7 @@ class TodoVC: UIViewController {
     }
     @objc func keyboardWillShow(_ notification: NSNotification) {
         print("키보드 보임")
-        
+        self.view.bringSubviewToFront(editView)
         if keyboardFlag == false {
             keyboardFlag = true
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]

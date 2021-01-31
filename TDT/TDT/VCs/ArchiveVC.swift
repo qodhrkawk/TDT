@@ -348,8 +348,17 @@ extension ArchiveVC: UITableViewDataSource{
         cell.myIndexpath = indexPath
         cell.setLabel(str: archiveDatas[indexPath.section][indexPath.row].todo)
         cell.isImportant = archiveDatas[indexPath.section][indexPath.row].isImportant
-        cell.setItems()
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let date = Date()
+        let dateString = dateFormatter.string(from: date)
+       
+        
+        cell.setItems()
+        if dateInfo[indexPath.section] == dateString {
+            cell.setLabelColor()
+        }
         return cell
     }
     

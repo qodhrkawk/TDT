@@ -205,6 +205,12 @@ class ArchiveTVC: UITableViewCell {
         
         
     }
+    
+    func setLabelColor(){
+        
+        todoLabel.textColor = .brownGreyTwo
+    }
+    
     func setLabel(str: String){
         todoLabel.text = str
         todoLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
@@ -214,16 +220,9 @@ class ArchiveTVC: UITableViewCell {
         
         let viewWidth = todoLabel.intrinsicContentSize.width
         
-        todoLabel.textColor = .brownGreyTwo
-       
         
-        if myIndexpath != nil {
-            if myIndexpath!.section != 0 {
-                todoLabel.textColor = .brownGreyThreeBlur
-            }
-        }
+        todoLabel.textColor = .brownGreyThreeBlur
         
- 
         
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-19)

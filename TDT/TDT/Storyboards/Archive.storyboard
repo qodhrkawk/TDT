@@ -98,7 +98,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="SlP-Yy-K3M" secondAttribute="bottom" id="6Fi-Dk-AAh"/>
-                            <constraint firstItem="SlP-Yy-K3M" firstAttribute="top" secondItem="nXb-bE-mBs" secondAttribute="top" id="9Kc-VL-pid"/>
+                            <constraint firstItem="SlP-Yy-K3M" firstAttribute="top" secondItem="UdK-Mi-pBN" secondAttribute="top" constant="44" id="9Kc-VL-pid"/>
                             <constraint firstItem="nXb-bE-mBs" firstAttribute="trailing" secondItem="SlP-Yy-K3M" secondAttribute="trailing" id="DYy-bs-Svc"/>
                             <constraint firstItem="sP8-8P-aha" firstAttribute="leading" secondItem="nXb-bE-mBs" secondAttribute="leading" id="Fes-1r-MRa"/>
                             <constraint firstItem="sP8-8P-aha" firstAttribute="top" secondItem="UdK-Mi-pBN" secondAttribute="top" id="R9r-YW-ve8"/>
@@ -121,7 +121,7 @@
     <resources>
         <image name="btnMain" width="40" height="40"/>
         <image name="imgArchive" width="110.5" height="24"/>
-        <image name="imgOops" width="47" height="44.5"/>
+        <image name="imgOops" width="47" height="45.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

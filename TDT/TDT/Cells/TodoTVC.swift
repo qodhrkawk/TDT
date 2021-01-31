@@ -213,15 +213,20 @@ class TodoTVC: UITableViewCell {
         
         let viewWidth = todoLabel.intrinsicContentSize.width
         
+        
         todoLabel.textColor = .brownGreyTwo
         
- 
+        todoLabel.snp.remakeConstraints{
+            $0.height.equalTo(18 + 25 * (todoLabel.calculateMaxLines()-1))
+        }
+        
+        
         
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-19)
             $0.top.equalTo(todoLabel.snp.top).offset(-16)
             //            $0.trailing.equalTo(todoLabel.snp.trailing).offset(19)
-            //            $0.bottom.equalTo(todoLabel.snp.bottom).offset(16)
+//                        $0.bottom.equalTo(todoLabel.snp.bottom).offset(16)
             
             
             var maximumIntrinsic = CGFloat(0.0)
@@ -249,7 +254,7 @@ class TodoTVC: UITableViewCell {
          
             
             
-            $0.height.equalTo(27 + 18 + 25 * (todoLabel.calculateMaxLines()-1))
+            $0.height.equalTo(30 + 18 + 25 * (todoLabel.calculateMaxLines()-1))
             
         }
         todoLabelOrigin = todoLabel.center.x
