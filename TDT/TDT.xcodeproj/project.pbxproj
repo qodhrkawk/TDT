@@ -13,6 +13,8 @@
 		EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */; };
 		EC7B009C25C301B100360A39 /* FlickEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B009B25C301B100360A39 /* FlickEmptyView.swift */; };
 		EC7B009F25C303F800360A39 /* ArchiveEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B009E25C303F800360A39 /* ArchiveEmptyView.swift */; };
+		EC7B933B25C847EB00AF3BFA /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingVC.swift */; };
+		EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC8C587125C7B7BF004A5C67 /* Setting.storyboard */; };
 		EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */; };
 		EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */; };
 		EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */; };
@@ -55,6 +57,8 @@
 		EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFirstHeaderView.swift; sourceTree = "<group>"; };
 		EC7B009B25C301B100360A39 /* FlickEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickEmptyView.swift; sourceTree = "<group>"; };
 		EC7B009E25C303F800360A39 /* ArchiveEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEmptyView.swift; sourceTree = "<group>"; };
+		EC7B933A25C847EB00AF3BFA /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
+		EC8C587125C7B7BF004A5C67 /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
 		EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFBold.ttf; sourceTree = "<group>"; };
@@ -193,6 +197,7 @@
 				ECA1000325BD71CF005BA8D1 /* Archive.storyboard */,
 				EC9D7B5225BB36A500453FE8 /* Alert.storyboard */,
 				ECA1000F25BD7C43005BA8D1 /* Control.storyboard */,
+				EC8C587125C7B7BF004A5C67 /* Setting.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -206,6 +211,7 @@
 				ECA1001225BD7C74005BA8D1 /* ControlVC.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */,
 				ECECF13D25C15DCD00C6FA54 /* LaunchVC.swift */,
+				EC7B933A25C847EB00AF3BFA /* SettingVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -321,6 +327,7 @@
 				EC9D7B4E25BB0A1B00453FE8 /* GmarketSansTTFLight.ttf in Resources */,
 				ECF8731025B9BD250096E766 /* Main.storyboard in Resources */,
 				EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */,
+				EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */,
 				EC9D7B5325BB36A500453FE8 /* Alert.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,6 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */,
+				EC7B933B25C847EB00AF3BFA /* SettingVC.swift in Sources */,
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
@@ -554,7 +562,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.05;
+				MARKETING_VERSION = 1.09;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -575,7 +583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.05;
+				MARKETING_VERSION = 1.09;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

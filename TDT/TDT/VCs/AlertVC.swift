@@ -33,12 +33,12 @@ class AlertVC: UIViewController {
     @IBOutlet weak var editLabel: UILabel!
     
     @IBOutlet weak var editUnderView: UIView!
-    
+
     var myText: String?
     
     var todoDelegate: ToDoDelegate?
     var idx: IndexPath?
-    
+    var editOkayImages = ["btnComplete","btnCompleteGr","btnCompleteYl","btnCompletePk"]
     var fromArchive = false
     
     override func viewDidLoad() {
@@ -107,6 +107,12 @@ class AlertVC: UIViewController {
         editLabel.textColor = .brownGreyThree
 //        editTextView.setLinespace(spacing: 50)
 //        editTextView.delegate = self
+        if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
+            TodoVC.mainColor = TodoVC.colors[mainColorIndex]
+            let editOkayButtonImageName = editOkayImages[mainColorIndex]
+            editOkayButton.setImage(UIImage(named: editOkayButtonImageName), for: .normal)
+            
+        }
     }
     
     func disableChangeButton(){
@@ -116,6 +122,7 @@ class AlertVC: UIViewController {
         
     }
     
+   
     func setButtons(){
         //        cancelButton.makeRounded(cornerRadius: 6)
         

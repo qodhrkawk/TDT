@@ -78,8 +78,8 @@ class TodoTVC: UITableViewCell {
         containView.backgroundColor = .white
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
-        
-        
+        containView.alpha = 1
+        highLightView.backgroundColor = TodoVC.mainColor
 
         containView.isUserInteractionEnabled = true
      
@@ -138,7 +138,7 @@ class TodoTVC: UITableViewCell {
     @objc func doubleTapped(){
         print("더블클릭")
         feedbackGenerator?.impactOccurred()
-        
+        highLightView.backgroundColor = TodoVC.mainColor
         
      
         textBoxDelegate?.doubleTapped(idx: myIndexpath!)
@@ -148,7 +148,14 @@ class TodoTVC: UITableViewCell {
         print("왼스와이프")
         print(myIndexpath!)
         deleteImage.image = UIImage(named: "icnDone")
-        UIView.animate(withDuration: 0.4, animations: {
+        
+        UIView.animate(withDuration: 0.35, animations: {
+            
+            self.containView.backgroundColor = TodoVC.mainColor
+        })
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            
             self.deleteImage.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -50, y: 0)
@@ -157,9 +164,9 @@ class TodoTVC: UITableViewCell {
             
             
         }, completion: { finish in
-          
+            
         })
-        UIView.animate(withDuration: 0.3,delay: 0.3,options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.2,delay: 0.15,options: .curveEaseIn, animations: {
             
             self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
@@ -217,7 +224,7 @@ class TodoTVC: UITableViewCell {
         todoLabel.textColor = .brownGreyTwo
         
         todoLabel.snp.remakeConstraints{
-            $0.height.equalTo(18 + 25 * (todoLabel.calculateMaxLines()-1))
+            $0.height.equalTo(20 + 25 * (todoLabel.calculateMaxLines()-1))
         }
         
         
@@ -254,7 +261,7 @@ class TodoTVC: UITableViewCell {
          
             
             
-            $0.height.equalTo(30 + 18 + 25 * (todoLabel.calculateMaxLines()-1))
+            $0.height.equalTo(30 + 20 + 25 * (todoLabel.calculateMaxLines()-1))
             
         }
         todoLabelOrigin = todoLabel.center.x

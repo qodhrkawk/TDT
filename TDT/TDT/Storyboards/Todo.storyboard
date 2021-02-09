@@ -93,13 +93,26 @@
                                             <constraint firstAttribute="height" constant="25" id="waB-f9-D1g"/>
                                         </constraints>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jHa-Mr-CmA">
+                                        <rect key="frame" x="102" y="65.5" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="9yd-ya-vgB"/>
+                                            <constraint firstAttribute="width" constant="40" id="blB-cZ-Rgn"/>
+                                        </constraints>
+                                        <state key="normal" image="btnMore"/>
+                                        <connections>
+                                            <action selector="settingButtonAction:" destination="Ww2-g9-m5I" eventType="touchUpInside" id="SbL-X0-9GY"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="jHa-Mr-CmA" firstAttribute="centerY" secondItem="Ctj-CF-kxx" secondAttribute="centerY" id="BXm-Lu-8Z0"/>
                                     <constraint firstItem="Ctj-CF-kxx" firstAttribute="top" secondItem="p1W-Xe-Znr" secondAttribute="top" constant="73" id="BYU-il-ZiC"/>
                                     <constraint firstItem="Ctj-CF-kxx" firstAttribute="leading" secondItem="p1W-Xe-Znr" secondAttribute="leading" constant="26" id="NBt-aj-oyu"/>
                                     <constraint firstAttribute="height" constant="120" id="UzU-eS-04N"/>
                                     <constraint firstAttribute="trailing" secondItem="EIY-6q-6cV" secondAttribute="trailing" constant="13" id="Zk0-HY-cLK"/>
+                                    <constraint firstItem="jHa-Mr-CmA" firstAttribute="leading" secondItem="Ctj-CF-kxx" secondAttribute="trailing" constant="4" id="a99-Kk-qcX"/>
                                     <constraint firstItem="EIY-6q-6cV" firstAttribute="centerY" secondItem="Ctj-CF-kxx" secondAttribute="centerY" id="mOW-sF-jqZ"/>
                                 </constraints>
                             </view>
@@ -154,6 +167,7 @@
                     </view>
                     <connections>
                         <outlet property="editView" destination="IzE-xC-ok5" id="vLx-Xz-OHb"/>
+                        <outlet property="flickImage" destination="Ctj-CF-kxx" id="Y5G-kg-fLL"/>
                         <outlet property="headerView" destination="p1W-Xe-Znr" id="RfZ-2G-OYo"/>
                         <outlet property="newTextField" destination="FAu-0m-kq9" id="4oI-C7-eQ8"/>
                         <outlet property="sendButton" destination="0EM-ZY-Gta" id="e3Y-VI-HPC"/>
@@ -168,6 +182,7 @@
     </scenes>
     <resources>
         <image name="btnArchive" width="40" height="40"/>
+        <image name="btnMore" width="40" height="40"/>
         <image name="btnSendInactive" width="40" height="40"/>
         <image name="imgLogo" width="72" height="25"/>
         <systemColor name="systemBackgroundColor">

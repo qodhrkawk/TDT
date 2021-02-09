@@ -22,16 +22,20 @@ class TodoVC: UIViewController {
     
     var currentStatus = 1
     static var mainColor: UIColor = .maincolor
+    static var colors = [UIColor.maincolor,UIColor.shamrockGreen,UIColor.sunYellow,UIColor.warmPink]
+    var flickImages = ["imgLogo","imgLogoGr","imgLogoYl","imgLogoPk"]
+    var sendButtonImages = ["btnSendActive","btnSendActiveGr","btnSendActiveYl","btnSendActivePk"]
     
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var wholeTV: UITableView!
+    @IBOutlet weak var flickImage: UIImageView!
     
     @IBOutlet weak var wholeTVBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var headerView: UIView!
     
     @IBOutlet weak var newTextField: UITextField!
-    
+    var pastKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
     @IBOutlet weak var sendButton: UIButton!
     var nowOffset = CGPoint(x: 0, y: 0)
     var feedbackGenerator: UIImpactFeedbackGenerator?
@@ -39,9 +43,12 @@ class TodoVC: UIViewController {
     var controlDelegate: ControlDelegate?
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     var emptyView = FlickEmptyView()
+    var sendButtonEnableImage: UIImage?
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        initialThreeBoxes()
         setData()
         wholeTV.delegate = self
         wholeTV.dataSource = self
@@ -51,6 +58,7 @@ class TodoVC: UIViewController {
         setWholeTV()
         setItems()
         
+        setMainColor()
         
         
         
@@ -60,8 +68,10 @@ class TodoVC: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         print("todoviewwillapp")
+        registerKeyboardSizeChangedNotification()
         currentStatus = 1
         setData()
+        setMainColor()
         wholeTV.reloadData()
         registerForKeyboardNotifications()
     }
@@ -75,12 +85,26 @@ class TodoVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         print("todoviewwilldisapp")
         unregisterForKeyboardNotifications()
-        
+        unregisterKeyboardSizeChangedNotification()
         currentStatus = 1
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    func setMainColor(){
+        if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
+            TodoVC.mainColor = TodoVC.colors[mainColorIndex]
+            let flickImageName = flickImages[mainColorIndex]
+            let sendButtonImageName = sendButtonImages[mainColorIndex]
+            flickImage.image = UIImage(named: flickImageName)
+            sendButtonEnableImage = UIImage(named: sendButtonImageName)
+            
+        }
+        
+        
+        
     }
     
     func setData(){
@@ -111,6 +135,29 @@ class TodoVC: UIViewController {
         
     }
     
+    func initialThreeBoxes(){
+        if let data = defaults.string(forKey: "initiated") {
+            return
+        }
+        else{
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy.MM.dd"
+            let date = Date()
+            let dateString = dateFormatter.string(from: date)
+            todoDatas.append([TodoData(date: dateString, todo: "왼쪽으로 밀어서 완료 상태로 만들어 보세요.", isImportant: false),
+                              TodoData(date: dateString, todo: "두번 탭해서 중요 표시를 해 보세요.", isImportant: false),
+                              TodoData(date: dateString, todo: "길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.", isImportant: false)])
+          
+            dateInfo.append(dateString)
+            
+            defaults.setValue(dateInfo, forKey: "dates")
+            
+            defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+            defaults.setValue("yes", forKey: "initiated")
+        }
+        
+    }
+    
     
     func setItems(){
         newTextField.addLeftPadding(left: 7)
@@ -129,21 +176,72 @@ class TodoVC: UIViewController {
     }
     
     func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow(_:)), name:
-                                                UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(keyboardWillShow(_:)), name:
+//                                                UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name:
                                                 UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func unregisterForKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name:
-                                                    UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.removeObserver(self, name:
+//                                                    UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name:
                                                     UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
+    func registerKeyboardSizeChangedNotification(){
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardSizeChanged(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
+    }
+    func unregisterKeyboardSizeChangedNotification(){
+        NotificationCenter.default.removeObserver(self, name:
+                                                    UIResponder.keyboardDidChangeFrameNotification, object: nil)
+        
+    }
+    
+    @objc func keyboardSizeChanged(_ notification: NSNotification) {
+        self.view.bringSubviewToFront(editView)
+        
+        keyboardFlag = false
+        if keyboardFlag == false {
+            keyboardFlag = true
+
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
+                                    as? NSValue)?.cgRectValue {
+                print("zzzz")
+                print(keyboardSize.height)
+                if keyboardSize.height == pastKeyboardSize.height {
+                    print("리턴")
+                    return
+                }
+                pastKeyboardSize = keyboardSize
+                
+                print(keyboardSize.height)
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.editView.transform = CGAffineTransform(translationX: 0, y: -(keyboardSize.height-29))
+ 
+                    self.nowOffset = self.wholeTV.contentOffset
+                    print(self.nowOffset)
+                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: self.nowOffset.y + keyboardSize.height-29), animated: false)
+                    self.wholeTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                    self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+                    
+                })
+                
+                self.view.layoutIfNeeded()
+                
+                
+                
+            }
+            
+            
+        }
+        
+     
+    }
+    
     @objc func keyboardWillShow(_ notification: NSNotification) {
-        print("키보드 보임")
         self.view.bringSubviewToFront(editView)
         if keyboardFlag == false {
             keyboardFlag = true
@@ -185,13 +283,10 @@ class TodoVC: UIViewController {
                 
                 UIView.animate(withDuration: 0.3, animations: {
                     self.editView.transform = .identity
-                    //                        self.wholeTVBottomConstraint.constant = 90
-                    //                    self.nowOffset = self.wholeTV.contentOffset
+
                     
                     let goY = self.nowOffset.y > keyboardSize.height-29 ? self.nowOffset.y - (keyboardSize.height - 29) : 0
-                 
-//                    self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: ), animated: true)
-                    
+
                     self.wholeTV.contentInset = UIEdgeInsets(top: keyboardSize.height-29, left: 0, bottom: 0, right: 0)
                     self.wholeTV.setContentOffset(CGPoint(x: self.nowOffset.x, y: goY), animated: true)
                     self.wholeTV.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -200,6 +295,7 @@ class TodoVC: UIViewController {
                     
                 })
                 self.view.layoutIfNeeded()
+                pastKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
                 self.wholeTV.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
             }
             
@@ -293,7 +389,7 @@ class TodoVC: UIViewController {
         if let text = sender.text {
             // 초과되는 텍스트 제거
             if text.count >= 1 {
-                sendButton.setImage(UIImage(named: "btnSendActive"), for: .normal)
+                sendButton.setImage(sendButtonEnableImage, for: .normal)
             }
             else{
                 sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
@@ -310,6 +406,14 @@ class TodoVC: UIViewController {
             
             currentStatus = 2
         }
+        
+    }
+    
+    
+    @IBAction func settingButtonAction(_ sender: Any) {
+        guard let settingVC = UIStoryboard(name: "Setting", bundle: nil).instantiateViewController(identifier: "SettingVC") as? SettingVC else {return}
+        settingVC.modalPresentationStyle = .fullScreen
+        self.present(settingVC, animated: true, completion: nil)
         
     }
     
@@ -559,7 +663,6 @@ extension TodoVC: TextBoxDelegate {
                         
                     }
                     else {
-                        print("이거이거")
                         archiveTmpData = [[todoDatas[idx.section][idx.row]]]
                         archiveTmpDate = [dateString]
                         
@@ -575,7 +678,6 @@ extension TodoVC: TextBoxDelegate {
             }
             // 기존에 archive data 없음
             else {
-                print("이거이거")
                 defaults.set(try? PropertyListEncoder().encode([[todoDatas[idx.section][idx.row]]]),forKey: "ArchiveDatas")
                 defaults.setValue([dateString], forKey: "ArchiveDates")
             }
@@ -615,7 +717,7 @@ extension TodoVC: UITextFieldDelegate{
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.text!.count >= 1 {
-            sendButton.setImage(UIImage(named: "btnSendActive"), for: .normal)
+            sendButton.setImage(sendButtonEnableImage,for: .normal)
         }
         else{
             sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)

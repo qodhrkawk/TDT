@@ -107,6 +107,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="archiveImage" destination="LPY-xB-rln" id="naj-M6-ViJ"/>
                         <outlet property="headerImageView" destination="LPY-xB-rln" id="2eF-Z6-oHM"/>
                         <outlet property="headerView" destination="sP8-8P-aha" id="csf-0B-moh"/>
                         <outlet property="mainButton" destination="Aig-DE-Go6" id="eTS-Vi-Onl"/>

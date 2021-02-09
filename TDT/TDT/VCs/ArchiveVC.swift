@@ -12,6 +12,7 @@ class ArchiveVC: UIViewController {
     
     @IBOutlet weak var headerView: UIView!
     
+    @IBOutlet weak var archiveImage: UIImageView!
     @IBOutlet weak var wholeTV: UITableView!
     @IBOutlet weak var headerImageView: UIImageView!
     @IBOutlet weak var mainButton: UIButton!
@@ -24,6 +25,8 @@ class ArchiveVC: UIViewController {
     var feedbackGenerator: UIImpactFeedbackGenerator?
     var emptyView = ArchiveEmptyView()
     var controlDelegate: ControlDelegate?
+    
+    var archiveImageNames = ["imgArchive","imgArchiveGr","imgArchiveYl","imgArchivePk"]
     override func viewDidLoad() {
         super.viewDidLoad()
         wholeTV.delegate = self
@@ -36,6 +39,7 @@ class ArchiveVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         setData()
+        setMainColor()
         wholeTV.reloadData()
         currentStatus = 1
     }
@@ -47,6 +51,14 @@ class ArchiveVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         currentStatus = 1
         
+    }
+    
+    func setMainColor(){
+        if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
+            let archiveImageName = archiveImageNames[mainColorIndex]
+            archiveImage.image = UIImage(named: archiveImageName)
+           
+        }
     }
     
     func setItems(){

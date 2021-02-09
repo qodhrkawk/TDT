@@ -223,7 +223,7 @@
                         <outlet property="editCancelButton" destination="iNb-Ci-yOA" id="O2a-y3-caM"/>
                         <outlet property="editLabel" destination="KMo-La-Ife" id="2s5-GY-j3t"/>
                         <outlet property="editLineView" destination="UPs-nh-vrI" id="DTN-WL-vdD"/>
-                        <outlet property="editOkayButton" destination="YYQ-qj-O34" id="bdH-or-fIb"/>
+                        <outlet property="editOkayButton" destination="YYQ-qj-O34" id="7ri-et-Ty7"/>
                         <outlet property="editTextView" destination="lpG-cu-vDA" id="1BQ-te-mUR"/>
                         <outlet property="editUnderView" destination="8cV-rQ-iau" id="4wF-Ma-IO8"/>
                         <outlet property="editView" destination="YOu-Qo-BEM" id="8bo-B8-ewG"/>

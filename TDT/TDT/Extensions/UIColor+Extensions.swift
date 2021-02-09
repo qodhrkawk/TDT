@@ -102,4 +102,20 @@ extension UIColor {
     @nonobjc class var brownGreyTwo40: UIColor {
         return UIColor(white: 129.0 / 255.0, alpha: 0.4)
      }
+    
+    @nonobjc class var shamrockGreen: UIColor {
+       return UIColor(red: 0.0, green: 192.0 / 255.0, blue: 66.0 / 255.0, alpha: 1.0)
+     }
+
+     @nonobjc class var sunYellow: UIColor {
+       return UIColor(red: 254.0 / 255.0, green: 208.0 / 255.0, blue: 47.0 / 255.0, alpha: 1.0)
+     }
+    @nonobjc class var duckEggBlue: UIColor {
+        return UIColor(red: 218.0 / 255.0, green: 227.0 / 255.0, blue: 225.0 / 255.0, alpha: 1.0)
+      }
+    @nonobjc class var veryLightPinkFive: UIColor {
+        return UIColor(white: 229.0 / 255.0, alpha: 1.0)
+      }
+
+
 }

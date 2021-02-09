@@ -1,19 +1,19 @@
 {
   "images" : [
     {
+      "filename" : "btnComplete.png",
       "scale" : "1x",
-      "idiom" : "universal",
-      "filename" : "btnComplete.png"
-    },
-    {
-      "filename" : "btnComplete@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "btnComplete@3x.png",
-      "scale" : "3x",
       "idiom" : "universal"
+    },
+    {
+      "scale" : "2x",
+      "filename" : "btnComplete@2x.png",
+      "idiom" : "universal"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "btnComplete@3x.png",
+      "scale" : "3x"
     }
   ],
   "info" : {

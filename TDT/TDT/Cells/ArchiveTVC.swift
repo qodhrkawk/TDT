@@ -31,6 +31,7 @@ class ArchiveTVC: UITableViewCell {
     
     let highLightView = UIView().then {
         $0.backgroundColor = TodoVC.mainColor
+        $0.alpha = 0.4
         $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
     }
 
@@ -74,7 +75,7 @@ class ArchiveTVC: UITableViewCell {
         
         containView.backgroundColor = .subgrey
         
-        
+        highLightView.backgroundColor = TodoVC.mainColor
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         
@@ -111,7 +112,7 @@ class ArchiveTVC: UITableViewCell {
             highLightView.alpha = 0
         }
         else{
-            highLightView.alpha = 1
+            highLightView.alpha = 0.4
         }
        
       
@@ -130,7 +131,7 @@ class ArchiveTVC: UITableViewCell {
         else{
             
             UIView.animate(withDuration: 0.5, animations: {
-                self.highLightView.alpha = 1
+                self.highLightView.alpha = 0.4
             })
             isImportant = true
         }
@@ -139,7 +140,7 @@ class ArchiveTVC: UITableViewCell {
     @objc func doubleTapped(){
         print("더블클릭")
         feedbackGenerator?.impactOccurred()
-        
+        highLightView.backgroundColor = TodoVC.mainColor
         
      
         textBoxDelegate?.doubleTapped(idx: myIndexpath!)
@@ -153,7 +154,7 @@ class ArchiveTVC: UITableViewCell {
         print("오른스와이프")
         print(myIndexpath!)
         deleteImage.image = UIImage(named: "imgOops")
-        UIView.animate(withDuration: 0.4, animations: {
+        UIView.animate(withDuration: 0.2, animations: {
             self.deleteImage.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: 50, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: 50, y: 0)
@@ -164,7 +165,7 @@ class ArchiveTVC: UITableViewCell {
         }, completion: { finish in
           
         })
-        UIView.animate(withDuration: 0.3,delay: 0.3,options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.2,delay: 0.15,options: .curveEaseIn, animations: {
             
             self.containView.transform = CGAffineTransform(translationX: 400, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: 400, y: 0)
