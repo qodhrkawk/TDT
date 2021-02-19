@@ -45,6 +45,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        let shareUserDefaults = UserDefaults.init(suiteName: "group.YunaeKim.TDT")
+        let defaults = UserDefaults.standard
+        
+        let widgetData = defaults.string(forKey: "widget")
+        
+        
+        shareUserDefaults!.setValue(widgetData, forKey: "todo")
+        
     }
 
 

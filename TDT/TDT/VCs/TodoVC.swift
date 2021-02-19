@@ -10,7 +10,7 @@ import UIKit
 
 class TodoVC: UIViewController {
     
-
+    
     var myStr = "왼쪽으로밀어서완료aaaaaaanaa"
     let defaults = UserDefaults.standard
 
@@ -401,6 +401,8 @@ class TodoVC: UIViewController {
     }
     @IBAction func sendButtonAction(_ sender: Any) {
         if newTextField.text != ""{
+            defaults.setValue(newTextField.text!, forKey: "widget")
+            
             addData(todo: newTextField.text!)
             newTextField.text = ""
             

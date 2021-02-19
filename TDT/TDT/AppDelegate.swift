@@ -9,11 +9,41 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    
+
+
+
+
+    func appUpdate() {
+
+       // id뒤에 값은 앱정보에 Apple ID에 써있는 숫자
+
+       if let url = URL(string: "itms-apps://itunes.apple.com/app/id1551113176"), UIApplication.shared.canOpenURL(url) {
+
+          // 앱스토어로 이동
+
+          if #available(iOS 10.0, *) {
+
+             UIApplication.shared.open(url, options: [:], completionHandler: nil)
+
+          } else {
+
+              UIApplication.shared.openURL(url)
+
+          }
+
+       }
+
+    }
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+        
         let defaults = UserDefaults.standard
         
         if let mainColor = defaults.value(forKey: "mainColor") {
@@ -22,6 +52,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             defaults.setValue(0, forKey: "mainColor")
         }
+        
+        _ = try? AppStoreCheck.isUpdateAvailable { (update, error) in
+
+           if let error = error {
+
+              print(error)
+
+           } else if let update = update {
+            
+              if update {
+
+                 self.appUpdate()
+
+                 return
+
+              }
+
+           }
+
+        }
+
        
         
         
@@ -33,6 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
+        
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
