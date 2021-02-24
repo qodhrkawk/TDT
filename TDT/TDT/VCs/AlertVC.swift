@@ -45,7 +45,7 @@ class AlertVC: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
         setButtons()
-        lineView.backgroundColor = .veryLightPinkThree
+        lineView.backgroundColor = UIColor(named: "inactiveColor")
         stackView.makeRounded(cornerRadius: 3)
         setItems()
         
@@ -89,20 +89,22 @@ class AlertVC: UIViewController {
     func setItems(){
         deleteCheckView.makeRounded(cornerRadius: 3)
         deleteCheckLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
-        
+        deleteCheckLabel.textColor = UIColor(named: "mainTextColor")
         
         deleteCheckView.alpha = 0
         
         editLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
         editTextView.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
-        editLineView.backgroundColor = .veryLightPinkTwo
+        editLineView.backgroundColor = UIColor(named: "mainTextColor")
+        editLineView.alpha = 0.2
         editView.alpha = 0
+        editView.backgroundColor = UIColor(named: "boxColor")
         editTextView.textContainerInset = UIEdgeInsets(top: 17.0,
                                                        left: 25.0,
                                                        bottom: 23.0, right: 25.0)
         editTextView.text = myText
-        editTextView.backgroundColor = .white1
-        editUnderView.backgroundColor = .white1
+        editTextView.backgroundColor = UIColor(named: "textBoxColor")
+        editUnderView.backgroundColor = UIColor(named: "textBoxColor")
         editView.makeRounded(cornerRadius: 3)
         editLabel.textColor = .brownGreyThree
 //        editTextView.setLinespace(spacing: 50)
@@ -126,34 +128,45 @@ class AlertVC: UIViewController {
     func setButtons(){
         //        cancelButton.makeRounded(cornerRadius: 6)
         
-        changeButton.backgroundColor = .subgrey
+        changeButton.backgroundColor = UIColor(named: "textBoxColor")
         changeButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
-        changeButton.setTitleColor(.black, for: .normal)
+        changeButton.setTitleColor(UIColor(named: "mainTextColor"), for: .normal)
         
         
         
-        deleteButton.backgroundColor = .subgrey
+        deleteButton.backgroundColor = UIColor(named: "textBoxColor")
         deleteButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
-        deleteButton.setTitleColor(.warmPink, for: .normal)
+        deleteButton.setTitleColor(UIColor(named: "alertColor"), for: .normal)
         if fromArchive {
-            changeButton.setTitleColor(.brownGreyFour, for: .normal)
+            changeButton.setTitleColor(UIColor(named: "inactiveColor"), for: .normal)
         }
         
         
-        cancelButton.backgroundColor = .subgrey
+        cancelButton.backgroundColor = UIColor(named: "inactiveColor")
         cancelButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 16)
         cancelButton.setTitleColor(.brownGreyThree, for: .normal)
         cancelButton.makeRounded(cornerRadius: 3)
      
         
-        deleteCancelButton.backgroundColor = .veryLightPinkTwo
+        deleteCancelButton.backgroundColor = UIColor(named: "inactiveColor")
         deleteCancelButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
         deleteCancelButton.makeRounded(cornerRadius: 3)
+        deleteCancelButton.setTitleColor(UIColor(named: "archiveTextColor"), for: .normal)
         
-        deleteOkayButton.backgroundColor = .warmPink
+        deleteOkayButton.backgroundColor = UIColor(named: "alertColor")
         deleteOkayButton.titleLabel?.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
-        deleteOkayButton.setTitleColor(.white, for: .normal)
+        deleteOkayButton.setTitleColor(UIColor(named: "mainTextColor"), for: .normal)
         deleteOkayButton.makeRounded(cornerRadius: 3)
+        
+        
+        
+        if traitCollection.userInterfaceStyle == .light {
+            editCancelButton.setImage(UIImage(named: "btnClose"), for: .normal)
+           
+        }
+        else {
+            editCancelButton.setImage(UIImage(named: "dkBtnClose"), for: .normal)
+        }
         
         
     }

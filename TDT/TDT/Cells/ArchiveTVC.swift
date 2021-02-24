@@ -40,7 +40,7 @@ class ArchiveTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.backgroundColor = .veryLightPinkTwo
+        self.backgroundColor = UIColor(named: "bgColor")
         setItems()
         todoLabelOrigin = todoLabel.center.x
         containViewOrigin = containView.center.x
@@ -59,7 +59,7 @@ class ArchiveTVC: UITableViewCell {
     }
     override func prepareForReuse() {
         wasLongTapped = false
-        self.backgroundColor = .veryLightPinkTwo
+        self.backgroundColor = UIColor(named: "bgColor")
         setItems()
         
         todoLabelOrigin = todoLabel.center.x
@@ -73,7 +73,7 @@ class ArchiveTVC: UITableViewCell {
 
     func setItems(){
         
-        containView.backgroundColor = .subgrey
+        containView.backgroundColor = UIColor(named: "archiveBoxColor")
         
         highLightView.backgroundColor = TodoVC.mainColor
         containView.makeRounded(cornerRadius: 3)
@@ -153,7 +153,14 @@ class ArchiveTVC: UITableViewCell {
     @objc func rightSwiped(){
         print("오른스와이프")
         print(myIndexpath!)
-        deleteImage.image = UIImage(named: "imgOops")
+       
+        if traitCollection.userInterfaceStyle == .light {
+            deleteImage.image = UIImage(named: "imgOops")
+            
+        }
+        else {
+            deleteImage.image = UIImage(named: "dkImgOops")
+        }
         UIView.animate(withDuration: 0.2, animations: {
             self.deleteImage.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: 50, y: 0)
@@ -209,7 +216,8 @@ class ArchiveTVC: UITableViewCell {
     
     func setLabelColor(){
         
-        todoLabel.textColor = .brownGreyTwo
+        todoLabel.textColor = UIColor(named: "mainTextColor")
+        todoLabel.alpha = 1
     }
     
     func setLabel(str: String){
@@ -222,7 +230,8 @@ class ArchiveTVC: UITableViewCell {
         let viewWidth = todoLabel.intrinsicContentSize.width
         
         
-        todoLabel.textColor = .brownGreyThreeBlur
+        todoLabel.textColor = UIColor(named: "archiveTextColor")
+//        todoLabel.alpha = 0.4
         
         
         containView.snp.remakeConstraints{

@@ -27,6 +27,7 @@ class ArchiveVC: UIViewController {
     var controlDelegate: ControlDelegate?
     
     var archiveImageNames = ["imgArchive","imgArchiveGr","imgArchiveYl","imgArchivePk"]
+    var darkArchiveImageNames = ["dkImgArchive","dkImgArchiveGr","dkImgArchiveYl","dkImgArchivePk"]
     override func viewDidLoad() {
         super.viewDidLoad()
         wholeTV.delegate = self
@@ -55,16 +56,19 @@ class ArchiveVC: UIViewController {
     
     func setMainColor(){
         if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
-            let archiveImageName = archiveImageNames[mainColorIndex]
+            var archiveImageName = archiveImageNames[mainColorIndex]
+            if traitCollection.userInterfaceStyle == .dark {
+                archiveImageName = darkArchiveImageNames[mainColorIndex]
+            }
             archiveImage.image = UIImage(named: archiveImageName)
            
         }
     }
     
     func setItems(){
-        self.view.backgroundColor = .veryLightPinkTwo
-        headerView.backgroundColor = .veryLightPinkTwo
-        wholeTV.backgroundColor = .veryLightPinkTwo
+        self.view.backgroundColor = UIColor(named: "bgColor")
+        headerView.backgroundColor = UIColor(named: "bgColor")
+        wholeTV.backgroundColor = UIColor(named: "bgColor")
         headerView.alpha = 0.95
         
         leftSwipe2 = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped2))
@@ -73,6 +77,13 @@ class ArchiveVC: UIViewController {
         self.view.addGestureRecognizer(leftSwipe2)
         self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
         self.feedbackGenerator?.prepare()
+        
+        if traitCollection.userInterfaceStyle == .light {
+            mainButton.setImage(UIImage(named: "btnMain"), for: .normal)
+        }
+        else {
+            mainButton.setImage(UIImage(named: "dkBtnMain"), for: .normal)
+        }
     }
     
     
