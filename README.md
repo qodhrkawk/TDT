@@ -24,7 +24,7 @@
 
 ### 라이브러리
 
-| 라이브러리(Library) | 목적(Purpose)            | 버전(VersionA                                                |
+| 라이브러리(Library) | 목적(Purpose)            | 버전(Version)                                                |
 | ------------------- | ------------------------ | ------------------------------------------------------------ |
 | SnapKit             | 오토레이아웃             | ![Kingfisher](https://img.shields.io/badge/SnapKit-5.0.1-black) |
 | Then                | 짧은 코드 처리           | ![Kingfisher](https://img.shields.io/badge/Then-2.7.0-white) |
