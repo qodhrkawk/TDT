@@ -264,10 +264,6 @@ class TodoTVC: UITableViewCell {
                 
             }
             
-            
-         
-            
-            
             $0.height.equalTo(30 + 20 + 25 * (todoLabel.calculateMaxLines()-1))
             
         }
