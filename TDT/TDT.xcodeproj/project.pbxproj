@@ -8,14 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E5EA9A8F7A3549B88474AD6C /* Pods_TDT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */; };
-		EC5BAD3C25D2EAB500F142CB /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5BAD3B25D2EAB500F142CB /* WidgetKit.framework */; };
-		EC5BAD3E25D2EAB500F142CB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */; };
-		EC5BAD4125D2EAB500F142CB /* FlickWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5BAD4025D2EAB500F142CB /* FlickWidget.swift */; };
-		EC5BAD4425D2EAB500F142CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC5BAD4325D2EAB500F142CB /* Assets.xcassets */; };
-		EC5BAD4625D2EAB500F142CB /* FlickWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = EC5BAD4225D2EAB500F142CB /* FlickWidget.intentdefinition */; };
-		EC5BAD4725D2EAB500F142CB /* FlickWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = EC5BAD4225D2EAB500F142CB /* FlickWidget.intentdefinition */; };
-		EC5BAD4A25D2EAB500F142CB /* FlickWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC5BAD3A25D2EAB500F142CB /* FlickWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		EC5BAD9525D2FDF600F142CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730A25B9BD250096E766 /* SceneDelegate.swift */; };
 		EC778C2725BC0B4100EAE775 /* TodoTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTVC.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
 		EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */; };
@@ -57,16 +49,6 @@
 		ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0825BC920D001C4D5E /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		EC5BAD4825D2EAB500F142CB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = ECF872FD25B9BD250096E766 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EC5BAD3925D2EAB500F142CB;
-			remoteInfo = FlickWidgetExtension;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		EC5BAD4B25D2EAB500F142CB /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -74,7 +56,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				EC5BAD4A25D2EAB500F142CB /* FlickWidgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,15 +66,8 @@
 		1B42DCB1B925A39C276981B7 /* Pods-TDT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.debug.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.debug.xcconfig"; sourceTree = "<group>"; };
 		AC2020E7DB3909549ED23AB0 /* Pods-TDT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.release.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.release.xcconfig"; sourceTree = "<group>"; };
 		CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TDT.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EC5BAD3A25D2EAB500F142CB /* FlickWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlickWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC5BAD3B25D2EAB500F142CB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		EC5BAD4025D2EAB500F142CB /* FlickWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickWidget.swift; sourceTree = "<group>"; };
-		EC5BAD4225D2EAB500F142CB /* FlickWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = FlickWidget.intentdefinition; sourceTree = "<group>"; };
-		EC5BAD4325D2EAB500F142CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EC5BAD4525D2EAB500F142CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EC5BAD5225D2F22100F142CB /* FlickWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlickWidgetExtension.entitlements; sourceTree = "<group>"; };
-		EC5BAD5525D2F25E00F142CB /* TDT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDT.entitlements; sourceTree = "<group>"; };
 		EC778C2625BC0B4100EAE775 /* TodoTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTVC.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
 		EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFirstHeaderView.swift; sourceTree = "<group>"; };
@@ -138,15 +112,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		EC5BAD3725D2EAB500F142CB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EC5BAD3E25D2EAB500F142CB /* SwiftUI.framework in Frameworks */,
-				EC5BAD3C25D2EAB500F142CB /* WidgetKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ECF8730225B9BD250096E766 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -166,25 +131,6 @@
 				EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EC5BAD3F25D2EAB500F142CB /* FlickWidget */ = {
-			isa = PBXGroup;
-			children = (
-				EC5BAD5125D2EFB900F142CB /* Provider */,
-				EC5BAD4025D2EAB500F142CB /* FlickWidget.swift */,
-				EC5BAD4225D2EAB500F142CB /* FlickWidget.intentdefinition */,
-				EC5BAD4325D2EAB500F142CB /* Assets.xcassets */,
-				EC5BAD4525D2EAB500F142CB /* Info.plist */,
-			);
-			path = FlickWidget;
-			sourceTree = "<group>";
-		};
-		EC5BAD5125D2EFB900F142CB /* Provider */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Provider;
 			sourceTree = "<group>";
 		};
 		EC9D7B4725BB09FB00453FE8 /* SupportFiles */ = {
@@ -226,9 +172,7 @@
 		ECF872FC25B9BD250096E766 = {
 			isa = PBXGroup;
 			children = (
-				EC5BAD5225D2F22100F142CB /* FlickWidgetExtension.entitlements */,
 				ECF8730725B9BD250096E766 /* TDT */,
-				EC5BAD3F25D2EAB500F142CB /* FlickWidget */,
 				ECF8730625B9BD250096E766 /* Products */,
 				F75BC93B1CF8FB6787B1DD88 /* Pods */,
 				7F3FE1BF99F1C090BA97DA2A /* Frameworks */,
@@ -239,7 +183,6 @@
 			isa = PBXGroup;
 			children = (
 				ECF8730525B9BD250096E766 /* TDT.app */,
-				EC5BAD3A25D2EAB500F142CB /* FlickWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,7 +190,6 @@
 		ECF8730725B9BD250096E766 /* TDT */ = {
 			isa = PBXGroup;
 			children = (
-				EC5BAD5525D2F25E00F142CB /* TDT.entitlements */,
 				ECA1001B25BD8663005BA8D1 /* Data */,
 				ECFDFA0425BC91BD001C4D5E /* CustomViews */,
 				EC9D7B5825BB393800453FE8 /* Protocols */,
@@ -340,23 +282,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EC5BAD3925D2EAB500F142CB /* FlickWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = EC5BAD4E25D2EAB500F142CB /* Build configuration list for PBXNativeTarget "FlickWidgetExtension" */;
-			buildPhases = (
-				EC5BAD3625D2EAB500F142CB /* Sources */,
-				EC5BAD3725D2EAB500F142CB /* Frameworks */,
-				EC5BAD3825D2EAB500F142CB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = FlickWidgetExtension;
-			productName = FlickWidgetExtension;
-			productReference = EC5BAD3A25D2EAB500F142CB /* FlickWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		ECF8730425B9BD250096E766 /* TDT */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ECF8731925B9BD270096E766 /* Build configuration list for PBXNativeTarget "TDT" */;
@@ -371,7 +296,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				EC5BAD4925D2EAB500F142CB /* PBXTargetDependency */,
 			);
 			name = TDT;
 			productName = TDT;
@@ -387,9 +311,6 @@
 				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
-					EC5BAD3925D2EAB500F142CB = {
-						CreatedOnToolsVersion = 12.4;
-					};
 					ECF8730425B9BD250096E766 = {
 						CreatedOnToolsVersion = 12.3;
 					};
@@ -409,20 +330,11 @@
 			projectRoot = "";
 			targets = (
 				ECF8730425B9BD250096E766 /* TDT */,
-				EC5BAD3925D2EAB500F142CB /* FlickWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		EC5BAD3825D2EAB500F142CB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EC5BAD4425D2EAB500F142CB /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ECF8730325B9BD250096E766 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -486,16 +398,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		EC5BAD3625D2EAB500F142CB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EC5BAD4625D2EAB500F142CB /* FlickWidget.intentdefinition in Sources */,
-				EC5BAD4125D2EAB500F142CB /* FlickWidget.swift in Sources */,
-				EC5BAD9525D2FDF600F142CB /* SceneDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ECF8730125B9BD250096E766 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -523,7 +425,6 @@
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
 				EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */,
 				ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */,
-				EC5BAD4725D2EAB500F142CB /* FlickWidget.intentdefinition in Sources */,
 				ECF8732725B9BDDC0096E766 /* TodoVC.swift in Sources */,
 				EC7B009C25C301B100360A39 /* FlickEmptyView.swift in Sources */,
 				ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */,
@@ -533,14 +434,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		EC5BAD4925D2EAB500F142CB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = EC5BAD3925D2EAB500F142CB /* FlickWidgetExtension */;
-			targetProxy = EC5BAD4825D2EAB500F142CB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		ECF8730E25B9BD250096E766 /* Main.storyboard */ = {
@@ -562,52 +455,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		EC5BAD4C25D2EAB500F142CB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = FlickWidgetExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6ZTQ76LJPZ;
-				INFOPLIST_FILE = FlickWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		EC5BAD4D25D2EAB500F142CB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = FlickWidgetExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6ZTQ76LJPZ;
-				INFOPLIST_FILE = FlickWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		ECF8731725B9BD270096E766 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -773,15 +620,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EC5BAD4E25D2EAB500F142CB /* Build configuration list for PBXNativeTarget "FlickWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				EC5BAD4C25D2EAB500F142CB /* Debug */,
-				EC5BAD4D25D2EAB500F142CB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		ECF8730025B9BD250096E766 /* Build configuration list for PBXProject "TDT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
