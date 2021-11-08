@@ -48,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let shareUserDefaults = UserDefaults.init(suiteName: "group.YunaeKim.TDT")
         let defaults = UserDefaults.standard
         
-        let widgetData = defaults.string(forKey: "widget")
+        let widgetData = defaults.stringArray(forKey: "widget")
         
         
         shareUserDefaults!.setValue(widgetData, forKey: "todo")

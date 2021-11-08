@@ -43,7 +43,7 @@ class TodoTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.backgroundColor = .veryLightPinkTwo
+        self.backgroundColor = UIColor(named: "bgColor")
         setItems()
         todoLabelOrigin = todoLabel.center.x
         containViewOrigin = containView.center.x
@@ -62,7 +62,7 @@ class TodoTVC: UITableViewCell {
     }
     override func prepareForReuse() {
         wasLongTapped = false
-        self.backgroundColor = .veryLightPinkTwo
+        self.backgroundColor = UIColor(named: "bgColor")
         setItems()
         
         todoLabelOrigin = todoLabel.center.x
@@ -75,7 +75,7 @@ class TodoTVC: UITableViewCell {
     }
 
     func setItems(){
-        containView.backgroundColor = .white
+        containView.backgroundColor = UIColor(named: "boxColor")
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         containView.alpha = 1
@@ -147,7 +147,14 @@ class TodoTVC: UITableViewCell {
     @objc func leftSwiped(){
         print("왼스와이프")
         print(myIndexpath!)
-        deleteImage.image = UIImage(named: "icnDone")
+        
+        if traitCollection.userInterfaceStyle == .light {
+            deleteImage.image = UIImage(named: "icnDone")
+            
+        }
+        else {
+            deleteImage.image = UIImage(named: "dkIcnDone")
+        }
         
         UIView.animate(withDuration: 0.35, animations: {
             
@@ -221,7 +228,7 @@ class TodoTVC: UITableViewCell {
         let viewWidth = todoLabel.intrinsicContentSize.width
         
         
-        todoLabel.textColor = .brownGreyTwo
+        todoLabel.textColor = UIColor(named: "mainTextColor")
         
         todoLabel.snp.remakeConstraints{
             $0.height.equalTo(20 + 25 * (todoLabel.calculateMaxLines()-1))

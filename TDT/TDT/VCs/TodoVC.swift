@@ -24,12 +24,15 @@ class TodoVC: UIViewController {
     static var mainColor: UIColor = .maincolor
     static var colors = [UIColor.maincolor,UIColor.shamrockGreen,UIColor.sunYellow,UIColor.warmPink]
     var flickImages = ["imgLogo","imgLogoGr","imgLogoYl","imgLogoPk"]
+    var darkFlickImages = ["dkImgLogo","dkImgLogoGr","dkImgLogoYl","dkImgLogoPk"]
     var sendButtonImages = ["btnSendActive","btnSendActiveGr","btnSendActiveYl","btnSendActivePk"]
     
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var wholeTV: UITableView!
     @IBOutlet weak var flickImage: UIImageView!
+    @IBOutlet weak var archiveButton: UIButton!
     
+    @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var wholeTVBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var headerView: UIView!
@@ -52,12 +55,12 @@ class TodoVC: UIViewController {
         setData()
         wholeTV.delegate = self
         wholeTV.dataSource = self
-        self.view.backgroundColor = .veryLightPinkTwo
-        headerView.backgroundColor = .veryLightPinkTwo
+        self.view.backgroundColor = UIColor(named: "bgColor")
+        headerView.backgroundColor = UIColor(named: "bgColor")
         headerView.alpha = 0.95
         setWholeTV()
         setItems()
-        
+        editView.backgroundColor = UIColor(named: "boxColor")
         setMainColor()
         
         
@@ -96,11 +99,15 @@ class TodoVC: UIViewController {
     func setMainColor(){
         if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
             TodoVC.mainColor = TodoVC.colors[mainColorIndex]
-            let flickImageName = flickImages[mainColorIndex]
+            var flickImageName = flickImages[mainColorIndex]
             let sendButtonImageName = sendButtonImages[mainColorIndex]
+            
+            
+            if traitCollection.userInterfaceStyle == .dark {
+                flickImageName = darkFlickImages[mainColorIndex]
+            }
             flickImage.image = UIImage(named: flickImageName)
             sendButtonEnableImage = UIImage(named: sendButtonImageName)
-            
         }
         
         
@@ -166,13 +173,28 @@ class TodoVC: UIViewController {
         newTextField.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
         newTextField.delegate = self
         newTextField.addTarget(self, action: #selector(textFieldDidChange(sender:)), for: .editingChanged)
-        newTextField.backgroundColor = .veryLightPink30
+        newTextField.backgroundColor = UIColor(named: "textBoxColor")
+        newTextField.textColor = UIColor(named: "typingTextColor")
         
-        editView.setBorder(borderColor: .veryLightPinkFour, borderWidth: 1.0)
+        editView.setBorder(borderColor: UIColor(named: "boxColor"), borderWidth: 1.0)
         rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
         self.view.isUserInteractionEnabled = true
         rightSwipe.direction = .right
         self.view.addGestureRecognizer(rightSwipe)
+        
+        if traitCollection.userInterfaceStyle == .light {
+            archiveButton.setImage(UIImage(named: "btnArchive"), for: .normal)
+            sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+            moreButton.setImage(UIImage(named: "btnMore"), for: .normal)
+            
+        }
+        else {
+            archiveButton.setImage(UIImage(named: "dkBtnArchive"), for: .normal)
+            sendButton.setImage(UIImage(named: "dkBtnSendInactive"), for: .normal)
+            moreButton.setImage(UIImage(named: "dkBtnMore"), for: .normal)
+        }
+       
+        
     }
     
     func registerForKeyboardNotifications() {
@@ -366,7 +388,7 @@ class TodoVC: UIViewController {
     
     func setWholeTV(){
         wholeTV.isUserInteractionEnabled = true
-        wholeTV.backgroundColor = .veryLightPinkTwo
+        wholeTV.backgroundColor = UIColor(named: "bgColor")
         let tableViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTouched))
         
         wholeTV.addGestureRecognizer(tableViewTapGesture)
@@ -392,7 +414,13 @@ class TodoVC: UIViewController {
                 sendButton.setImage(sendButtonEnableImage, for: .normal)
             }
             else{
-                sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+                
+                if traitCollection.userInterfaceStyle == .light {
+                    sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+                }
+                else {
+                    sendButton.setImage(UIImage(named: "dkBtnSendInactive"), for: .normal)
+                }
                 
             }
             
@@ -401,7 +429,7 @@ class TodoVC: UIViewController {
     }
     @IBAction func sendButtonAction(_ sender: Any) {
         if newTextField.text != ""{
-            defaults.setValue(newTextField.text!, forKey: "widget")
+//            defaults.setValue(newTextField.text!, forKey: "widget")
             
             addData(todo: newTextField.text!)
             newTextField.text = ""
@@ -556,6 +584,15 @@ extension TodoVC: UITableViewDataSource{
 //        guard let keys = wholeData!.dict[wholeData!.dict.keys[index]] as? [TodoData] else {return 0}
 //        print("난희?")
 //
+        if section == todoDatas.count-1 {
+            var widgetArr:[String] = []
+            for data in todoDatas[section] {
+                widgetArr.append(data.todo)
+            }
+            
+            defaults.setValue(widgetArr, forKey: "widget")
+        }
+        
         return todoDatas[section].count
     }
     
@@ -722,7 +759,12 @@ extension TodoVC: UITextFieldDelegate{
             sendButton.setImage(sendButtonEnableImage,for: .normal)
         }
         else{
-            sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+            if traitCollection.userInterfaceStyle == .light {
+                sendButton.setImage(UIImage(named: "btnSendInactive"), for: .normal)
+            }
+            else {
+                sendButton.setImage(UIImage(named: "dkBtnSendInactive"), for: .normal)
+            }
             
         }
     }

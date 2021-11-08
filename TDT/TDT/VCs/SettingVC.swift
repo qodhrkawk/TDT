@@ -24,9 +24,12 @@ class SettingVC: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet var colorButtons: [UIButton]!
     
+    @IBOutlet weak var moreButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var underView: UIView!
     let defaults = UserDefaults.standard
     var settingImageNames = ["imgSettings","imgSettingsGr","imgSettingsYl","imgSettingsPk"]
+    var darkSettingImageNames = ["dkImgSettings","dkImgSettingsGr","dkImgSettingsYl","dkImgSettingsPk"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,19 +42,27 @@ class SettingVC: UIViewController, MFMailComposeViewControllerDelegate {
     }
     func setItems(){
         for line in sepLines {
-            line.backgroundColor = .duckEggBlue
+            line.backgroundColor = UIColor(named: "inactiveColor")
         }
-        
+        self.view.backgroundColor = UIColor(named: "bgColor")
+        if traitCollection.userInterfaceStyle == .light {
+            cancelButton.setImage(UIImage(named: "btnClose"), for: .normal)
+           
+        }
+        else {
+            cancelButton.setImage(UIImage(named: "dkBtnClose"), for: .normal)
+        }
     }
     
     func setLabels(){
         for lb in titleLabels {
             lb.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
+            lb.textColor = UIColor(named: "typingTextColor")
         }
         
         for lb in subLabels {
             lb.font = UIFont(name: "GmarketSansTTFMedium", size: 14)
-            lb.textColor = .brownGreyTwo
+            lb.textColor = UIColor(named: "mainTextColor")
         }
         
     }
@@ -69,12 +80,24 @@ class SettingVC: UIViewController, MFMailComposeViewControllerDelegate {
             }
             
         }
-        underView.backgroundColor = .veryLightPinkFive
+        
+        if traitCollection.userInterfaceStyle == .light {
+            moreButton.setImage(UIImage(named: "btnMore"), for: .normal)
+        }
+        else {
+            moreButton.setImage(UIImage(named: "dkBtnMore"), for: .normal)
+
+        }
+        
+        underView.backgroundColor = UIColor(named: "boxColor")
         
     }
     func setMainColor(){
         if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
-            let settingImageName = settingImageNames[mainColorIndex]
+            var settingImageName = settingImageNames[mainColorIndex]
+            if traitCollection.userInterfaceStyle == .dark {
+                settingImageName = darkSettingImageNames[mainColorIndex]
+            }
             settingImage.image = UIImage(named: settingImageName)
         }
         
@@ -117,7 +140,7 @@ class SettingVC: UIViewController, MFMailComposeViewControllerDelegate {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
         mailComposerVC.setSubject("Flick 1:1 문의하기")
-        mailComposerVC.setToRecipients(["yeseul2y@gmail.com"])
+        mailComposerVC.setToRecipients(["flick.todo.official@gmail.com"])
         mailComposerVC.setMessageBody("", isHTML: false)
         return mailComposerVC
     }
@@ -128,6 +151,17 @@ class SettingVC: UIViewController, MFMailComposeViewControllerDelegate {
             print("can send mail")
         } 
     }
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                              didFinishWith result: MFMailComposeResult, error: Error?) {
+       
+        
+        controller.dismiss(animated: true, completion: {
+            self.showToast(text: "전송 완료", withDelay: 2.0)
+        })
+    }
+
+
+    
     
 }
 
