@@ -92,7 +92,6 @@
 		EC5BAD4225D2EAB500F142CB /* FlickWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = FlickWidget.intentdefinition; sourceTree = "<group>"; };
 		EC5BAD4325D2EAB500F142CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC5BAD4525D2EAB500F142CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EC5BAD5225D2F22100F142CB /* FlickWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlickWidgetExtension.entitlements; sourceTree = "<group>"; };
 		EC5BAD5525D2F25E00F142CB /* TDT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDT.entitlements; sourceTree = "<group>"; };
 		EC778C2625BC0B4100EAE775 /* TodoTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTVC.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
@@ -119,6 +118,7 @@
 		ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlDelegate.swift; sourceTree = "<group>"; };
 		ECA1001C25BD8677005BA8D1 /* TodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoData.swift; sourceTree = "<group>"; };
 		ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHeaderView.swift; sourceTree = "<group>"; };
+		ECDA34F327390ED600CED562 /* FlickWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlickWidgetExtension.entitlements; sourceTree = "<group>"; };
 		ECECF13D25C15DCD00C6FA54 /* LaunchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchVC.swift; sourceTree = "<group>"; };
 		ECF8730525B9BD250096E766 /* TDT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF8730825B9BD250096E766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -226,7 +226,7 @@
 		ECF872FC25B9BD250096E766 = {
 			isa = PBXGroup;
 			children = (
-				EC5BAD5225D2F22100F142CB /* FlickWidgetExtension.entitlements */,
+				ECDA34F327390ED600CED562 /* FlickWidgetExtension.entitlements */,
 				ECF8730725B9BD250096E766 /* TDT */,
 				EC5BAD3F25D2EAB500F142CB /* FlickWidget */,
 				ECF8730625B9BD250096E766 /* Products */,
