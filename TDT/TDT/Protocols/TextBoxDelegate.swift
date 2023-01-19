@@ -12,5 +12,4 @@ protocol TextBoxDelegate {
     func leftSwiped(idx: IndexPath)
     func doubleTapped(idx: IndexPath)
     func shouldMove()
-    
 }

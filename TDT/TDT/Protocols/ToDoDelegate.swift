@@ -11,5 +11,4 @@ protocol ToDoDelegate{
     func delete(idx: IndexPath)
     func modify(idx: IndexPath,str: String)
     func disMissed(idx: IndexPath)
-    
 }

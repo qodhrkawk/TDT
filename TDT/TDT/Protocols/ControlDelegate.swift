@@ -8,6 +8,5 @@
 import Foundation
 
 protocol ControlDelegate {
-
     func moveTo(idx: Int)
 }
