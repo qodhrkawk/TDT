@@ -20,7 +20,7 @@
 		EC9D7B4E25BB0A1B00453FE8 /* GmarketSansTTFLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4B25BB0A1200453FE8 /* GmarketSansTTFLight.ttf */; };
 		EC9D7B5025BB0A1E00453FE8 /* GmarketSansTTFMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4A25BB0A1200453FE8 /* GmarketSansTTFMedium.ttf */; };
 		EC9D7B5325BB36A500453FE8 /* Alert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B5225BB36A500453FE8 /* Alert.storyboard */; };
-		EC9D7B5625BB36B400453FE8 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B5525BB36B400453FE8 /* AlertVC.swift */; };
+		EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B5525BB36B400453FE8 /* AlertViewController.swift */; };
 		EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B5925BB394D00453FE8 /* TextBoxDelegate.swift */; };
 		ECA1000425BD71CF005BA8D1 /* Archive.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECA1000325BD71CF005BA8D1 /* Archive.storyboard */; };
 		ECA1000725BD71E8005BA8D1 /* ArchiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */; };
@@ -78,7 +78,7 @@
 		EC9D7B4A25BB0A1200453FE8 /* GmarketSansTTFMedium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFMedium.ttf; sourceTree = "<group>"; };
 		EC9D7B4B25BB0A1200453FE8 /* GmarketSansTTFLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFLight.ttf; sourceTree = "<group>"; };
 		EC9D7B5225BB36A500453FE8 /* Alert.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Alert.storyboard; sourceTree = "<group>"; };
-		EC9D7B5525BB36B400453FE8 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
+		EC9D7B5525BB36B400453FE8 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		EC9D7B5925BB394D00453FE8 /* TextBoxDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBoxDelegate.swift; sourceTree = "<group>"; };
 		ECA1000325BD71CF005BA8D1 /* Archive.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Archive.storyboard; sourceTree = "<group>"; };
 		ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveVC.swift; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 			children = (
 				ECF8732625B9BDDC0096E766 /* TodoVC.swift */,
 				ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */,
-				EC9D7B5525BB36B400453FE8 /* AlertVC.swift */,
+				EC9D7B5525BB36B400453FE8 /* AlertViewController.swift */,
 				ECA1001225BD7C74005BA8D1 /* ControlViewController.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPageViewController.swift */,
 				EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */,
@@ -416,7 +416,7 @@
 				ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */,
 				ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */,
 				ECA1000B25BD739A005BA8D1 /* ArchiveTVC.swift in Sources */,
-				EC9D7B5625BB36B400453FE8 /* AlertVC.swift in Sources */,
+				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
 				EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */,

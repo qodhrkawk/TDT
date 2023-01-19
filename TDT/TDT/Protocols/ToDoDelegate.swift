@@ -7,8 +7,8 @@
 
 import Foundation
 
-protocol ToDoDelegate{
-    func delete(idx: IndexPath)
-    func modify(idx: IndexPath,str: String)
-    func disMissed(idx: IndexPath)
+protocol ToDoDelegate: AnyObject {
+    func delete(indexPath: IndexPath)
+    func modify(indexPath: IndexPath,str: String)
+    func dismissed(indexPath: IndexPath)
 }

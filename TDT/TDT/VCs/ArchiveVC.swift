@@ -116,9 +116,9 @@ class ArchiveVC: UIViewController {
     @objc func leftSwiped2(){
         pageControlDelegate?.moveToViewController(to: 1)
     }
-    func myDeleteRow(idx: IndexPath,isBack: Bool){
+    func myDeleteRow(indexPath: IndexPath,isBack: Bool){
         wholeTV.beginUpdates()
-        let inputTodo = archiveDatas[idx.section][idx.row]
+        let inputTodo = archiveDatas[indexPath.section][indexPath.row]
         if isBack {
             if let todoDate = defaults.stringArray(forKey: "dates") {
                 var tmpTodoDate = todoDate
@@ -192,24 +192,24 @@ class ArchiveVC: UIViewController {
             
         }
         
-        archiveDatas[idx.section].remove(at: idx.row)
+        archiveDatas[indexPath.section].remove(at: indexPath.row)
         
         
         
         // 삭제 (날짜 + 데이터)
-        if archiveDatas[idx.section].count == 0{
-            archiveDatas.remove(at: idx.section)
+        if archiveDatas[indexPath.section].count == 0{
+            archiveDatas.remove(at: indexPath.section)
         }
         
         defaults.set(try? PropertyListEncoder().encode(archiveDatas), forKey: "ArchiveDatas")
         
-        if wholeTV.numberOfRows(inSection: idx.section) == 1 {
-            dateInfo.remove(at: idx.section)
+        if wholeTV.numberOfRows(inSection: indexPath.section) == 1 {
+            dateInfo.remove(at: indexPath.section)
             defaults.setValue(dateInfo, forKey: "ArchiveDates")
-            wholeTV.deleteSections([idx.section], with: .fade)
+            wholeTV.deleteSections([indexPath.section], with: .fade)
         }
         else{
-            wholeTV.deleteRows(at: [idx], with: .fade)
+            wholeTV.deleteRows(at: [indexPath], with: .fade)
         }
         
         wholeTV.endUpdates()
@@ -390,13 +390,13 @@ extension ArchiveVC: UITableViewDataSource{
 }
 
 extension ArchiveVC: TextBoxDelegate {
-    func longTapped(idx: IndexPath) {
+    func longTapped(indexPath: IndexPath) {
         feedbackGenerator?.impactOccurred()
         self.view.endEditing(true)
-        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
+        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         
-        vcName.myText = archiveDatas[idx.section][idx.row].todo
-        vcName.idx = idx
+        vcName.contentText = archiveDatas[indexPath.section][indexPath.row].todo
+        vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.fromArchive = true
         vcName.modalPresentationStyle = .overCurrentContext
@@ -405,17 +405,17 @@ extension ArchiveVC: TextBoxDelegate {
         self.present(vcName, animated: false, completion: nil)
     }
     
-    func leftSwiped(idx: IndexPath) {
+    func leftSwiped(indexPath: IndexPath) {
         
-        myDeleteRow(idx: idx,isBack: true)
+        myDeleteRow(indexPath: indexPath, isBack: true)
     }
     
     func shouldMove() {
         pageControlDelegate?.moveToViewController(to: 1)
     }
     
-    func doubleTapped(idx: IndexPath) {
-        archiveDatas[idx.section][idx.row].isImportant = !archiveDatas[idx.section][idx.row].isImportant
+    func doubleTapped(indexPath: IndexPath) {
+        archiveDatas[indexPath.section][indexPath.row].isImportant = !archiveDatas[indexPath.section][indexPath.row].isImportant
         wholeTV.reloadData()
         defaults.set(try? PropertyListEncoder().encode(archiveDatas),forKey: "ArchiveDatas")
     }
@@ -433,19 +433,19 @@ extension ArchiveVC: UITextFieldDelegate{
 }
 
 extension ArchiveVC: ToDoDelegate{
-    func modify(idx: IndexPath, str: String) {
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? ArchiveTVC else { return}
+    func modify(indexPath: IndexPath, str: String) {
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTVC else { return}
         
         cell.wasLongTapped = false
-        archiveDatas[idx.section][idx.row].todo = str
+        archiveDatas[indexPath.section][indexPath.row].todo = str
         defaults.set(try? PropertyListEncoder().encode(archiveDatas),forKey: "ArchiveDatas")
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
     }
     
-    func delete(idx: IndexPath){
-        myDeleteRow(idx: idx,isBack: false)
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? ArchiveTVC else { return}
+    func delete(indexPath: IndexPath){
+        myDeleteRow(indexPath: indexPath,isBack: false)
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTVC else { return}
         
         cell.wasLongTapped = false
         
@@ -454,8 +454,8 @@ extension ArchiveVC: ToDoDelegate{
     }
     
     
-    func disMissed(idx: IndexPath) {
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? ArchiveTVC else { return}
+    func dismissed(indexPath: IndexPath) {
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTVC else { return}
         print("왜?")
         cell.wasLongTapped = false
     }

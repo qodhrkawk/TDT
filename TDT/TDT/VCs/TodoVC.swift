@@ -635,13 +635,13 @@ extension TodoVC: UITableViewDataSource{
 }
 
 extension TodoVC: TextBoxDelegate {
-    func longTapped(idx: IndexPath) {
+    func longTapped(indexPath: IndexPath) {
         feedbackGenerator?.impactOccurred()
-        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertVC") as? AlertVC else {return}
+        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         self.view.endEditing(true)
-        vcName.myText = todoDatas[idx.section][idx.row].todo
+        vcName.contentText = todoDatas[indexPath.section][indexPath.row].todo
         
-        vcName.idx = idx
+        vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
         
@@ -649,9 +649,9 @@ extension TodoVC: TextBoxDelegate {
         self.present(vcName, animated: false, completion: nil)
     }
     
-    func leftSwiped(idx: IndexPath) {
+    func leftSwiped(indexPath: IndexPath) {
         
-        myDeleteRow(idx: idx,isEnd: true)
+        myDeleteRow(indexPath: indexPath,isEnd: true)
         
         
     }
@@ -659,13 +659,13 @@ extension TodoVC: TextBoxDelegate {
         pageControlDelegate?.moveToViewController(to: 0)
     }
     
-    func doubleTapped(idx: IndexPath) {
-        todoDatas[idx.section][idx.row].isImportant = !todoDatas[idx.section][idx.row].isImportant
+    func doubleTapped(indexPath: IndexPath) {
+        todoDatas[indexPath.section][indexPath.row].isImportant = !todoDatas[indexPath.section][indexPath.row].isImportant
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         wholeTV.reloadData()
     }
     
-    func myDeleteRow(idx: IndexPath,isEnd: Bool){
+    func myDeleteRow(indexPath: IndexPath,isEnd: Bool){
 
         wholeTV.beginUpdates()
         
@@ -688,20 +688,20 @@ extension TodoVC: TextBoxDelegate {
                             // 원래 있던 날짜
                             if dateString == archiveDate[i] {
                                 flag = true
-                                archiveTmpData![i].append(todoDatas[idx.section][idx.row])
+                                archiveTmpData![i].append(todoDatas[indexPath.section][indexPath.row])
                             }
                         }
                         
                         // 날짜 추가해야함
                         if !flag {
-                            archiveTmpData!.insert([todoDatas[idx.section][idx.row]], at: 0)
+                            archiveTmpData!.insert([todoDatas[indexPath.section][indexPath.row]], at: 0)
                             archiveTmpDate.insert(dateString, at: 0)
 
                         }
                         
                     }
                     else {
-                        archiveTmpData = [[todoDatas[idx.section][idx.row]]]
+                        archiveTmpData = [[todoDatas[indexPath.section][indexPath.row]]]
                         archiveTmpDate = [dateString]
                         
                         userDefaults.setValue([dateString], forKey: "ArchiveDates")
@@ -716,29 +716,29 @@ extension TodoVC: TextBoxDelegate {
             }
             // 기존에 archive data 없음
             else {
-                userDefaults.set(try? PropertyListEncoder().encode([[todoDatas[idx.section][idx.row]]]),forKey: "ArchiveDatas")
+                userDefaults.set(try? PropertyListEncoder().encode([[todoDatas[indexPath.section][indexPath.row]]]),forKey: "ArchiveDatas")
                 userDefaults.setValue([dateString], forKey: "ArchiveDates")
             }
 
         }
         
-        todoDatas[idx.section].remove(at: idx.row)
+        todoDatas[indexPath.section].remove(at: indexPath.row)
      
         // 삭제 (날짜 + 데이터)
-        if todoDatas[idx.section].count == 0{
+        if todoDatas[indexPath.section].count == 0{
             //            wholeData!.dict.removeValue(forKey: wholeData!.dict.keys[index])
-            todoDatas.remove(at: idx.section)
+            todoDatas.remove(at: indexPath.section)
         }
         
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         
-        if wholeTV.numberOfRows(inSection: idx.section) == 1 {
-            dateInfo.remove(at: idx.section)
+        if wholeTV.numberOfRows(inSection: indexPath.section) == 1 {
+            dateInfo.remove(at: indexPath.section)
             userDefaults.setValue(dateInfo, forKey: "dates")
-            wholeTV.deleteSections([idx.section], with: .fade)
+            wholeTV.deleteSections([indexPath.section], with: .fade)
         }
         else{
-            wholeTV.deleteRows(at: [idx], with: .fade)
+            wholeTV.deleteRows(at: [indexPath], with: .fade)
         }
         
         wholeTV.endUpdates()
@@ -770,29 +770,29 @@ extension TodoVC: UITextFieldDelegate{
     
 }
 
-extension TodoVC: ToDoDelegate{
-    func delete(idx: IndexPath){
-        myDeleteRow(idx: idx,isEnd: false)
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+extension TodoVC: ToDoDelegate {
+    func delete(indexPath: IndexPath){
+        myDeleteRow(indexPath: indexPath, isEnd: false)
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
         
         cell.wasLongTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
-    func modify(idx: IndexPath,str: String){
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+    func modify(indexPath: IndexPath, str: String){
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
         
         cell.wasLongTapped = false
         
-        todoDatas[idx.section][idx.row].todo = str
+        todoDatas[indexPath.section][indexPath.row].todo = str
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
-        wholeTV.scrollToRow(at: idx, at: .middle, animated: true)
+        wholeTV.scrollToRow(at: indexPath, at: .middle, animated: true)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     
-    func disMissed(idx: IndexPath) {
-        guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
+    func dismissed(indexPath: IndexPath) {
+        guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
         print("왜?")
         cell.wasLongTapped = false
     }

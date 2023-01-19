@@ -143,7 +143,7 @@ class ArchiveTVC: UITableViewCell {
         highLightView.backgroundColor = TodoVC.mainColor
         
      
-        textBoxDelegate?.doubleTapped(idx: myIndexpath!)
+        textBoxDelegate?.doubleTapped(indexPath: myIndexpath!)
        
     }
     @objc func leftSwiped(){
@@ -180,7 +180,7 @@ class ArchiveTVC: UITableViewCell {
             self.highLightView.transform = CGAffineTransform(translationX: 400, y: 0)
             
         }, completion: { finish in
-            self.textBoxDelegate?.leftSwiped(idx: self.myIndexpath!)
+            self.textBoxDelegate?.leftSwiped(indexPath: self.myIndexpath!)
             UIView.animate(withDuration: 0,delay: 0.3, animations: {
                 self.deleteImage.alpha = 0
                 self.containView.transform = .identity
@@ -203,7 +203,7 @@ class ArchiveTVC: UITableViewCell {
 //        }
         if !wasLongTapped{
             wasLongTapped = true
-            textBoxDelegate?.longTapped(idx: myIndexpath!)
+            textBoxDelegate?.longTapped(indexPath: myIndexpath!)
             
         }
         
