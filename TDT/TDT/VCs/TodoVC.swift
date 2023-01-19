@@ -41,7 +41,7 @@ class TodoVC: UIViewController {
     var nowOffset = CGPoint(x: 0, y: 0)
     var feedbackGenerator: UIImpactFeedbackGenerator?
     var keyboardFlag = false
-    var controlDelegate: ControlDelegate?
+    weak var pageControlDelegate: PageControlDelegate?
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     var emptyView = EmptyView(type: .main)
     var sendButtonEnableImage: UIImage?
@@ -327,7 +327,7 @@ class TodoVC: UIViewController {
     }
     @objc func rightSwiped() {
     
-        controlDelegate?.moveTo(idx: 0)
+        pageControlDelegate?.moveToViewController(to: 0)
     }
     
     
@@ -396,7 +396,7 @@ class TodoVC: UIViewController {
     
     
     @IBAction func archiveButtonAction(_ sender: Any) {
-        controlDelegate?.moveTo(idx: 0)
+        pageControlDelegate?.moveToViewController(to: 0)
     }
     
     
@@ -656,7 +656,7 @@ extension TodoVC: TextBoxDelegate {
         
     }
     func shouldMove() {
-        controlDelegate?.moveTo(idx: 0)
+        pageControlDelegate?.moveToViewController(to: 0)
     }
     
     func doubleTapped(idx: IndexPath) {

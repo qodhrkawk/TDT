@@ -24,7 +24,8 @@ class ArchiveVC: UIViewController {
     var delaySection = -1
     var feedbackGenerator: UIImpactFeedbackGenerator?
     var emptyView = EmptyView(type: .archive)
-    var controlDelegate: ControlDelegate?
+    
+    weak var pageControlDelegate: PageControlDelegate?
     
     var archiveImageNames = ["imgArchive","imgArchiveGr","imgArchiveYl","imgArchivePk"]
     var darkArchiveImageNames = ["dkImgArchive","dkImgArchiveGr","dkImgArchiveYl","dkImgArchivePk"]
@@ -113,8 +114,7 @@ class ArchiveVC: UIViewController {
         
     }
     @objc func leftSwiped2(){
-        controlDelegate?.moveTo(idx: 1)
-        
+        pageControlDelegate?.moveToViewController(to: 1)
     }
     func myDeleteRow(idx: IndexPath,isBack: Bool){
         wholeTV.beginUpdates()
@@ -217,10 +217,8 @@ class ArchiveVC: UIViewController {
     }
     
     @IBAction func mainButtonAction(_ sender: Any) {
-        controlDelegate?.moveTo(idx: 1)
+        pageControlDelegate?.moveToViewController(to: 1)
     }
-    
-    
 }
 
 extension ArchiveVC: UITableViewDelegate{
@@ -410,12 +408,10 @@ extension ArchiveVC: TextBoxDelegate {
     func leftSwiped(idx: IndexPath) {
         
         myDeleteRow(idx: idx,isBack: true)
-        
-        
     }
+    
     func shouldMove() {
-        controlDelegate?.moveTo(idx: 1)
-        
+        pageControlDelegate?.moveToViewController(to: 1)
     }
     
     func doubleTapped(idx: IndexPath) {
