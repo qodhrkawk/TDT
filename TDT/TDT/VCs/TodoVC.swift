@@ -10,9 +10,7 @@ import UIKit
 
 class TodoVC: UIViewController {
     
-    
-    var myStr = "왼쪽으로밀어서완료aaaaaaanaa"
-    let defaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.standard
 
     var dateInfo: [String] = []
     
@@ -97,7 +95,7 @@ class TodoVC: UIViewController {
     }
     
     func setMainColor(){
-        if let mainColorIndex = defaults.value(forKey: "mainColor") as? Int {
+        if let mainColorIndex = userDefaults.value(forKey: "mainColor") as? Int {
             TodoVC.mainColor = TodoVC.colors[mainColorIndex]
             var flickImageName = flickImages[mainColorIndex]
             let sendButtonImageName = sendButtonImages[mainColorIndex]
@@ -115,7 +113,7 @@ class TodoVC: UIViewController {
     }
     
     func setData(){
-        if let savedData = defaults.value(forKey: "TodoDatas") as? Data{
+        if let savedData = userDefaults.value(forKey: "TodoDatas") as? Data{
             let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
             
             
@@ -129,7 +127,7 @@ class TodoVC: UIViewController {
         
         if todoDatas.count > 0 {
             
-            if let tmpDate = defaults.stringArray(forKey: "dates") {
+            if let tmpDate = userDefaults.stringArray(forKey: "dates") {
                 dateInfo = tmpDate
             }
             
@@ -143,7 +141,7 @@ class TodoVC: UIViewController {
     }
     
     func initialThreeBoxes(){
-        if let data = defaults.string(forKey: "initiated") {
+        if let data = userDefaults.string(forKey: "initiated") {
             return
         }
         else{
@@ -157,10 +155,10 @@ class TodoVC: UIViewController {
           
             dateInfo.append(dateString)
             
-            defaults.setValue(dateInfo, forKey: "dates")
+            userDefaults.setValue(dateInfo, forKey: "dates")
             
-            defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
-            defaults.setValue("yes", forKey: "initiated")
+            userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+            userDefaults.setValue("yes", forKey: "initiated")
         }
         
     }
@@ -341,7 +339,7 @@ class TodoVC: UIViewController {
         
         // 기존 데이터가 1개 이상
         if todoDatas.count > 0 {
-            if let myDate = defaults.stringArray(forKey: "dates") {
+            if let myDate = userDefaults.stringArray(forKey: "dates") {
                 
                 // 마지막이 같은 날짜이면
                 if dateInfo[todoDatas.count-1] == dateString {
@@ -354,7 +352,7 @@ class TodoVC: UIViewController {
                 else{
                     var tmpDate = myDate
                     tmpDate.append(dateString)
-                    defaults.setValue(tmpDate, forKey: "dates")
+                    userDefaults.setValue(tmpDate, forKey: "dates")
                     dateInfo.append(dateString)
 //                    wholeData!.dict[wholeData!.dict.count] = [TodoData(date: dateString, todo: todo, isImportant: false)]
                     todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
@@ -367,7 +365,7 @@ class TodoVC: UIViewController {
         else{
             let newDate = [dateString]
             
-            defaults.setValue(newDate, forKey: "dates")
+            userDefaults.setValue(newDate, forKey: "dates")
             
 //            wholeData!.dict[0] = [TodoData(date: dateString, todo: todo, isImportant: false)]
             todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
@@ -378,7 +376,7 @@ class TodoVC: UIViewController {
             
         }
         
-        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
 //        defaults.set(try? PropertyListEncoder().encode(wholeData!.dict), forKey: "wholeData")
         
         wholeTV.reloadData()
@@ -429,8 +427,6 @@ class TodoVC: UIViewController {
     }
     @IBAction func sendButtonAction(_ sender: Any) {
         if newTextField.text != ""{
-//            defaults.setValue(newTextField.text!, forKey: "widget")
-            
             addData(todo: newTextField.text!)
             newTextField.text = ""
             
@@ -441,10 +437,15 @@ class TodoVC: UIViewController {
     
     
     @IBAction func settingButtonAction(_ sender: Any) {
-        guard let settingVC = UIStoryboard(name: "Setting", bundle: nil).instantiateViewController(identifier: "SettingVC") as? SettingVC else {return}
-        settingVC.modalPresentationStyle = .fullScreen
-        self.present(settingVC, animated: true, completion: nil)
-        
+        guard let settingViewController = UIStoryboard(
+            name: "Setting",
+            bundle: nil
+        ).instantiateViewController(
+            identifier: "SettingViewController"
+        ) as? SettingViewController else { return }
+
+        settingViewController.modalPresentationStyle = .fullScreen
+        self.present(settingViewController, animated: true, completion: nil)
     }
     
 }
@@ -590,7 +591,7 @@ extension TodoVC: UITableViewDataSource{
                 widgetArr.append(data.todo)
             }
             
-            defaults.setValue(widgetArr, forKey: "widget")
+            userDefaults.setValue(widgetArr, forKey: "widget")
         }
         
         return todoDatas[section].count
@@ -659,10 +660,8 @@ extension TodoVC: TextBoxDelegate {
     }
     
     func doubleTapped(idx: IndexPath) {
-      
-        
         todoDatas[idx.section][idx.row].isImportant = !todoDatas[idx.section][idx.row].isImportant
-        defaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
+        userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         wholeTV.reloadData()
     }
     
@@ -675,12 +674,12 @@ extension TodoVC: TextBoxDelegate {
             dateFormatter.dateFormat = "yyyy.MM.dd"
             let date = Date()
             let dateString = dateFormatter.string(from: date)
-            if let savedData = defaults.value(forKey: "ArchiveDatas") as? Data{
+            if let savedData = userDefaults.value(forKey: "ArchiveDatas") as? Data{
                 let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
                 
                 var archiveTmpData = originalData
                 
-                if let archiveDate = defaults.stringArray(forKey: "ArchiveDates") {
+                if let archiveDate = userDefaults.stringArray(forKey: "ArchiveDates") {
                     var archiveTmpDate = archiveDate
                     if archiveDate.count > 0 {
                         var flag = false
@@ -705,20 +704,20 @@ extension TodoVC: TextBoxDelegate {
                         archiveTmpData = [[todoDatas[idx.section][idx.row]]]
                         archiveTmpDate = [dateString]
                         
-                        defaults.setValue([dateString], forKey: "ArchiveDates")
+                        userDefaults.setValue([dateString], forKey: "ArchiveDates")
                         
                     }
-                    defaults.setValue(archiveTmpDate, forKey: "ArchiveDates")
+                    userDefaults.setValue(archiveTmpDate, forKey: "ArchiveDates")
                     
                 }
                 
-                defaults.set(try? PropertyListEncoder().encode(archiveTmpData),forKey: "ArchiveDatas")
+                userDefaults.set(try? PropertyListEncoder().encode(archiveTmpData),forKey: "ArchiveDatas")
                 
             }
             // 기존에 archive data 없음
             else {
-                defaults.set(try? PropertyListEncoder().encode([[todoDatas[idx.section][idx.row]]]),forKey: "ArchiveDatas")
-                defaults.setValue([dateString], forKey: "ArchiveDates")
+                userDefaults.set(try? PropertyListEncoder().encode([[todoDatas[idx.section][idx.row]]]),forKey: "ArchiveDatas")
+                userDefaults.setValue([dateString], forKey: "ArchiveDates")
             }
 
         }
@@ -731,11 +730,11 @@ extension TodoVC: TextBoxDelegate {
             todoDatas.remove(at: idx.section)
         }
         
-        defaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
+        userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         
         if wholeTV.numberOfRows(inSection: idx.section) == 1 {
             dateInfo.remove(at: idx.section)
-            defaults.setValue(dateInfo, forKey: "dates")
+            userDefaults.setValue(dateInfo, forKey: "dates")
             wholeTV.deleteSections([idx.section], with: .fade)
         }
         else{
@@ -778,7 +777,7 @@ extension TodoVC: ToDoDelegate{
         
         cell.wasLongTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
-        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     func modify(idx: IndexPath,str: String){
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: idx.row, section: idx.section)) as? TodoTVC else { return}
@@ -789,7 +788,7 @@ extension TodoVC: ToDoDelegate{
         wholeTV.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
         wholeTV.scrollToRow(at: idx, at: .middle, animated: true)
-        defaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     
     func disMissed(idx: IndexPath) {

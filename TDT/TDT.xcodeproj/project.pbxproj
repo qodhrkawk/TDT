@@ -11,7 +11,7 @@
 		EC778C2725BC0B4100EAE775 /* TodoTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTVC.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
 		EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */; };
-		EC7B933B25C847EB00AF3BFA /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingVC.swift */; };
+		EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */; };
 		EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */; };
 		EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC8C587125C7B7BF004A5C67 /* Setting.storyboard */; };
 		EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */; };
@@ -69,7 +69,7 @@
 		EC778C2625BC0B4100EAE775 /* TodoTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTVC.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
 		EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFirstHeaderView.swift; sourceTree = "<group>"; };
-		EC7B933A25C847EB00AF3BFA /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
+		EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
 		EC8C587125C7B7BF004A5C67 /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
 		EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
@@ -228,7 +228,7 @@
 				EC9D7B5525BB36B400453FE8 /* AlertVC.swift */,
 				ECA1001225BD7C74005BA8D1 /* ControlVC.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */,
-				EC7B933A25C847EB00AF3BFA /* SettingVC.swift */,
+				EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -399,7 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */,
-				EC7B933B25C847EB00AF3BFA /* SettingVC.swift in Sources */,
+				EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */,
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
