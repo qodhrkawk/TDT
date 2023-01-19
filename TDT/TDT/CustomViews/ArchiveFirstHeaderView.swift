@@ -8,45 +8,38 @@
 import UIKit
 
 class ArchiveFirstHeaderView: UIView {
-
-  
-    var dateLabel = UILabel().then {
+    private var dateLabel = UILabel().then {
         $0.text = ""
         $0.font = UIFont(name: "GmarketSansTTFLight", size: 12)
         $0.textColor = .brownGreyTwo
-
     }
     
-    var highLightView = UIView().then {
+    private var highLightView = UIView().then {
         if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
             $0.backgroundColor = TodoVC.colors[mainColorIndex]
             $0.alpha = 0.2
         }
-        
-        
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
-        addView()
+
         if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
             highLightView.backgroundColor = TodoVC.colors[mainColorIndex]
         }
         
-        setAutoLayout()
-        
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addView(){
+    private func setupLayout(){
         self.addSubview(dateLabel)
         self.addSubview(highLightView)
-    }
-    func setAutoLayout(){
+
         dateLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(6)
             $0.leading.equalToSuperview().offset(23)
@@ -56,13 +49,10 @@ class ArchiveFirstHeaderView: UIView {
             $0.leading.equalTo(dateLabel)
             $0.height.equalTo(9)
             $0.trailing.equalTo(self.dateLabel)
-            
         }
     }
     
     func startAnimation(){
-
-        print("지금")
         self.highLightView.snp.remakeConstraints{
             $0.bottom.equalTo(self.dateLabel.snp.bottom)
             $0.leading.equalTo(self.dateLabel)
@@ -73,14 +63,10 @@ class ArchiveFirstHeaderView: UIView {
         self.alpha = 0
         UIView.animate(withDuration: 5.0, animations: {
             self.alpha = 1
-//            self.layoutIfNeeded()
-
         })
     }
     
     func setDate(date: String){
         dateLabel.text = date
     }
-    
-
 }

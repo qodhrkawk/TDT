@@ -45,7 +45,7 @@ class TodoVC: UIViewController {
     var keyboardFlag = false
     var controlDelegate: ControlDelegate?
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
-    var emptyView = FlickEmptyView()
+    var emptyView = EmptyView(type: .main)
     var sendButtonEnableImage: UIImage?
     
     override func viewDidLoad() {

@@ -23,7 +23,7 @@ class ArchiveVC: UIViewController {
     var leftSwipe2 = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped2))
     var delaySection = -1
     var feedbackGenerator: UIImpactFeedbackGenerator?
-    var emptyView = ArchiveEmptyView()
+    var emptyView = EmptyView(type: .archive)
     var controlDelegate: ControlDelegate?
     
     var archiveImageNames = ["imgArchive","imgArchiveGr","imgArchiveYl","imgArchivePk"]

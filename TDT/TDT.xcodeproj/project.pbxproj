@@ -11,8 +11,6 @@
 		EC778C2725BC0B4100EAE775 /* TodoTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTVC.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
 		EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */; };
-		EC7B009C25C301B100360A39 /* FlickEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B009B25C301B100360A39 /* FlickEmptyView.swift */; };
-		EC7B009F25C303F800360A39 /* ArchiveEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B009E25C303F800360A39 /* ArchiveEmptyView.swift */; };
 		EC7B933B25C847EB00AF3BFA /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingVC.swift */; };
 		EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */; };
 		EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC8C587125C7B7BF004A5C67 /* Setting.storyboard */; };
@@ -33,7 +31,7 @@
 		ECA1001925BD8273005BA8D1 /* ControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */; };
 		ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
 		ECA1002125BD981C005BA8D1 /* FirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */; };
-		ECECF13E25C15DCD00C6FA54 /* LaunchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECF13D25C15DCD00C6FA54 /* LaunchVC.swift */; };
+		ECBCC33F29796EFE00E7C0E5 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */; };
 		ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730825B9BD250096E766 /* AppDelegate.swift */; };
 		ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730A25B9BD250096E766 /* SceneDelegate.swift */; };
 		ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730C25B9BD250096E766 /* ViewController.swift */; };
@@ -71,8 +69,6 @@
 		EC778C2625BC0B4100EAE775 /* TodoTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTVC.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
 		EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFirstHeaderView.swift; sourceTree = "<group>"; };
-		EC7B009B25C301B100360A39 /* FlickEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickEmptyView.swift; sourceTree = "<group>"; };
-		EC7B009E25C303F800360A39 /* ArchiveEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEmptyView.swift; sourceTree = "<group>"; };
 		EC7B933A25C847EB00AF3BFA /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
 		EC8C587125C7B7BF004A5C67 /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
@@ -93,8 +89,8 @@
 		ECA1001825BD8273005BA8D1 /* ControlDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlDelegate.swift; sourceTree = "<group>"; };
 		ECA1001C25BD8677005BA8D1 /* TodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoData.swift; sourceTree = "<group>"; };
 		ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHeaderView.swift; sourceTree = "<group>"; };
+		ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		ECDA34F42739123D00CED562 /* TDT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDT.entitlements; sourceTree = "<group>"; };
-		ECECF13D25C15DCD00C6FA54 /* LaunchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchVC.swift; sourceTree = "<group>"; };
 		ECF8730525B9BD250096E766 /* TDT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF8730825B9BD250096E766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ECF8730A25B9BD250096E766 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -232,7 +228,6 @@
 				EC9D7B5525BB36B400453FE8 /* AlertVC.swift */,
 				ECA1001225BD7C74005BA8D1 /* ControlVC.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPVC.swift */,
-				ECECF13D25C15DCD00C6FA54 /* LaunchVC.swift */,
 				EC7B933A25C847EB00AF3BFA /* SettingVC.swift */,
 			);
 			path = VCs;
@@ -266,8 +261,7 @@
 				ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */,
 				ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */,
 				EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */,
-				EC7B009B25C301B100360A39 /* FlickEmptyView.swift */,
-				EC7B009E25C303F800360A39 /* ArchiveEmptyView.swift */,
+				ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -416,7 +410,7 @@
 				EC778C2725BC0B4100EAE775 /* TodoTVC.swift in Sources */,
 				ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */,
 				ECA1001925BD8273005BA8D1 /* ControlDelegate.swift in Sources */,
-				EC7B009F25C303F800360A39 /* ArchiveEmptyView.swift in Sources */,
+				ECBCC33F29796EFE00E7C0E5 /* EmptyView.swift in Sources */,
 				ECA1002125BD981C005BA8D1 /* FirstHeaderView.swift in Sources */,
 				ECA1001625BD7CCA005BA8D1 /* ControlPVC.swift in Sources */,
 				ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */,
@@ -428,9 +422,7 @@
 				EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */,
 				ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */,
 				ECF8732725B9BDDC0096E766 /* TodoVC.swift in Sources */,
-				EC7B009C25C301B100360A39 /* FlickEmptyView.swift in Sources */,
 				ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */,
-				ECECF13E25C15DCD00C6FA54 /* LaunchVC.swift in Sources */,
 				ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
