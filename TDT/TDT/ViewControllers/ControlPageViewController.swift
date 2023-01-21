@@ -1,12 +1,12 @@
 import UIKit
 
 class ControlPageViewController: UIPageViewController {
-    let identifiers = ["ArchiveVC","TodoVC"]
+    let identifiers = ["ArchiveVC","TodoViewController"]
 
     lazy var viewControllerArray : [UIViewController] = {
         return [
             self.viewControllerInstance(storyboardName: "Archive", viewControllerName: "ArchiveVC"),
-            self.viewControllerInstance(storyboardName: "Todo", viewControllerName: "TodoVC")
+            self.viewControllerInstance(storyboardName: "Todo", viewControllerName: "TodoViewController")
         ]
     }()
     

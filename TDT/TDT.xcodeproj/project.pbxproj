@@ -32,6 +32,10 @@
 		ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
 		ECA1002125BD981C005BA8D1 /* FirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */; };
 		ECBCC33F29796EFE00E7C0E5 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */; };
+		ECD004E7297BCF1A0043972F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E6297BCF1A0043972F /* Theme.swift */; };
+		ECD004EA297BD05A0043972F /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E9297BD05A0043972F /* ThemeManager.swift */; };
+		ECD004ED297BD1A00043972F /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */; };
+		ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */; };
 		ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730825B9BD250096E766 /* AppDelegate.swift */; };
 		ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730A25B9BD250096E766 /* SceneDelegate.swift */; };
 		ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730C25B9BD250096E766 /* ViewController.swift */; };
@@ -39,7 +43,7 @@
 		ECF8731225B9BD270096E766 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECF8731125B9BD270096E766 /* Assets.xcassets */; };
 		ECF8731525B9BD270096E766 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECF8731325B9BD270096E766 /* LaunchScreen.storyboard */; };
 		ECF8732425B9BDC80096E766 /* Todo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECF8732325B9BDC80096E766 /* Todo.storyboard */; };
-		ECF8732725B9BDDC0096E766 /* TodoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8732625B9BDDC0096E766 /* TodoVC.swift */; };
+		ECF8732725B9BDDC0096E766 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8732625B9BDDC0096E766 /* TodoViewController.swift */; };
 		ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */; };
 		ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */; };
 		ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */; };
@@ -90,6 +94,10 @@
 		ECA1001C25BD8677005BA8D1 /* TodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoData.swift; sourceTree = "<group>"; };
 		ECA1002025BD981C005BA8D1 /* FirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstHeaderView.swift; sourceTree = "<group>"; };
 		ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
+		ECD004E6297BCF1A0043972F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		ECD004E9297BD05A0043972F /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsWrapper.swift; sourceTree = "<group>"; };
+		ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultKeys.swift; sourceTree = "<group>"; };
 		ECDA34F42739123D00CED562 /* TDT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDT.entitlements; sourceTree = "<group>"; };
 		ECF8730525B9BD250096E766 /* TDT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF8730825B9BD250096E766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -100,7 +108,7 @@
 		ECF8731425B9BD270096E766 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ECF8731625B9BD270096E766 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ECF8732325B9BDC80096E766 /* Todo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Todo.storyboard; sourceTree = "<group>"; };
-		ECF8732625B9BDDC0096E766 /* TodoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoVC.swift; sourceTree = "<group>"; };
+		ECF8732625B9BDDC0096E766 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDelegate.swift; sourceTree = "<group>"; };
 		ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extensions.swift"; sourceTree = "<group>"; };
@@ -162,15 +170,32 @@
 			isa = PBXGroup;
 			children = (
 				ECA1001C25BD8677005BA8D1 /* TodoData.swift */,
+				ECD004E6297BCF1A0043972F /* Theme.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		ECD004E8297BD04C0043972F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				ECD004E9297BD05A0043972F /* ThemeManager.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		ECD004EB297BD1930043972F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */,
+				ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		ECF872FC25B9BD250096E766 = {
 			isa = PBXGroup;
 			children = (
 				ECDA34F42739123D00CED562 /* TDT.entitlements */,
-				ECA1001B25BD8663005BA8D1 /* Data */,
 				ECF8730725B9BD250096E766 /* TDT */,
 				ECF8730625B9BD250096E766 /* Products */,
 				F75BC93B1CF8FB6787B1DD88 /* Pods */,
@@ -189,12 +214,15 @@
 		ECF8730725B9BD250096E766 /* TDT */ = {
 			isa = PBXGroup;
 			children = (
+				ECD004EB297BD1930043972F /* Utils */,
+				ECD004E8297BD04C0043972F /* Helpers */,
+				ECA1001B25BD8663005BA8D1 /* Data */,
 				ECFDFA0425BC91BD001C4D5E /* CustomViews */,
 				EC9D7B5825BB393800453FE8 /* Protocols */,
 				EC9D7B4725BB09FB00453FE8 /* SupportFiles */,
 				ECF8733425BA00950096E766 /* Extensions */,
 				ECF8732225B9BDAB0096E766 /* Cells */,
-				ECF8732125B9BDA50096E766 /* VCs */,
+				ECF8732125B9BDA50096E766 /* ViewControllers */,
 				ECF8732025B9BDA00096E766 /* Storyboards */,
 				ECF8730825B9BD250096E766 /* AppDelegate.swift */,
 				ECF8730A25B9BD250096E766 /* SceneDelegate.swift */,
@@ -220,17 +248,17 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		ECF8732125B9BDA50096E766 /* VCs */ = {
+		ECF8732125B9BDA50096E766 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				ECF8732625B9BDDC0096E766 /* TodoVC.swift */,
+				ECF8732625B9BDDC0096E766 /* TodoViewController.swift */,
 				ECA1000625BD71E8005BA8D1 /* ArchiveVC.swift */,
 				EC9D7B5525BB36B400453FE8 /* AlertViewController.swift */,
 				ECA1001225BD7C74005BA8D1 /* ControlViewController.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPageViewController.swift */,
 				EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */,
 			);
-			path = VCs;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		ECF8732225B9BDAB0096E766 /* Cells */ = {
@@ -398,8 +426,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECD004E7297BCF1A0043972F /* Theme.swift in Sources */,
 				EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */,
 				EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */,
+				ECD004ED297BD1A00043972F /* UserDefaultsWrapper.swift in Sources */,
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
@@ -418,12 +448,14 @@
 				ECA1000B25BD739A005BA8D1 /* ArchiveTVC.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
+				ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
 				EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */,
 				ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */,
-				ECF8732725B9BDDC0096E766 /* TodoVC.swift in Sources */,
+				ECF8732725B9BDDC0096E766 /* TodoViewController.swift in Sources */,
 				ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */,
 				ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */,
+				ECD004EA297BD05A0043972F /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

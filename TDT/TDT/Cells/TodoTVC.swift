@@ -34,8 +34,15 @@ class TodoTVC: UITableViewCell {
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     
     let highLightView = UIView().then {
-        $0.backgroundColor = TodoVC.mainColor
+        if let currentTheme = ThemeManager.shared.currentTheme {
+            $0.backgroundColor = currentTheme.mainColor
+        }
         $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
+    }
+    
+    private var mainColor: UIColor? {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
+        return currentTheme.mainColor
     }
 
     var wasLongTapped = false
@@ -51,14 +58,11 @@ class TodoTVC: UITableViewCell {
         
         self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
         self.feedbackGenerator?.prepare()
-        
-        // Initialization code
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
       
-        // Configure the view for the selected state
     }
     override func prepareForReuse() {
         wasLongTapped = false
@@ -71,7 +75,6 @@ class TodoTVC: UITableViewCell {
         
         self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
         self.feedbackGenerator?.prepare()
-        
     }
 
     func setItems(){
@@ -79,7 +82,7 @@ class TodoTVC: UITableViewCell {
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         containView.alpha = 1
-        highLightView.backgroundColor = TodoVC.mainColor
+        highLightView.backgroundColor = mainColor
 
         containView.isUserInteractionEnabled = true
      
@@ -136,14 +139,12 @@ class TodoTVC: UITableViewCell {
         
     }
     @objc func doubleTapped(){
-        print("더블클릭")
         feedbackGenerator?.impactOccurred()
-        highLightView.backgroundColor = TodoVC.mainColor
+        highLightView.backgroundColor = mainColor
         
-     
         textBoxDelegate?.doubleTapped(indexPath: myIndexpath!)
-       
     }
+    
     @objc func leftSwiped(){
         print("왼스와이프")
         print(myIndexpath!)
@@ -156,12 +157,13 @@ class TodoTVC: UITableViewCell {
             deleteImage.image = UIImage(named: "dkIcnDone")
         }
         
-        UIView.animate(withDuration: 0.35, animations: {
-            
-            self.containView.backgroundColor = TodoVC.mainColor
+        UIView.animate(withDuration: 0.35, animations: { [weak self] in
+            guard let self else { return }
+            self.containView.backgroundColor = self.mainColor
         })
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+            guard let self else { return }
             
             self.deleteImage.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
@@ -173,7 +175,8 @@ class TodoTVC: UITableViewCell {
         }, completion: { finish in
             
         })
-        UIView.animate(withDuration: 0.2,delay: 0.15,options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.2,delay: 0.15,options: .curveEaseIn, animations: { [weak self] in
+            guard let self else { return }
             
             self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
@@ -182,41 +185,30 @@ class TodoTVC: UITableViewCell {
             
         }, completion: { finish in
             self.textBoxDelegate?.leftSwiped(indexPath: self.myIndexpath!)
-            UIView.animate(withDuration: 0,delay: 0.3, animations: {
+            UIView.animate(withDuration: 0,delay: 0.3, animations: { [weak self] in
+                guard let self else { return }
+                
                 self.deleteImage.alpha = 0
                 self.containView.transform = .identity
                 self.todoLabel.transform = .identity
                 self.deleteImage.transform = .identity
                 self.highLightView.transform = .identity
             })
-          
-            
         })
 
        
     }
     @objc func rightSwiped(){
-//        self.textBoxDelegate?.shouldMove()
         
     }
     
    
     @objc func longTapped(){
-        print("long tapped")
-//        if longtap.state == UIGestureRecognizer.State.began{
-//            textBoxDelegate?.longTapped(idx: myIndexpath!)
-//        }
         if !wasLongTapped{
             wasLongTapped = true
             textBoxDelegate?.longTapped(indexPath: myIndexpath!)
             
         }
-        
-//        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-//        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
-
-        
-        
     }
     func setLabel(str: String){
         todoLabel.text = str
@@ -233,20 +225,15 @@ class TodoTVC: UITableViewCell {
         todoLabel.snp.remakeConstraints{
             $0.height.equalTo(20 + 25 * (todoLabel.calculateMaxLines()-1))
         }
-        
-        
-        
+
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-19)
             $0.top.equalTo(todoLabel.snp.top).offset(-16)
-            //            $0.trailing.equalTo(todoLabel.snp.trailing).offset(19)
-//                        $0.bottom.equalTo(todoLabel.snp.bottom).offset(16)
-            
             
             var maximumIntrinsic = CGFloat(0.0)
        
-            var strArr = getLinesArrayFromLabel(label: todoLabel)
-            var tmpLabel = UILabel()
+            let strArr = getLinesArrayFromLabel(label: todoLabel)
+            let tmpLabel = UILabel()
             tmpLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
             tmpLabel.addCharacterSpacing(kernValue: -1)
             
@@ -269,20 +256,9 @@ class TodoTVC: UITableViewCell {
         }
         todoLabelOrigin = todoLabel.center.x
         containViewOrigin = containView.center.x
-        
-        
-        
-    }
-    
-    func showDelete(){
-        print("지우자지우자")
-        
-        
-        
     }
     
     func getLinesArrayFromLabel(label:UILabel) -> [String] {
-        
         let text:NSString = label.text! as NSString // TODO: Make safe?
         let font:UIFont = label.font
         let rect:CGRect = label.frame

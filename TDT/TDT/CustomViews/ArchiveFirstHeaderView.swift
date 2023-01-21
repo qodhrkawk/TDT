@@ -15,8 +15,8 @@ class ArchiveFirstHeaderView: UIView {
     }
     
     private var highLightView = UIView().then {
-        if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
-            $0.backgroundColor = TodoVC.colors[mainColorIndex]
+        if let currentTheme = ThemeManager.shared.currentTheme {
+            $0.backgroundColor = currentTheme.mainColor
             $0.alpha = 0.2
         }
     }
@@ -24,10 +24,6 @@ class ArchiveFirstHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
-
-        if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
-            highLightView.backgroundColor = TodoVC.colors[mainColorIndex]
-        }
         
         setupLayout()
     }

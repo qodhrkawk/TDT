@@ -39,7 +39,6 @@ class AlertViewController: UIViewController {
     
     weak var todoDelegate: ToDoDelegate?
     
-    private var editOkayImageNames = ["btnComplete","btnCompleteGr","btnCompleteYl","btnCompletePk"]
     var fromArchive = false
     
     override func viewDidLoad() {
@@ -104,12 +103,9 @@ class AlertViewController: UIViewController {
         editUnderView.backgroundColor = Design.Color.editTextViewBackgroundColor
         editView.makeRounded(cornerRadius: 3)
         editLabel.textColor = .brownGreyThree
-
-        if let mainColorIndex = UserDefaults.standard.value(forKey: "mainColor") as? Int {
-            TodoVC.mainColor = TodoVC.colors[mainColorIndex]
-
-            let editOkayButtonImageName = editOkayImageNames[mainColorIndex]
-            editOkayButton.setImage(UIImage(named: editOkayButtonImageName), for: .normal)
+        
+        if let currentTheme = ThemeManager.shared.currentTheme {
+            editOkayButton.setImage(currentTheme.editOkayButtonImage, for: .normal)
         }
         
         setupButtons()

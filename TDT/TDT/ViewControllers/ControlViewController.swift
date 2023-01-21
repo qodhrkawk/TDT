@@ -21,8 +21,8 @@ class ControlViewController: UIViewController {
             guard let archiveVC = pageInstance?.viewControllerArray[0] as? ArchiveVC else { return }
             archiveVC.pageControlDelegate = self
 
-            guard let todoVC = pageInstance?.viewControllerArray[1] as? TodoVC else { return }
-            todoVC.pageControlDelegate = self
+            guard let todoViewController = pageInstance?.viewControllerArray[1] as? TodoViewController else { return }
+            todoViewController.pageControlDelegate = self
         }
     }
 }

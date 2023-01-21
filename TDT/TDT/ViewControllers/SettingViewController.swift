@@ -7,6 +7,7 @@
 
 import UIKit
 import MessageUI
+import Combine
 
 
 class SettingViewController: UIViewController, MFMailComposeViewControllerDelegate {
@@ -24,9 +25,8 @@ class SettingViewController: UIViewController, MFMailComposeViewControllerDelega
     @IBOutlet weak var underView: UIView!
 
     private let userDefaults = UserDefaults.standard
-
-    private var settingImageNames = Constants.settingImageNames
-    private var darkSettingImageNames = Constants.darkSettingImageNames
+    
+    @Published var theme: Theme?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,17 +66,30 @@ class SettingViewController: UIViewController, MFMailComposeViewControllerDelega
     }
     
     private func setupButtons(){
-        for index in 0..<colorButtons.count {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return }
+        
+        for (index, theme) in Theme.allCases.enumerated() {
             colorButtons[index].makeRounded(cornerRadius: 17.5)
-            colorButtons[index].backgroundColor = TodoVC.colors[index]
-
-            if TodoVC.mainColor == TodoVC.colors[index] {
+            colorButtons[index].backgroundColor = theme.mainColor
+            if theme == currentTheme {
                 colorButtons[index].alpha = 1
             }
             else {
                 colorButtons[index].alpha = 0.2
             }
         }
+//
+//        for index in 0..<colorButtons.count {
+//            colorButtons[index].makeRounded(cornerRadius: 17.5)
+//            colorButtons[index].backgroundColor = TodoViewController.colors[index]
+//
+//            if TodoViewController.mainColor == TodoViewController.colors[index] {
+//                colorButtons[index].alpha = 1
+//            }
+//            else {
+//                colorButtons[index].alpha = 0.2
+//            }
+//        }
         
         if traitCollection.userInterfaceStyle == .light {
             moreButton.setImage(Design.Image.moreButtonImage, for: .normal)
@@ -89,33 +102,21 @@ class SettingViewController: UIViewController, MFMailComposeViewControllerDelega
     }
 
     private func setMainColor(){
-        if let mainColorIndex = userDefaults.value(forKey: "mainColor") as? Int {
-            var settingImageName = settingImageNames[mainColorIndex]
-            if traitCollection.userInterfaceStyle == .dark {
-                settingImageName = darkSettingImageNames[mainColorIndex]
-            }
-            settingImage.image = UIImage(named: settingImageName)
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return }
+        
+        if traitCollection.userInterfaceStyle == .dark {
+            settingImage.image = currentTheme.darkModeSettingImage
         }
+        settingImage.image = currentTheme.settingImage
     }
     
     @IBAction func colorButtonAction(_ sender: UIButton) {
-        switch sender {
-        case colorButtons[0]:
-            TodoVC.mainColor = TodoVC.colors[0]
-            userDefaults.setValue(0, forKey: "mainColor")
-        case colorButtons[1]:
-            TodoVC.mainColor = TodoVC.colors[1]
-            userDefaults.setValue(1, forKey: "mainColor")
-        case colorButtons[2]:
-            TodoVC.mainColor = TodoVC.colors[2]
-            userDefaults.setValue(2, forKey: "mainColor")
-        case colorButtons[3]:
-            TodoVC.mainColor = TodoVC.colors[3]
-            userDefaults.setValue(3, forKey: "mainColor")
-        default:
-            return
-        }
+        guard let colorButton = colorButtons.enumerated().first(where: { $0.element == sender }),
+              let theme = Theme(rawValue: colorButton.offset)
+        else { return }
         
+        ThemeManager.shared.setCurrentTheme(theme)
+
         setupButtons()
         setMainColor()
     }
@@ -177,10 +178,5 @@ extension SettingViewController {
             static let subLabelFont = UIFont(name: "GmarketSansTTFMedium", size: 14)
         }
 
-    }
-    
-    enum Constants {
-        static let settingImageNames = ["imgSettings","imgSettingsGr","imgSettingsYl","imgSettingsPk"]
-        static let darkSettingImageNames = ["dkImgSettings","dkImgSettingsGr","dkImgSettingsYl","dkImgSettingsPk"]
     }
 }

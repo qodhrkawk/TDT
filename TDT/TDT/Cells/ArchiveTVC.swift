@@ -29,8 +29,15 @@ class ArchiveTVC: UITableViewCell {
     var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     
+    private var mainColor: UIColor? {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
+        return currentTheme.mainColor
+    }
+    
     let highLightView = UIView().then {
-        $0.backgroundColor = TodoVC.mainColor
+        if let currentTheme = ThemeManager.shared.currentTheme {
+            $0.backgroundColor = currentTheme.mainColor
+        }
         $0.alpha = 0.4
         $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
     }
@@ -75,7 +82,7 @@ class ArchiveTVC: UITableViewCell {
         
         containView.backgroundColor = UIColor(named: "archiveBoxColor")
         
-        highLightView.backgroundColor = TodoVC.mainColor
+        highLightView.backgroundColor = mainColor
         containView.makeRounded(cornerRadius: 3)
         self.makeRounded(cornerRadius: 3)
         
@@ -140,7 +147,7 @@ class ArchiveTVC: UITableViewCell {
     @objc func doubleTapped(){
         print("더블클릭")
         feedbackGenerator?.impactOccurred()
-        highLightView.backgroundColor = TodoVC.mainColor
+        highLightView.backgroundColor = mainColor
         
      
         textBoxDelegate?.doubleTapped(indexPath: myIndexpath!)

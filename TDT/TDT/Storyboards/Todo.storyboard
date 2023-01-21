@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ww2-g9-m5I">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ww2-g9-m5I">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,10 +14,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--TodoVC-->
+        <!--TodoViewController-->
         <scene sceneID="hDE-N0-Q8H">
             <objects>
-                <viewController storyboardIdentifier="TodoVC" title="TodoVC" id="Ww2-g9-m5I" customClass="TodoVC" customModule="TDT" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TodoViewController" title="TodoViewController" id="Ww2-g9-m5I" customClass="TodoViewController" customModule="TDT" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jOh-2D-dEz">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,13 +168,13 @@
                     <connections>
                         <outlet property="archiveButton" destination="EIY-6q-6cV" id="vsE-Kd-LKQ"/>
                         <outlet property="editView" destination="IzE-xC-ok5" id="vLx-Xz-OHb"/>
-                        <outlet property="flickImage" destination="Ctj-CF-kxx" id="Y5G-kg-fLL"/>
+                        <outlet property="flickImageView" destination="Ctj-CF-kxx" id="VyL-Dz-lq5"/>
                         <outlet property="headerView" destination="p1W-Xe-Znr" id="RfZ-2G-OYo"/>
                         <outlet property="moreButton" destination="jHa-Mr-CmA" id="PkK-xL-py6"/>
-                        <outlet property="newTextField" destination="FAu-0m-kq9" id="4oI-C7-eQ8"/>
                         <outlet property="sendButton" destination="0EM-ZY-Gta" id="e3Y-VI-HPC"/>
-                        <outlet property="wholeTV" destination="K95-Yr-f9a" id="UeK-u8-Fil"/>
-                        <outlet property="wholeTVBottomConstraint" destination="GlX-15-Yot" id="seP-XY-Von"/>
+                        <outlet property="textField" destination="FAu-0m-kq9" id="CUd-S9-VOl"/>
+                        <outlet property="todoTableView" destination="K95-Yr-f9a" id="gSW-Mi-jjg"/>
+                        <outlet property="todoTableViewBottomConstraint" destination="GlX-15-Yot" id="i6R-lt-tWn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AQc-l2-blr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
