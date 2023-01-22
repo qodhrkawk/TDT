@@ -15,7 +15,7 @@ enum Theme: Int, CaseIterable, Codable {
     
     var flickImage: UIImage? {
         switch self {
-        case .blue: return UIImage(named: "imgLogo")
+        case .blue: return UIImage(named: "imgLogo")?.withRenderingMode(.alwaysTemplate)
         case .green: return UIImage(named: "imgLogoGr")
         case .yellow: return UIImage(named: "imgLogoYl")
         case .pink: return UIImage(named: "imgLogoPk")
@@ -42,7 +42,7 @@ enum Theme: Int, CaseIterable, Codable {
         
     var mainColor: UIColor {
         switch self {
-        case .blue: return UIColor.maincolor
+        case .blue: return UIColor(hexString: "#0069CA")
         case .green: return UIColor.shamrockGreen
         case .yellow: return UIColor.sunYellow
         case .pink: return UIColor.warmPink

@@ -1,5 +1,5 @@
 //
-//  FirstHeaderView.swift
+//  DateHeaderView.swift
 //  TDT
 //
 //  Created by Yunjae Kim on 2021/01/24.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class FirstHeaderView: UIView {
+class DateHeaderView: UIView {
     private var dateLabel = UILabel().then {
-        $0.font = UIFont(name: "GmarketSansTTFLight", size: 12)
-        $0.textColor = .brownGreyTwo
+        $0.font = UIFont(name: "GmarketSansTTFLight", size: 12)?.withFigmaFontSize(500)
+        $0.textColor = .subText
     }
     
     override init(frame: CGRect) {
@@ -27,8 +27,8 @@ class FirstHeaderView: UIView {
         self.addSubview(dateLabel)
 
         dateLabel.snp.makeConstraints {
-            $0.bottom.equalToSuperview().offset(6)
-            $0.leading.equalToSuperview().offset(23)
+            $0.bottom.equalToSuperview().offset(-12)
+            $0.leading.equalToSuperview().offset(20)
         }
     }
     

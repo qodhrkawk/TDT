@@ -27,7 +27,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TodoTVC" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodoTVC" rowHeight="113" id="2LH-VN-LfG" customClass="TodoTVC" customModule="TDT" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TodoTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TodoTableViewCell" rowHeight="113" id="2LH-VN-LfG" customClass="TodoTableViewCell" customModule="TDT" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="113"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2LH-VN-LfG" id="bVo-Uh-T5H">

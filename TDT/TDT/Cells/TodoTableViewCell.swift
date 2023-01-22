@@ -1,5 +1,5 @@
 //
-//  TodoTVC.swift
+//  TodoTableViewCell.swift
 //  TDT
 //
 //  Created by Yunjae Kim on 2021/01/22.
@@ -9,38 +9,36 @@ import UIKit
 import Then
 import SnapKit
 import AudioToolbox
+import Combine
 
-class TodoTVC: UITableViewCell {
-    static let identifier = "TodoTVC"
+class TodoTableViewCell: UITableViewCell {
+    static let identifier = "TodoTableViewCell"
     
     @IBOutlet weak var containView: UIView!
     
     @IBOutlet weak var deleteImage: UIImageView!
     @IBOutlet weak var todoLabel: UILabel!
-    var todo: String?
-    var indexPathRow = 0
+    
     var isImportant = false
-    var textBoxDelegate: TextBoxDelegate?
-    var containViewOrigin: CGFloat?
-    var todoLabelOrigin: CGFloat?
+    weak var textBoxDelegate: TextBoxDelegate?
     var myIndexpath: IndexPath?
-    var feedbackGenerator: UIImpactFeedbackGenerator?
     
-    var dragInitX : CGFloat?
-    var dragInitial = true
-    var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-    var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
-    var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
-    var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
+    @Published var todoData: TodoData?
     
-    let highLightView = UIView().then {
-        if let currentTheme = ThemeManager.shared.currentTheme {
-            $0.backgroundColor = currentTheme.mainColor
-        }
-        $0.roundCorners(cornerRadius: 3.0, maskedCorners: [.layerMinXMinYCorner, .layerMinXMaxYCorner])
-    }
+    private var cancellables = Set<AnyCancellable>()
     
-    private var mainColor: UIColor? {
+    private var todo: String?
+    private var indexPathRow = 0
+    private var feedbackGenerator: UIImpactFeedbackGenerator?
+    
+    private var dragInitX : CGFloat?
+    private var dragInitial = true
+
+    private var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+    private var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+    private var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
+    
+    private var mainColor: UIColor {
         guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
         return currentTheme.mainColor
     }
@@ -50,14 +48,9 @@ class TodoTVC: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.backgroundColor = UIColor(named: "bgColor")
-        setItems()
-        todoLabelOrigin = todoLabel.center.x
-        containViewOrigin = containView.center.x
-        deleteImage.alpha = 0
-        
-        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-        self.feedbackGenerator?.prepare()
+        setupUIs()
+        subscribeAttributes()
+        prepareFeedbackGenerator()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -66,23 +59,42 @@ class TodoTVC: UITableViewCell {
     }
     override func prepareForReuse() {
         wasLongTapped = false
-        self.backgroundColor = UIColor(named: "bgColor")
-        setItems()
+        setupUIs()
+        subscribeAttributes()
+                
+        prepareFeedbackGenerator()
+    }
+    
+    private func subscribeAttributes() {
+        for cancellable in cancellables {
+            cancellable.cancel()
+        }
         
-        todoLabelOrigin = todoLabel.center.x
-        containViewOrigin = containView.center.x
-        deleteImage.alpha = 0
-        
-        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-        self.feedbackGenerator?.prepare()
+        $todoData.sink(receiveValue: { [weak self] todoData in
+            guard
+                let self,
+                let todoData
+            else { return }
+            
+            if todoData.isImportant {
+                self.containView.setBorder(borderColor: self.mainColor.withAlphaComponent(0.6), borderWidth: 1.5)
+            }
+            else {
+                self.containView.setBorder(borderColor: self.mainColor.withAlphaComponent(0.6), borderWidth: 0.0)
+            }
+            
+            self.setLabel(text: todoData.todo)
+        })
+        .store(in: &cancellables)
     }
 
-    func setItems(){
+    private func setupUIs(){
+        backgroundColor = Design.backgroundColor
+        deleteImage.alpha = 0
+
         containView.backgroundColor = UIColor(named: "boxColor")
-        containView.makeRounded(cornerRadius: 3)
-        self.makeRounded(cornerRadius: 3)
+        containView.makeRounded(cornerRadius: 8)
         containView.alpha = 1
-        highLightView.backgroundColor = mainColor
 
         containView.isUserInteractionEnabled = true
      
@@ -92,66 +104,29 @@ class TodoTVC: UITableViewCell {
         longtap.minimumPressDuration = 0.5
         
         leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
-        rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
         
         leftSwipe.direction = .left
-        rightSwipe.direction = .right
         
         doubletap.numberOfTapsRequired = 2
         containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(longtap)
-        self.addGestureRecognizer(leftSwipe)
-//        self.addGestureRecognizer(rightSwipe)
-//        containView.addGestureRecognizer(panTap)
-        self.addSubview(highLightView)
-        highLightView.snp.makeConstraints{
-            $0.leading.top.bottom.equalTo(containView)
-            $0.width.equalTo(7)
-        }
-        
-        if !isImportant {
-            highLightView.alpha = 0
-        }
-        else{
-            highLightView.alpha = 1
-        }
-       
-      
+        addGestureRecognizer(leftSwipe)
     }
     
-
-    func changeImportant(){
-        print("callled")
-        if isImportant {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.highLightView.alpha = 0
-            })
-           
-            isImportant = false
-        }
-        else{
-            
-            UIView.animate(withDuration: 0.5, animations: {
-                self.highLightView.alpha = 1
-            })
-            isImportant = true
-        }
-        
+    private func prepareFeedbackGenerator() {
+        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        self.feedbackGenerator?.prepare()
     }
+    
     @objc func doubleTapped(){
         feedbackGenerator?.impactOccurred()
-        highLightView.backgroundColor = mainColor
         
         textBoxDelegate?.doubleTapped(indexPath: myIndexpath!)
     }
     
     @objc func leftSwiped(){
-        print("왼스와이프")
-        print(myIndexpath!)
-        
         if traitCollection.userInterfaceStyle == .light {
             deleteImage.image = UIImage(named: "icnDone")
-            
         }
         else {
             deleteImage.image = UIImage(named: "dkIcnDone")
@@ -169,8 +144,6 @@ class TodoTVC: UITableViewCell {
             self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -50, y: 0)
             self.deleteImage.transform = CGAffineTransform(translationX: -50, y: 0)
-            self.highLightView.transform = CGAffineTransform(translationX: -50, y: 0)
-            
             
         }, completion: { finish in
             
@@ -181,7 +154,6 @@ class TodoTVC: UITableViewCell {
             self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
             self.deleteImage.transform = CGAffineTransform(translationX: -400, y: 0)
-            self.highLightView.transform = CGAffineTransform(translationX: -400, y: 0)
             
         }, completion: { finish in
             self.textBoxDelegate?.leftSwiped(indexPath: self.myIndexpath!)
@@ -192,26 +164,19 @@ class TodoTVC: UITableViewCell {
                 self.containView.transform = .identity
                 self.todoLabel.transform = .identity
                 self.deleteImage.transform = .identity
-                self.highLightView.transform = .identity
             })
         })
-
-       
     }
-    @objc func rightSwiped(){
-        
-    }
-    
    
     @objc func longTapped(){
         if !wasLongTapped{
             wasLongTapped = true
             textBoxDelegate?.longTapped(indexPath: myIndexpath!)
-            
         }
     }
-    func setLabel(str: String){
-        todoLabel.text = str
+    
+    private func setLabel(text: String){
+        todoLabel.text = text
         todoLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
         todoLabel.lineBreakMode = .byCharWrapping
         
@@ -220,7 +185,7 @@ class TodoTVC: UITableViewCell {
         let viewWidth = todoLabel.intrinsicContentSize.width
         
         
-        todoLabel.textColor = UIColor(named: "mainTextColor")
+        todoLabel.textColor = Design.textColor
         
         todoLabel.snp.remakeConstraints{
             $0.height.equalTo(20 + 25 * (todoLabel.calculateMaxLines()-1))
@@ -252,13 +217,10 @@ class TodoTVC: UITableViewCell {
             }
             
             $0.height.equalTo(30 + 20 + 25 * (todoLabel.calculateMaxLines()-1))
-            
         }
-        todoLabelOrigin = todoLabel.center.x
-        containViewOrigin = containView.center.x
     }
     
-    func getLinesArrayFromLabel(label:UILabel) -> [String] {
+    func getLinesArrayFromLabel(label: UILabel) -> [String] {
         let text:NSString = label.text! as NSString // TODO: Make safe?
         let font:UIFont = label.font
         let rect:CGRect = label.frame
@@ -283,4 +245,13 @@ class TodoTVC: UITableViewCell {
         return linesArray
     }
     
+}
+
+extension TodoTableViewCell {
+    enum Design {
+        static let backgroundColor = UIColor(named: "bgColor")
+        
+        static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
+        static let textColor = UIColor.mainText
+    }
 }

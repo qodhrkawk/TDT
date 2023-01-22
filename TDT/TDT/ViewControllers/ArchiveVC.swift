@@ -316,7 +316,7 @@ extension ArchiveVC: UITableViewDelegate{
             return view
         }
         else {
-            let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
             
             view.setDate(date: dateInfo[section]+" 한 일")
             return view

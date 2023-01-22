@@ -117,6 +117,9 @@ extension TodoViewController {
         view.backgroundColor = Design.backgroundColor
         
         headerView.backgroundColor = Design.backgroundColor
+        
+        flickImageView.image = Design.flickImage
+
         headerView.alpha = 0.95
 
         textField.addLeftPadding(left: 7)
@@ -154,7 +157,7 @@ extension TodoViewController {
     private func setMainColor(){
         guard let theme = ThemeManager.shared.currentTheme else { return }
         
-        flickImageView.image = theme.flickImage
+        flickImageView.tintColor = theme.mainColor
         sendButtonEnableImage = theme.sendButtonImage
     }
     
@@ -437,8 +440,8 @@ extension TodoViewController: UITableViewDelegate{
             UIView.animate(withDuration: 0.4 ,delay: delay,options: .curveEaseOut, animations: {
                 cell.alpha = 1
                 cell.layer.transform = CATransform3DIdentity
-            },completion: { f in
-                self.delaySection = -1
+            },completion: { [weak self] _ in
+                self?.delaySection = -1
             })
             
             
@@ -474,11 +477,11 @@ extension TodoViewController: UITableViewDelegate{
         
         switch section {
         case 0:
-            let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 65))
+            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 121))
             view.setDate(date: dateInfo[section])
             return view
         default:
-            let view = FirstHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
+            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
             
             view.setDate(date: dateInfo[section])
             return view
@@ -488,7 +491,7 @@ extension TodoViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            return 65
+            return 121
         default:
             return 30
         }
@@ -527,13 +530,13 @@ extension TodoViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTVC.identifier) as? TodoTVC else {return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: TodoTableViewCell.identifier
+        ) as? TodoTableViewCell else { return UITableViewCell() }
 
         cell.textBoxDelegate = self
-        cell.setLabel(str: todoDatas[indexPath.section][indexPath.row].todo)
+        cell.todoData = todoDatas[indexPath.section][indexPath.row]
         cell.myIndexpath = indexPath
-        cell.isImportant = todoDatas[indexPath.section][indexPath.row].isImportant
-        cell.setItems()
         
         return cell
     }
@@ -667,14 +670,14 @@ extension TodoViewController: UITextFieldDelegate{
 extension TodoViewController: ToDoDelegate {
     func delete(indexPath: IndexPath){
         myDeleteRow(indexPath: indexPath, isEnd: false)
-        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
+        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         
         cell.wasLongTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     func modify(indexPath: IndexPath, str: String){
-        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
+        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         
         cell.wasLongTapped = false
         
@@ -686,7 +689,7 @@ extension TodoViewController: ToDoDelegate {
     }
     
     func dismissed(indexPath: IndexPath) {
-        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTVC else { return}
+        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         cell.wasLongTapped = false
     }
 }
@@ -701,6 +704,7 @@ extension TodoViewController: UIScrollViewDelegate {
 extension TodoViewController {
     enum Design {
         static let backgroundColor = UIColor(named: "bgColor")
+        static let flickImage = UIImage(named: "imgLogo")?.withRenderingMode(.alwaysTemplate)
         
         enum TextField {
             static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)

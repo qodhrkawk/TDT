@@ -16,10 +16,7 @@ struct WholeData: Codable {
     }
 }
 
-
-
-
-struct TodoData: Codable{
+struct TodoData: Codable {
     var date: String
     var todo: String
     var isImportant: Bool
