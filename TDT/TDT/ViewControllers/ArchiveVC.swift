@@ -122,21 +122,15 @@ class ArchiveVC: UIViewController {
         if isBack {
             if let todoDate = defaults.stringArray(forKey: "dates") {
                 var tmpTodoDate = todoDate
-                print("응응응1")
                 if tmpTodoDate.count > 0 {
                     var flag = false
                     var inputIdx = -1
-                    print("응응응2")
-                    print(tmpTodoDate)
-                    print(inputTodo.date)
                     for i in 0...tmpTodoDate.count-1 {
                         if inputTodo.date == tmpTodoDate[i] {
-                            print("응응응3")
                             flag = true
                             if let savedData = defaults.value(forKey: "TodoDatas") as? Data{
                                 let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
                                 var tmpTodoDatas = originalData
-                                print("응응응4")
                                 tmpTodoDatas![i].append(inputTodo)
                                 defaults.set(try? PropertyListEncoder().encode(tmpTodoDatas), forKey: "TodoDatas")
                                 
@@ -146,7 +140,6 @@ class ArchiveVC: UIViewController {
                         }
                         else if inputTodo.date < tmpTodoDate[i] {
                             inputIdx = i
-                            print("응응응5")
                             break
                         }
                         
@@ -456,7 +449,6 @@ extension ArchiveVC: ToDoDelegate{
     
     func dismissed(indexPath: IndexPath) {
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTVC else { return}
-        print("왜?")
         cell.wasLongTapped = false
     }
     

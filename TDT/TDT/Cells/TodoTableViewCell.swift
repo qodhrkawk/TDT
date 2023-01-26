@@ -15,8 +15,8 @@ class TodoTableViewCell: UITableViewCell {
     static let identifier = "TodoTableViewCell"
     
     @IBOutlet weak var containView: UIView!
+    @IBOutlet weak var gradientView: GradientView!
     
-    @IBOutlet weak var deleteImage: UIImageView!
     @IBOutlet weak var todoLabel: UILabel!
     
     var isImportant = false
@@ -24,6 +24,7 @@ class TodoTableViewCell: UITableViewCell {
     var myIndexpath: IndexPath?
     
     @Published var todoData: TodoData?
+    private var previousTodoData: TodoData?
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -51,6 +52,11 @@ class TodoTableViewCell: UITableViewCell {
         setupUIs()
         subscribeAttributes()
         prepareFeedbackGenerator()
+        layoutIfNeeded()
+    }
+    
+    override func layoutSubviews() {
+        gradientView.setGradient(color1: mainColor, color2: Design.backgroundColor!)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -63,6 +69,7 @@ class TodoTableViewCell: UITableViewCell {
         subscribeAttributes()
                 
         prepareFeedbackGenerator()
+        layoutIfNeeded()
     }
     
     private func subscribeAttributes() {
@@ -82,7 +89,8 @@ class TodoTableViewCell: UITableViewCell {
             else {
                 self.containView.setBorder(borderColor: self.mainColor.withAlphaComponent(0.6), borderWidth: 0.0)
             }
-            
+
+            self.previousTodoData = todoData
             self.setLabel(text: todoData.todo)
         })
         .store(in: &cancellables)
@@ -90,14 +98,13 @@ class TodoTableViewCell: UITableViewCell {
 
     private func setupUIs(){
         backgroundColor = Design.backgroundColor
-        deleteImage.alpha = 0
-
-        containView.backgroundColor = UIColor(named: "boxColor")
+        
+        gradientView.alpha = 0
+        
+        containView.backgroundColor = Design.boxColor
         containView.makeRounded(cornerRadius: 8)
         containView.alpha = 1
-
         containView.isUserInteractionEnabled = true
-     
         
         doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
@@ -114,8 +121,8 @@ class TodoTableViewCell: UITableViewCell {
     }
     
     private func prepareFeedbackGenerator() {
-        self.feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-        self.feedbackGenerator?.prepare()
+        feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator?.prepare()
     }
     
     @objc func doubleTapped(){
@@ -125,45 +132,33 @@ class TodoTableViewCell: UITableViewCell {
     }
     
     @objc func leftSwiped(){
-        if traitCollection.userInterfaceStyle == .light {
-            deleteImage.image = UIImage(named: "icnDone")
-        }
-        else {
-            deleteImage.image = UIImage(named: "dkIcnDone")
-        }
-        
-        UIView.animate(withDuration: 0.35, animations: { [weak self] in
-            guard let self else { return }
-            self.containView.backgroundColor = self.mainColor
-        })
-        
-        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self else { return }
             
-            self.deleteImage.alpha = 1
+            self.gradientView.alpha = 1
             self.containView.transform = CGAffineTransform(translationX: -50, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -50, y: 0)
-            self.deleteImage.transform = CGAffineTransform(translationX: -50, y: 0)
-            
-        }, completion: { finish in
-            
+            self.gradientView.transform = CGAffineTransform(translationX: -50, y: 0)
         })
-        UIView.animate(withDuration: 0.2,delay: 0.15,options: .curveEaseIn, animations: { [weak self] in
+
+        UIView.animate(withDuration: 0.5,delay: 0.2,options: .curveEaseOut, animations: { [weak self] in
             guard let self else { return }
             
             self.containView.transform = CGAffineTransform(translationX: -400, y: 0)
             self.todoLabel.transform = CGAffineTransform(translationX: -400, y: 0)
-            self.deleteImage.transform = CGAffineTransform(translationX: -400, y: 0)
+            self.gradientView.transform = CGAffineTransform(translationX: -400, y: 0)
             
-        }, completion: { finish in
+        }, completion: { [weak self] finish in
+            guard let self else { return }
+
             self.textBoxDelegate?.leftSwiped(indexPath: self.myIndexpath!)
             UIView.animate(withDuration: 0,delay: 0.3, animations: { [weak self] in
                 guard let self else { return }
                 
-                self.deleteImage.alpha = 0
                 self.containView.transform = .identity
                 self.todoLabel.transform = .identity
-                self.deleteImage.transform = .identity
+                self.gradientView.transform = .identity
+                self.gradientView.alpha = 0
             })
         })
     }
@@ -177,79 +172,32 @@ class TodoTableViewCell: UITableViewCell {
     
     private func setLabel(text: String){
         todoLabel.text = text
-        todoLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
+        todoLabel.font = Design.font
         todoLabel.lineBreakMode = .byCharWrapping
         
-        todoLabel.setSpacing(spacing: 8, kernValue: -1)
-        
-        let viewWidth = todoLabel.intrinsicContentSize.width
-        
-        
+        todoLabel.setSpacing(spacing: 5, kernValue: -1)
         todoLabel.textColor = Design.textColor
-        
-        todoLabel.snp.remakeConstraints{
-            $0.height.equalTo(20 + 25 * (todoLabel.calculateMaxLines()-1))
-        }
 
         containView.snp.remakeConstraints{
-            $0.leading.equalTo(todoLabel.snp.leading).offset(-19)
-            $0.top.equalTo(todoLabel.snp.top).offset(-16)
-            
-            var maximumIntrinsic = CGFloat(0.0)
-       
-            let strArr = getLinesArrayFromLabel(label: todoLabel)
-            let tmpLabel = UILabel()
-            tmpLabel.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
-            tmpLabel.addCharacterSpacing(kernValue: -1)
-            
-            for str in strArr {
-                tmpLabel.text = str.replacingOccurrences(of: "\n", with: "")
-                maximumIntrinsic = max(maximumIntrinsic,tmpLabel.intrinsicContentSize.width)
-            }
-    
-            if maximumIntrinsic > 306 - 38{
-                $0.width.equalTo(306)
-            }
-            else{
-                
-                $0.width.equalTo(38+maximumIntrinsic)
-                
-            }
-            
-            $0.height.equalTo(30 + 20 + 25 * (todoLabel.calculateMaxLines()-1))
+            $0.leading.equalTo(todoLabel.snp.leading).offset(-18)
+            $0.top.equalTo(todoLabel.snp.top).offset(-15)
+            $0.bottom.equalTo(todoLabel.snp.bottom).offset(15)
+            $0.trailing.equalTo(todoLabel.snp.trailing).offset(18)
+        }
+        
+        gradientView.snp.remakeConstraints {
+            $0.leading.equalTo(containView.snp.trailing).offset(-18)
+            $0.top.equalTo(containView.snp.top)
+            $0.bottom.equalTo(containView.snp.bottom)
+            $0.width.equalTo(75)
         }
     }
-    
-    func getLinesArrayFromLabel(label: UILabel) -> [String] {
-        let text:NSString = label.text! as NSString // TODO: Make safe?
-        let font:UIFont = label.font
-        let rect:CGRect = label.frame
-        
-        let myFont:CTFont = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
-        let attStr:NSMutableAttributedString = NSMutableAttributedString(string: text as String)
-        attStr.addAttribute(NSAttributedString.Key(rawValue: String(kCTFontAttributeName)), value:myFont, range: NSMakeRange(0, attStr.length))
-        let frameSetter:CTFramesetter = CTFramesetterCreateWithAttributedString(attStr as CFAttributedString)
-        let path:CGMutablePath = CGMutablePath()
-        path.addRect(CGRect(x:0, y:0, width:rect.size.width, height:100000))
-        
-        let frame:CTFrame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, 0), path, nil)
-        let lines = CTFrameGetLines(frame) as NSArray
-        var linesArray = [String]()
-        
-        for line in lines {
-            let lineRange = CTLineGetStringRange(line as! CTLine)
-            let range:NSRange = NSMakeRange(lineRange.location, lineRange.length)
-            let lineString = text.substring(with: range)
-            linesArray.append(lineString as String)
-        }
-        return linesArray
-    }
-    
 }
 
 extension TodoTableViewCell {
     enum Design {
         static let backgroundColor = UIColor(named: "bgColor")
+        static let boxColor = UIColor(named: "boxColor")
         
         static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
         static let textColor = UIColor.mainText

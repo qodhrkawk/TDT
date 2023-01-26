@@ -15,7 +15,6 @@ enum VersionError: Error {
 class AppStoreCheck {
 
     static func isUpdateAvailable(completion: @escaping (Bool?, Error?) -> Void) throws -> URLSessionDataTask {
-        print("here")
         guard let info = Bundle.main.infoDictionary,
 
             let currentVersion = info["CFBundleShortVersionString"] as? String, // 현재 버전

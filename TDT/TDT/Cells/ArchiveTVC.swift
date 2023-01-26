@@ -127,7 +127,6 @@ class ArchiveTVC: UITableViewCell {
     
 
     func changeImportant(){
-        print("callled")
         if isImportant {
             UIView.animate(withDuration: 0.5, animations: {
                 self.highLightView.alpha = 0
@@ -145,7 +144,6 @@ class ArchiveTVC: UITableViewCell {
         
     }
     @objc func doubleTapped(){
-        print("더블클릭")
         feedbackGenerator?.impactOccurred()
         highLightView.backgroundColor = mainColor
         
@@ -158,12 +156,8 @@ class ArchiveTVC: UITableViewCell {
     }
     
     @objc func rightSwiped(){
-        print("오른스와이프")
-        print(myIndexpath!)
-       
         if traitCollection.userInterfaceStyle == .light {
             deleteImage.image = UIImage(named: "imgOops")
-            
         }
         else {
             deleteImage.image = UIImage(named: "dkImgOops")
@@ -204,7 +198,6 @@ class ArchiveTVC: UITableViewCell {
     
    
     @objc func longTapped(){
-        print("long tapped")
 //        if longtap.state == UIGestureRecognizer.State.began{
 //            textBoxDelegate?.longTapped(idx: myIndexpath!)
 //        }
@@ -282,7 +275,6 @@ class ArchiveTVC: UITableViewCell {
     }
     
     func showDelete(){
-        print("지우자지우자")
         
         
         

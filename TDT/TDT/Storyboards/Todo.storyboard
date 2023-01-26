@@ -34,39 +34,43 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="113"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oN1-Pb-1c8" customClass="GradientView" customModule="TDT" customModuleProvider="target">
+                                                    <rect key="frame" x="7" y="-8" width="75" height="128"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="1w1-co-ngh"/>
+                                                    </constraints>
+                                                </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-ow-utm">
                                                     <rect key="frame" x="20" y="-7.5" width="240" height="128"/>
                                                     <color key="backgroundColor" red="1" green="0.99998790029999995" blue="0.99999219179999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <gestureRecognizers/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XHB-ZV-n5U">
-                                                    <rect key="frame" x="43" y="26" width="270" height="72"/>
+                                                    <rect key="frame" x="43" y="26" width="0.0" height="72"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="270" id="xaA-V5-Ik8"/>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="270" id="xaA-V5-Ik8"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="GmarketSansTTFMedium" family="Gmarket Sans TTF" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AZb-qs-05J">
-                                                    <rect key="frame" x="325" y="19" width="69" height="76"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="43" id="VXF-xM-S4S"/>
-                                                        <constraint firstAttribute="width" constant="44" id="rB2-uY-niB"/>
-                                                    </constraints>
-                                                </imageView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="oN1-Pb-1c8" firstAttribute="bottom" secondItem="0kg-ow-utm" secondAttribute="bottom" id="3NY-Um-ds4"/>
+                                                <constraint firstItem="oN1-Pb-1c8" firstAttribute="centerY" secondItem="0kg-ow-utm" secondAttribute="centerY" id="4k1-cB-DDD"/>
                                                 <constraint firstItem="XHB-ZV-n5U" firstAttribute="top" secondItem="bVo-Uh-T5H" secondAttribute="top" constant="26" id="4xd-D9-O50"/>
-                                                <constraint firstItem="AZb-qs-05J" firstAttribute="centerY" secondItem="0kg-ow-utm" secondAttribute="centerY" id="Cuj-ec-dbk"/>
                                                 <constraint firstItem="XHB-ZV-n5U" firstAttribute="leading" secondItem="bVo-Uh-T5H" secondAttribute="leadingMargin" constant="23" id="D82-3O-IcM"/>
-                                                <constraint firstItem="AZb-qs-05J" firstAttribute="leading" secondItem="0kg-ow-utm" secondAttribute="trailing" constant="30" id="QTM-zo-k4u"/>
+                                                <constraint firstItem="oN1-Pb-1c8" firstAttribute="top" secondItem="0kg-ow-utm" secondAttribute="top" id="UaG-bo-yUN"/>
+                                                <constraint firstItem="0kg-ow-utm" firstAttribute="leading" secondItem="XHB-ZV-n5U" secondAttribute="leading" constant="-18" id="kcA-YS-hLW"/>
+                                                <constraint firstItem="0kg-ow-utm" firstAttribute="centerY" secondItem="XHB-ZV-n5U" secondAttribute="centerY" id="orN-JO-dhx"/>
                                                 <constraint firstAttribute="bottom" secondItem="XHB-ZV-n5U" secondAttribute="bottom" constant="15" id="sgf-vY-4T3"/>
+                                                <constraint firstItem="oN1-Pb-1c8" firstAttribute="leading" secondItem="0kg-ow-utm" secondAttribute="trailing" constant="-18" id="tAY-3H-P6N"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="containView" destination="0kg-ow-utm" id="MbK-yM-M2i"/>
-                                            <outlet property="deleteImage" destination="AZb-qs-05J" id="yFZ-uw-88O"/>
+                                            <outlet property="gradientView" destination="oN1-Pb-1c8" id="wZR-Fv-y6b"/>
                                             <outlet property="todoLabel" destination="XHB-ZV-n5U" id="EuH-JL-sbB"/>
                                         </connections>
                                     </tableViewCell>

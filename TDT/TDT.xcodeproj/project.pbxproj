@@ -31,6 +31,7 @@
 		ECA1001925BD8273005BA8D1 /* PageControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001825BD8273005BA8D1 /* PageControlDelegate.swift */; };
 		ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
 		ECA1002125BD981C005BA8D1 /* DateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1002025BD981C005BA8D1 /* DateHeaderView.swift */; };
+		ECADFED8297FEFFC004369E6 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECADFED7297FEFFC004369E6 /* GradientView.swift */; };
 		ECBCC33F29796EFE00E7C0E5 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */; };
 		ECD004E7297BCF1A0043972F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E6297BCF1A0043972F /* Theme.swift */; };
 		ECD004EA297BD05A0043972F /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E9297BD05A0043972F /* ThemeManager.swift */; };
@@ -94,6 +95,7 @@
 		ECA1001825BD8273005BA8D1 /* PageControlDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlDelegate.swift; sourceTree = "<group>"; };
 		ECA1001C25BD8677005BA8D1 /* TodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoData.swift; sourceTree = "<group>"; };
 		ECA1002025BD981C005BA8D1 /* DateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeaderView.swift; sourceTree = "<group>"; };
+		ECADFED7297FEFFC004369E6 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		ECD004E6297BCF1A0043972F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		ECD004E9297BD05A0043972F /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				ECA1002025BD981C005BA8D1 /* DateHeaderView.swift */,
 				EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */,
 				ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */,
+				ECADFED7297FEFFC004369E6 /* GradientView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				ECA1000B25BD739A005BA8D1 /* ArchiveTVC.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
+				ECADFED8297FEFFC004369E6 /* GradientView.swift in Sources */,
 				ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
 				EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */,

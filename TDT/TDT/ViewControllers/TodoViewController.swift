@@ -535,7 +535,7 @@ extension TodoViewController: UITableViewDataSource{
         ) as? TodoTableViewCell else { return UITableViewCell() }
 
         cell.textBoxDelegate = self
-        cell.todoData = todoDatas[indexPath.section][indexPath.row]
+        cell.todoData = todoDatas[indexPath.section][indexPath.row]        
         cell.myIndexpath = indexPath
         
         return cell
