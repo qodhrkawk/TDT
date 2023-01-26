@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uxz-EI-igA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uxz-EI-igA">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--ArchiveVC-->
+        <!--Archive View Controller-->
         <scene sceneID="j7v-PU-JLA">
             <objects>
-                <viewController storyboardIdentifier="ArchiveVC" id="uxz-EI-igA" customClass="ArchiveVC" customModule="TDT" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ArchiveViewController" id="uxz-EI-igA" customClass="ArchiveViewController" customModule="TDT" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UdK-Mi-pBN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -22,41 +22,46 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ArchiveTVC" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ArchiveTVC" rowHeight="131" id="zOf-yX-5fK" customClass="ArchiveTVC" customModule="TDT" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ArchiveTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ArchiveTableViewCell" rowHeight="131" id="zOf-yX-5fK" customClass="ArchiveTableViewCell" customModule="TDT" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="131"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zOf-yX-5fK" id="RCr-uh-MC7">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="131"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5F-ft-dUF" customClass="GradientView" customModule="TDT" customModuleProvider="target">
+                                                    <rect key="frame" x="-50" y="6.5" width="75" height="128"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="Ar3-0I-OtD"/>
+                                                    </constraints>
+                                                </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="chF-UX-t8U">
                                                     <rect key="frame" x="20" y="15" width="226" height="100"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="24b-cO-xcJ">
-                                                    <rect key="frame" x="43" y="26" width="270" height="90"/>
+                                                    <rect key="frame" x="43" y="26" width="41.5" height="90"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="270" id="rpJ-ia-4mG"/>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="270" id="rpJ-ia-4mG"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="imgOops" translatesAutoresizingMaskIntoConstraints="NO" id="ZLI-rR-L6Y">
-                                                    <rect key="frame" x="239" y="34" width="96" height="62"/>
-                                                </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ZLI-rR-L6Y" firstAttribute="centerY" secondItem="chF-UX-t8U" secondAttribute="centerY" id="BOu-RP-Rlp"/>
+                                                <constraint firstItem="n5F-ft-dUF" firstAttribute="bottom" secondItem="chF-UX-t8U" secondAttribute="bottom" id="3y4-uY-qeB"/>
                                                 <constraint firstItem="24b-cO-xcJ" firstAttribute="top" secondItem="RCr-uh-MC7" secondAttribute="top" constant="26" id="HY6-pw-oWK"/>
+                                                <constraint firstItem="24b-cO-xcJ" firstAttribute="leading" secondItem="n5F-ft-dUF" secondAttribute="trailing" constant="18" id="JMP-Ms-Xtf"/>
                                                 <constraint firstAttribute="bottom" secondItem="24b-cO-xcJ" secondAttribute="bottom" constant="15" id="Vv8-U6-jN8"/>
                                                 <constraint firstItem="24b-cO-xcJ" firstAttribute="leading" secondItem="RCr-uh-MC7" secondAttribute="leadingMargin" constant="23" id="WzB-lN-9Uo"/>
-                                                <constraint firstItem="ZLI-rR-L6Y" firstAttribute="trailing" secondItem="chF-UX-t8U" secondAttribute="leading" constant="-19" id="fg1-F6-Vyy"/>
+                                                <constraint firstItem="n5F-ft-dUF" firstAttribute="top" secondItem="chF-UX-t8U" secondAttribute="top" id="dZ2-5X-6bd"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="containView" destination="chF-UX-t8U" id="MVZ-gE-LMd"/>
-                                            <outlet property="deleteImage" destination="ZLI-rR-L6Y" id="FZj-jl-duV"/>
+                                            <outlet property="gradientView" destination="n5F-ft-dUF" id="hj3-a9-LbB"/>
                                             <outlet property="todoLabel" destination="24b-cO-xcJ" id="vbT-SA-0gC"/>
                                         </connections>
                                     </tableViewCell>
@@ -122,7 +127,6 @@
     <resources>
         <image name="btnMain" width="40" height="40"/>
         <image name="imgArchive" width="110.5" height="24"/>
-        <image name="imgOops" width="47" height="45.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

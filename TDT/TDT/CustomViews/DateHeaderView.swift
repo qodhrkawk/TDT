@@ -35,4 +35,9 @@ class DateHeaderView: UIView {
     func setDate(date: String){
         dateLabel.text = date
     }
+    
+    func highlightDateLabel() {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return }
+        dateLabel.textColor = currentTheme.mainColor
+    }
 }

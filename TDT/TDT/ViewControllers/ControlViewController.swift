@@ -18,7 +18,7 @@ class ControlViewController: UIViewController {
         if segue.identifier == "controlSegue" {
             pageInstance = segue.destination as? ControlPageViewController
 
-            guard let archiveVC = pageInstance?.viewControllerArray[0] as? ArchiveVC else { return }
+            guard let archiveVC = pageInstance?.viewControllerArray[0] as? ArchiveViewController else { return }
             archiveVC.pageControlDelegate = self
 
             guard let todoViewController = pageInstance?.viewControllerArray[1] as? TodoViewController else { return }
