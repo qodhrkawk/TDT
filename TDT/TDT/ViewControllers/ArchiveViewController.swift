@@ -244,7 +244,7 @@ extension ArchiveViewController: UITableViewDelegate{
         let dateString = dateFormatter.string(from: date)
         
         if dateInfo[section] == dateString {
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100))
+            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 103))
             view.setDate(date: dateInfo[section]+" 한 일")
             view.highlightDateLabel()
      
@@ -261,7 +261,7 @@ extension ArchiveViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            return 100
+            return 103
         default:
             return 30
         }

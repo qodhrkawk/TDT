@@ -196,6 +196,6 @@ extension TodoTableViewCell {
         static let boxColor = UIColor(named: "boxColor")
         
         static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
-        static let textColor = UIColor.mainText
+        static let textColor = UIColor(named: "mainText")
     }
 }

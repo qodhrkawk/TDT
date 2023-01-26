@@ -13,7 +13,7 @@ class ArchiveTableViewCell: UITableViewCell {
     
     @IBOutlet weak var containView: UIView!
     @IBOutlet weak var todoLabel: UILabel!
-    @IBOutlet weak var gradientView: GradientView!
+    @IBOutlet weak var gradientView: ReverseGradientView!
     
     weak var textBoxDelegate: TextBoxDelegate?
     var myIndexpath: IndexPath?
@@ -189,6 +189,6 @@ extension ArchiveTableViewCell {
         
         static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
         static let textColor = UIColor(named: "doneText")
-        static let todayTextColor = UIColor.mainText
+        static let todayTextColor = UIColor(named: "mainText")
     }
 }

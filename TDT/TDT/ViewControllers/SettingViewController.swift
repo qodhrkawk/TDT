@@ -162,7 +162,7 @@ extension SettingViewController {
             static let separateLineColor = UIColor(named: "inactiveColor")
             static let viewBackgroundColor = UIColor(named: "bgColor")
             static let titleLabelTextColor = UIColor(named: "typingTextColor")
-            static let subLabelTextColor = UIColor(named: "mainTextColor")
+            static let subLabelTextColor = UIColor(named: "subText")
             static let underViewColor = UIColor(named: "boxColor")
         }
         

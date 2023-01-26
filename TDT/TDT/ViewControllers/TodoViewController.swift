@@ -477,7 +477,7 @@ extension TodoViewController: UITableViewDelegate{
         
         switch section {
         case 0:
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 121))
+            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 103))
             view.setDate(date: dateInfo[section])
             return view
         default:
@@ -491,7 +491,7 @@ extension TodoViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            return 121
+            return 103
         default:
             return 30
         }

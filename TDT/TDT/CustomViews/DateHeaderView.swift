@@ -10,7 +10,7 @@ import UIKit
 class DateHeaderView: UIView {
     private var dateLabel = UILabel().then {
         $0.font = UIFont(name: "GmarketSansTTFLight", size: 12)?.withFigmaFontSize(500)
-        $0.textColor = .subText
+        $0.textColor = UIColor(named: "subText")
     }
     
     override init(frame: CGRect) {
@@ -27,7 +27,7 @@ class DateHeaderView: UIView {
         self.addSubview(dateLabel)
 
         dateLabel.snp.makeConstraints {
-            $0.bottom.equalToSuperview().offset(-12)
+            $0.bottom.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
         }
     }

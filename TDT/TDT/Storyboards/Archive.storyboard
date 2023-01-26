@@ -29,8 +29,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="131"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5F-ft-dUF" customClass="GradientView" customModule="TDT" customModuleProvider="target">
-                                                    <rect key="frame" x="-50" y="6.5" width="75" height="128"/>
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n5F-ft-dUF" customClass="ReverseGradientView" customModule="TDT" customModuleProvider="target">
+                                                    <rect key="frame" x="-55" y="6.5" width="75" height="128"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="75" id="Ar3-0I-OtD"/>
@@ -41,7 +41,7 @@
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="24b-cO-xcJ">
-                                                    <rect key="frame" x="43" y="26" width="41.5" height="90"/>
+                                                    <rect key="frame" x="38" y="26" width="41.5" height="90"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="270" id="rpJ-ia-4mG"/>
                                                     </constraints>
@@ -55,7 +55,7 @@
                                                 <constraint firstItem="24b-cO-xcJ" firstAttribute="top" secondItem="RCr-uh-MC7" secondAttribute="top" constant="26" id="HY6-pw-oWK"/>
                                                 <constraint firstItem="24b-cO-xcJ" firstAttribute="leading" secondItem="n5F-ft-dUF" secondAttribute="trailing" constant="18" id="JMP-Ms-Xtf"/>
                                                 <constraint firstAttribute="bottom" secondItem="24b-cO-xcJ" secondAttribute="bottom" constant="15" id="Vv8-U6-jN8"/>
-                                                <constraint firstItem="24b-cO-xcJ" firstAttribute="leading" secondItem="RCr-uh-MC7" secondAttribute="leadingMargin" constant="23" id="WzB-lN-9Uo"/>
+                                                <constraint firstItem="24b-cO-xcJ" firstAttribute="leading" secondItem="RCr-uh-MC7" secondAttribute="leading" constant="38" id="WzB-lN-9Uo"/>
                                                 <constraint firstItem="n5F-ft-dUF" firstAttribute="top" secondItem="chF-UX-t8U" secondAttribute="top" id="dZ2-5X-6bd"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -71,7 +71,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imgArchive" translatesAutoresizingMaskIntoConstraints="NO" id="LPY-xB-rln">
-                                        <rect key="frame" x="26" y="73" width="111" height="30"/>
+                                        <rect key="frame" x="20" y="73" width="111" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="111" id="Fxa-qS-Ncq"/>
                                             <constraint firstAttribute="height" constant="30" id="xYa-XK-C5J"/>
@@ -91,7 +91,7 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="LPY-xB-rln" firstAttribute="leading" secondItem="sP8-8P-aha" secondAttribute="leading" constant="26" id="4r4-Ei-V7C"/>
+                                    <constraint firstItem="LPY-xB-rln" firstAttribute="leading" secondItem="sP8-8P-aha" secondAttribute="leading" constant="20" id="4r4-Ei-V7C"/>
                                     <constraint firstAttribute="height" constant="120" id="TZ3-Fk-JVg"/>
                                     <constraint firstAttribute="trailing" secondItem="Aig-DE-Go6" secondAttribute="trailing" constant="13" id="W7r-bW-zD2"/>
                                     <constraint firstItem="Aig-DE-Go6" firstAttribute="centerY" secondItem="LPY-xB-rln" secondAttribute="centerY" id="awd-6P-huX"/>

@@ -41,11 +41,16 @@ class AlertViewController: UIViewController {
     
     var fromArchive = false
     
+    private var mainColor: UIColor {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
+        return currentTheme.mainColor
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
 
-        stackView.makeRounded(cornerRadius: 3)
+        stackView.makeRounded(cornerRadius: 8)
         setupUIs()
     }
 
@@ -61,10 +66,12 @@ class AlertViewController: UIViewController {
         })
         
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         unregisterForKeyboardNotifications()
         editTextView.resignFirstResponder()
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if editView.alpha == 0{
             UIView.animate(withDuration: 0.15, animations: {
@@ -76,14 +83,13 @@ class AlertViewController: UIViewController {
                 self.todoDelegate?.dismissed(indexPath: indexPath)
                 self.dismiss(animated: false, completion: nil)
             })
-            
         }
     }
     
     func setupUIs(){
         lineView.backgroundColor = Design.Color.inactiveColor
         
-        deleteCheckView.makeRounded(cornerRadius: 3)
+        deleteCheckView.makeRounded(cornerRadius: 8)
         deleteCheckLabel.font = Design.Font.deleteCheckLabelFont
         deleteCheckLabel.textColor = Design.Color.mainTextColor
         
@@ -101,7 +107,7 @@ class AlertViewController: UIViewController {
         editTextView.text = contentText
         editTextView.backgroundColor = Design.Color.editTextViewBackgroundColor
         editUnderView.backgroundColor = Design.Color.editTextViewBackgroundColor
-        editView.makeRounded(cornerRadius: 3)
+        editView.makeRounded(cornerRadius: 8)
         editLabel.textColor = .brownGreyThree
         
         if let currentTheme = ThemeManager.shared.currentTheme {
@@ -112,32 +118,32 @@ class AlertViewController: UIViewController {
     }
 
     func setupButtons(){
-        changeButton.backgroundColor = Design.Color.changeButtonColor
+        changeButton.backgroundColor = Design.Color.boxColor
         changeButton.titleLabel?.font = Design.Font.buttonFont
         changeButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
         
-        deleteButton.backgroundColor = Design.Color.deleteButtonColor
+        deleteButton.backgroundColor = Design.Color.boxColor
         deleteButton.titleLabel?.font = Design.Font.buttonFont
-        deleteButton.setTitleColor(Design.Color.deleteButtonTextColor, for: .normal)
+        deleteButton.setTitleColor(mainColor, for: .normal)
 
         if fromArchive {
             changeButton.setTitleColor(Design.Color.inactiveColor, for: .normal)
         }
         
-        cancelButton.backgroundColor = Design.Color.inactiveColor
+        cancelButton.backgroundColor = Design.Color.boxColor
         cancelButton.titleLabel?.font = Design.Font.buttonFont
-        cancelButton.setTitleColor(.brownGreyThree, for: .normal)
-        cancelButton.makeRounded(cornerRadius: 3)
+        cancelButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
+        cancelButton.makeRounded(cornerRadius: 8)
      
         deleteCancelButton.backgroundColor = Design.Color.inactiveColor
         deleteCancelButton.titleLabel?.font = Design.Font.deleteCheckButtonFont
-        deleteCancelButton.makeRounded(cornerRadius: 3)
+        deleteCancelButton.makeRounded(cornerRadius: 8)
         deleteCancelButton.setTitleColor(Design.Color.deleteCancelButtonColor, for: .normal)
         
         deleteOkayButton.backgroundColor = Design.Color.deleteOkayButtonColor
         deleteOkayButton.titleLabel?.font = Design.Font.deleteCheckButtonFont
         deleteOkayButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
-        deleteOkayButton.makeRounded(cornerRadius: 3)
+        deleteOkayButton.makeRounded(cornerRadius: 8)
         
         if traitCollection.userInterfaceStyle == .light {
             editCancelButton.setImage(Design.Image.editCancelButtonImage, for: .normal)
@@ -257,14 +263,14 @@ class AlertViewController: UIViewController {
 
 enum Design {
     enum Color {
-        static let mainTextColor = UIColor(named: "mainTextColor")
-        static let editLineColor = UIColor(named: "mainTextColor")
+        static let boxColor = UIColor(named: "boxColor")
+        static let mainTextColor = UIColor(named: "mainText")
+        static let editLineColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.16)
         static let editViewBackgroundColor = UIColor(named: "boxColor")
         static let editTextViewBackgroundColor = UIColor(named: "textBoxColor")
         
         static let changeButtonColor = UIColor(named: "textBoxColor")
         static let deleteButtonColor = UIColor(named: "textBoxColor")
-        static let deleteButtonTextColor = UIColor(named: "alertColor")
         
         static let inactiveColor = UIColor(named: "inactiveColor")
         static let deleteCancelButtonColor = UIColor(named: "archiveTextColor")

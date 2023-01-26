@@ -10,7 +10,6 @@
 		E5EA9A8F7A3549B88474AD6C /* Pods_TDT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */; };
 		EC778C2725BC0B4100EAE775 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
-		EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */; };
 		EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */; };
 		EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */; };
 		EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC8C587125C7B7BF004A5C67 /* Setting.storyboard */; };
@@ -74,7 +73,6 @@
 		EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
-		EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFirstHeaderView.swift; sourceTree = "<group>"; };
 		EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
 		EC8C587125C7B7BF004A5C67 /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
@@ -293,7 +291,6 @@
 			children = (
 				ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */,
 				ECA1002025BD981C005BA8D1 /* DateHeaderView.swift */,
-				EC7B008325C2B2B700360A39 /* ArchiveFirstHeaderView.swift */,
 				ECBCC33E29796EFE00E7C0E5 /* EmptyView.swift */,
 				ECADFED7297FEFFC004369E6 /* GradientView.swift */,
 			);
@@ -440,7 +437,6 @@
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
 				ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */,
-				EC7B008425C2B2B700360A39 /* ArchiveFirstHeaderView.swift in Sources */,
 				ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */,
 				ECA1000725BD71E8005BA8D1 /* ArchiveViewController.swift in Sources */,
 				EC778C2725BC0B4100EAE775 /* TodoTableViewCell.swift in Sources */,
