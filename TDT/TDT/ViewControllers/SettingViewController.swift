@@ -149,7 +149,7 @@ class SettingViewController: UIViewController, MFMailComposeViewControllerDelega
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
         mailComposerVC.setSubject("Flick 1:1 문의하기")
-        mailComposerVC.setToRecipients(["flick.todo.official@gmail.com"])
+        mailComposerVC.setToRecipients(["theteamkarry@gmail.com"])
         mailComposerVC.setMessageBody("", isHTML: false)
 
         return mailComposerVC
