@@ -17,7 +17,7 @@ class ArchiveTableViewCell: UITableViewCell {
     
     weak var textBoxDelegate: TextBoxDelegate?
     var myIndexpath: IndexPath?
-    var wasLongTapped = false
+    var wasSingleTapped = false
     @Published var todoData: TodoData?
     @Published var isToday: Bool = false
     
@@ -28,7 +28,7 @@ class ArchiveTableViewCell: UITableViewCell {
     }
 
     private var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-    private var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+    private var singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
     private var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     private var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     private var feedbackGenerator: UIImpactFeedbackGenerator?
@@ -42,7 +42,7 @@ class ArchiveTableViewCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
-        wasLongTapped = false
+        wasSingleTapped = false
 
         setupUIs()
         subscribeAttributes()
@@ -91,8 +91,7 @@ extension ArchiveTableViewCell {
         containView.isUserInteractionEnabled = true
      
         doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
-        longtap.minimumPressDuration = 0.5
+        singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
         
         rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
         leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
@@ -102,7 +101,7 @@ extension ArchiveTableViewCell {
         
         doubletap.numberOfTapsRequired = 2
         containView.addGestureRecognizer(doubletap)
-        containView.addGestureRecognizer(longtap)
+        containView.addGestureRecognizer(singleTap)
         addGestureRecognizer(rightSwipe)
     }
     
@@ -151,9 +150,9 @@ extension ArchiveTableViewCell {
     }
     
    
-    @objc private func longTapped(){
-        if !wasLongTapped{
-            wasLongTapped = true
+    @objc private func singleTapped(){
+        if !wasSingleTapped{
+            wasSingleTapped = true
             textBoxDelegate?.longTapped(indexPath: myIndexpath!)
         }
     }

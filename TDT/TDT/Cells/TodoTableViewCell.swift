@@ -33,7 +33,7 @@ class TodoTableViewCell: UITableViewCell {
     private var dragInitial = true
 
     private var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-    private var longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+    private var singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
     private var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
     
     private var mainColor: UIColor {
@@ -41,7 +41,11 @@ class TodoTableViewCell: UITableViewCell {
         return currentTheme.mainColor
     }
 
-    var wasLongTapped = false
+    var wasSingleTapped = false {
+        didSet {
+            highlightBoxWhenSingleTappedIfNeeded()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -61,7 +65,7 @@ class TodoTableViewCell: UITableViewCell {
       
     }
     override func prepareForReuse() {
-        wasLongTapped = false
+        wasSingleTapped = false
         setupUIs()
         subscribeAttributes()
                 
@@ -103,8 +107,7 @@ class TodoTableViewCell: UITableViewCell {
         containView.isUserInteractionEnabled = true
         
         doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        longtap = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
-        longtap.minimumPressDuration = 0.5
+        singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
         
         leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
         
@@ -112,7 +115,7 @@ class TodoTableViewCell: UITableViewCell {
         
         doubletap.numberOfTapsRequired = 2
         containView.addGestureRecognizer(doubletap)
-        containView.addGestureRecognizer(longtap)
+        containView.addGestureRecognizer(singleTap)
         addGestureRecognizer(leftSwipe)
     }
     
@@ -159,9 +162,9 @@ class TodoTableViewCell: UITableViewCell {
         })
     }
    
-    @objc func longTapped(){
-        if !wasLongTapped{
-            wasLongTapped = true
+    @objc func singleTapped(){
+        if !wasSingleTapped{
+            wasSingleTapped = true
             textBoxDelegate?.longTapped(indexPath: myIndexpath!)
         }
     }
@@ -188,6 +191,10 @@ class TodoTableViewCell: UITableViewCell {
             $0.width.equalTo(75)
         }
     }
+    
+    private func highlightBoxWhenSingleTappedIfNeeded() {
+        containView.backgroundColor = wasSingleTapped ? Design.tappedColor : Design.boxColor
+    }
 }
 
 extension TodoTableViewCell {
@@ -197,5 +204,7 @@ extension TodoTableViewCell {
         
         static let font = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
         static let textColor = UIColor(named: "mainText")
+        
+        static let tappedColor = UIColor(named: "archiveBoxColor")
     }
 }

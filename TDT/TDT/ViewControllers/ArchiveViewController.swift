@@ -344,7 +344,7 @@ extension ArchiveViewController: ToDoDelegate{
     func modify(indexPath: IndexPath, str: String) {
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTableViewCell else { return}
         
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
         archiveDatas[indexPath.section][indexPath.row].todo = str
         userDefaults.set(try? PropertyListEncoder().encode(archiveDatas),forKey: "ArchiveDatas")
         wholeTV.reloadData()
@@ -355,14 +355,14 @@ extension ArchiveViewController: ToDoDelegate{
         myDeleteRow(indexPath: indexPath,isBack: false)
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTableViewCell else { return}
         
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
         
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
     }
     
     func dismissed(indexPath: IndexPath) {
         guard let cell = wholeTV.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? ArchiveTableViewCell else { return}
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
     }
     
 }

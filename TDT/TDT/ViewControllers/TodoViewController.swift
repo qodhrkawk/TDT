@@ -548,7 +548,7 @@ extension TodoViewController: TextBoxDelegate {
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         self.view.endEditing(true)
         vcName.contentText = todoDatas[indexPath.section][indexPath.row].todo
-        
+        vcName.fromArchive = false
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
@@ -672,14 +672,14 @@ extension TodoViewController: ToDoDelegate {
         myDeleteRow(indexPath: indexPath, isEnd: false)
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
     }
     func modify(indexPath: IndexPath, str: String){
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
         
         todoDatas[indexPath.section][indexPath.row].todo = str
         todoTableView.reloadData()
@@ -690,7 +690,7 @@ extension TodoViewController: ToDoDelegate {
     
     func dismissed(indexPath: IndexPath) {
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
-        cell.wasLongTapped = false
+        cell.wasSingleTapped = false
     }
 }
 
