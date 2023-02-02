@@ -8,72 +8,35 @@
 import UIKit
 
 enum Theme: Int, CaseIterable, Codable {
-    case blue = 0
-    case green
-    case yellow
+    case tomato = 0
+    case mustard
+    case forest
+    case flickBlue
+    case violet
     case pink
+    case babyBlue
     
-    var flickImage: UIImage? {
+    var colorName: String {
         switch self {
-        case .blue: return UIImage(named: "imgLogo")?.withRenderingMode(.alwaysTemplate)
-        case .green: return UIImage(named: "imgLogoGr")
-        case .yellow: return UIImage(named: "imgLogoYl")
-        case .pink: return UIImage(named: "imgLogoPk")
-        }
-    }
-        
-    var darkModeFlickImage: UIImage? {
-        switch self {
-        case .blue: return UIImage(named: "dkImgLogo")
-        case .green: return UIImage(named: "dkImgLogoGr")
-        case .yellow: return UIImage(named: "dkImgLogoYl")
-        case .pink: return UIImage(named: "dkImgLogoPk")
-        }
-    }
-    
-    var sendButtonImage: UIImage? {
-        switch self {
-        case .blue: return UIImage(named: "btnSendActive")
-        case .green: return UIImage(named: "btnSendActiveGr")
-        case .yellow: return UIImage(named: "btnSendActiveYl")
-        case .pink: return UIImage(named: "btnSendActivePk")
+        case .tomato: return "토마토"
+        case .mustard: return "머스타드"
+        case .forest: return "포레스트"
+        case .flickBlue: return "플릭 블루"
+        case .violet: return "파스텔 바이올렛"
+        case .pink: return "인디 핑크"
+        case .babyBlue: return "베이비 블루"
         }
     }
         
     var mainColor: UIColor {
         switch self {
-        case .blue: return UIColor(hexString: "#0069CA")
-        case .green: return UIColor.shamrockGreen
-        case .yellow: return UIColor.sunYellow
-        case .pink: return UIColor.warmPink
+        case .tomato: return UIColor(hexString: "#D94A2A")
+        case .mustard: return UIColor(hexString: "#EF9E00")
+        case .forest: return UIColor(hexString: "#03A239")
+        case .flickBlue: return UIColor(hexString: "#0069CA")
+        case .violet: return UIColor(hexString: "#8458CC")
+        case .pink: return UIColor(hexString: "#F092B4")
+        case .babyBlue: return UIColor(hexString: "#64B3CC")
         }
     }
-
-    var settingImage: UIImage? {
-        switch self {
-        case .blue: return UIImage(named: "imgSettings")
-        case .green: return UIImage(named: "imgSettingsGr")
-        case .yellow: return UIImage(named: "imgSettingsYl")
-        case .pink: return UIImage(named: "imgSettingsPk")
-        }
-    }
-        
-    var darkModeSettingImage: UIImage? {
-        switch self {
-        case .blue: return UIImage(named: "dkImgSettings")
-        case .green: return UIImage(named: "dkImgSettingsGr")
-        case .yellow: return UIImage(named: "dkImgSettingsYl")
-        case .pink: return UIImage(named: "dkImgSettingsPk")
-        }
-    }
-    
-    var editOkayButtonImage: UIImage? {
-        switch self {
-        case .blue: return UIImage(named: "btnComplete")
-        case .green: return UIImage(named: "btnCompleteGr")
-        case .yellow: return UIImage(named: "btnCompleteYl")
-        case .pink: return UIImage(named: "btnCompletePk")
-        }
-    }
-    
 }

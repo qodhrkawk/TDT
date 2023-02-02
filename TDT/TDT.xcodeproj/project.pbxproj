@@ -10,9 +10,7 @@
 		E5EA9A8F7A3549B88474AD6C /* Pods_TDT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */; };
 		EC778C2725BC0B4100EAE775 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
-		EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */; };
 		EC7C4B1625D3C56B00003657 /* AppstoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */; };
-		EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC8C587125C7B7BF004A5C67 /* Setting.storyboard */; };
 		EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */; };
 		EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */; };
 		EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */; };
@@ -37,6 +35,10 @@
 		ECD004ED297BD1A00043972F /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */; };
 		ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */; };
 		ECD3267F297D54AD00403374 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD3267E297D54AD00403374 /* UIFont+Extensions.swift */; };
+		ECE2DDBD2989114B000E01EF /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECE2DDBC2989114B000E01EF /* Setting.storyboard */; };
+		ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDBE2989132F000E01EF /* SettingViewController.swift */; };
+		ECE2DDC12989137B000E01EF /* SettingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDC02989137B000E01EF /* SettingListTableViewCell.swift */; };
+		ECE2DDC3298917ED000E01EF /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDC2298917ED000E01EF /* ThemeTableViewCell.swift */; };
 		ECF8730925B9BD250096E766 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730825B9BD250096E766 /* AppDelegate.swift */; };
 		ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730A25B9BD250096E766 /* SceneDelegate.swift */; };
 		ECF8730D25B9BD250096E766 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8730C25B9BD250096E766 /* ViewController.swift */; };
@@ -73,9 +75,7 @@
 		EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
-		EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
-		EC8C587125C7B7BF004A5C67 /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
 		EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFBold.ttf; sourceTree = "<group>"; };
@@ -101,6 +101,10 @@
 		ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultKeys.swift; sourceTree = "<group>"; };
 		ECD3267E297D54AD00403374 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		ECDA34F42739123D00CED562 /* TDT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDT.entitlements; sourceTree = "<group>"; };
+		ECE2DDBC2989114B000E01EF /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
+		ECE2DDBE2989132F000E01EF /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		ECE2DDC02989137B000E01EF /* SettingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingListTableViewCell.swift; sourceTree = "<group>"; };
+		ECE2DDC2298917ED000E01EF /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		ECF8730525B9BD250096E766 /* TDT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF8730825B9BD250096E766 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ECF8730A25B9BD250096E766 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -245,7 +249,7 @@
 				ECA1000325BD71CF005BA8D1 /* Archive.storyboard */,
 				EC9D7B5225BB36A500453FE8 /* Alert.storyboard */,
 				ECA1000F25BD7C43005BA8D1 /* Control.storyboard */,
-				EC8C587125C7B7BF004A5C67 /* Setting.storyboard */,
+				ECE2DDBC2989114B000E01EF /* Setting.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -258,7 +262,7 @@
 				EC9D7B5525BB36B400453FE8 /* AlertViewController.swift */,
 				ECA1001225BD7C74005BA8D1 /* ControlViewController.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPageViewController.swift */,
-				EC7B933A25C847EB00AF3BFA /* SettingViewController.swift */,
+				ECE2DDBE2989132F000E01EF /* SettingViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -268,6 +272,8 @@
 			children = (
 				EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */,
 				ECA1000A25BD739A005BA8D1 /* ArchiveTableViewCell.swift */,
+				ECE2DDC02989137B000E01EF /* SettingListTableViewCell.swift */,
+				ECE2DDC2298917ED000E01EF /* ThemeTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -375,8 +381,8 @@
 				EC9D7B4E25BB0A1B00453FE8 /* GmarketSansTTFLight.ttf in Resources */,
 				ECF8731025B9BD250096E766 /* Main.storyboard in Resources */,
 				EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */,
-				EC8C587225C7B7BF004A5C67 /* Setting.storyboard in Resources */,
 				EC9D7B5325BB36A500453FE8 /* Alert.storyboard in Resources */,
+				ECE2DDBD2989114B000E01EF /* Setting.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,11 +437,11 @@
 			files = (
 				ECD004E7297BCF1A0043972F /* Theme.swift in Sources */,
 				EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */,
-				EC7B933B25C847EB00AF3BFA /* SettingViewController.swift in Sources */,
 				ECD004ED297BD1A00043972F /* UserDefaultsWrapper.swift in Sources */,
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
+				ECE2DDC12989137B000E01EF /* SettingListTableViewCell.swift in Sources */,
 				ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */,
 				ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */,
 				ECA1000725BD71E8005BA8D1 /* ArchiveViewController.swift in Sources */,
@@ -448,6 +454,7 @@
 				ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */,
 				ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */,
 				ECA1000B25BD739A005BA8D1 /* ArchiveTableViewCell.swift in Sources */,
+				ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
 				ECADFED8297FEFFC004369E6 /* GradientView.swift in Sources */,
@@ -458,6 +465,7 @@
 				ECF8732725B9BDDC0096E766 /* TodoViewController.swift in Sources */,
 				ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */,
 				ECF8730B25B9BD250096E766 /* SceneDelegate.swift in Sources */,
+				ECE2DDC3298917ED000E01EF /* ThemeTableViewCell.swift in Sources */,
 				ECD3267F297D54AD00403374 /* UIFont+Extensions.swift in Sources */,
 				ECD004EA297BD05A0043972F /* ThemeManager.swift in Sources */,
 			);

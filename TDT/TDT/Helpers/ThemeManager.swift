@@ -15,7 +15,7 @@ class ThemeManager {
     init() {
         migrateThemeFromLegacyIfNeeded()
         if currentTheme == nil {
-            currentTheme = .blue
+            currentTheme = .flickBlue
         }
     }
     
@@ -24,14 +24,8 @@ class ThemeManager {
     }
     
     private func migrateThemeFromLegacyIfNeeded() {
-        if let legacyValue = UserDefaults.standard.value(forKey: "mainColor") as? Int {
-            switch legacyValue {
-            case 1: currentTheme = .green
-            case 2: currentTheme = .yellow
-            case 3: currentTheme = .pink
-            default: currentTheme = .blue
-            }
-            
+        if let _ = UserDefaults.standard.value(forKey: "mainColor") as? Int {
+            currentTheme = .flickBlue
             UserDefaults.standard.removeObject(forKey: "mainColor")
         }
     }

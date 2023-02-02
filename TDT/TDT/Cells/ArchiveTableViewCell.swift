@@ -23,7 +23,7 @@ class ArchiveTableViewCell: UITableViewCell {
     
     private var cancellables = Set<AnyCancellable>()
     private var mainColor: UIColor {
-        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
         return currentTheme.mainColor
     }
 
@@ -99,7 +99,9 @@ extension ArchiveTableViewCell {
         rightSwipe.direction = .right
         leftSwipe.direction = .left
         
+        singleTap.numberOfTapsRequired = 1
         doubletap.numberOfTapsRequired = 2
+        singleTap.require(toFail: doubletap)
         containView.addGestureRecognizer(doubletap)
         containView.addGestureRecognizer(singleTap)
         addGestureRecognizer(rightSwipe)

@@ -8,10 +8,7 @@
 import UIKit
 
 class ArchiveViewController: UIViewController {
-    
-    
     @IBOutlet weak var headerView: UIView!
-    
     @IBOutlet weak var archiveImage: UIImageView!
     @IBOutlet weak var wholeTV: UITableView!
     @IBOutlet weak var headerImageView: UIImageView!
@@ -75,12 +72,11 @@ extension ArchiveViewController {
         feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
         feedbackGenerator?.prepare()
         
-        if traitCollection.userInterfaceStyle == .light {
-            mainButton.setImage(Design.Image.mainButtonImage, for: .normal)
-        }
-        else {
-            mainButton.setImage(Design.Image.darkArchiveImage, for: .normal)
-        }
+        archiveImage.image = Design.Image.archiveImage
+        archiveImage.tintColor = Design.Color.mainTextColor
+        
+        mainButton.setImage(Design.Image.mainButtonImage, for: .normal)
+        mainButton.tintColor = Design.Color.mainButtonTintColor
     }
     
     @objc private func viewLeftSwiped(){
@@ -371,11 +367,13 @@ extension ArchiveViewController {
     enum Design {
         enum Color {
             static let backgroundColor = UIColor(named: "bgColor")
+            static let mainTextColor = UIColor(named: "mainText")
+            static let mainButtonTintColor = UIColor(named: "mainText")
         }
         
         enum Image {
-            static let mainButtonImage = UIImage(named: "btnMain")
-            static let archiveImage = UIImage(named: "imgArchive")
+            static let mainButtonImage = UIImage(named: "btnMain")?.withRenderingMode(.alwaysTemplate)
+            static let archiveImage = UIImage(named: "imgArchive")?.withRenderingMode(.alwaysTemplate)
             static let darkArchiveImage = UIImage(named: "dkBtnMain")
         }
         

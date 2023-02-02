@@ -37,7 +37,7 @@ class AlertViewController: UIViewController {
     var fromArchive = false
     
     private var mainColor: UIColor {
-        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.blue.mainColor }
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
         return currentTheme.mainColor
     }
     

@@ -2,137 +2,127 @@
 //  SettingViewController.swift
 //  TDT
 //
-//  Created by Yunjae Kim on 2021/02/01.
+//  Created by Yunjae Kim on 2023/01/31.
 //
 
 import UIKit
 import MessageUI
-import Combine
 
-
-class SettingViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class SettingViewController: UIViewController {
+    @IBOutlet weak var settingsImageView: UIImageView!
+    @IBOutlet weak var settingListTableView: UITableView!
+    @IBOutlet weak var themeTableView: UITableView!
+    @IBOutlet weak var closeButton: UIButton!
     
-    @IBOutlet weak var settingImage: UIImageView!
-    @IBOutlet var titleLabels: [UILabel]!
-    @IBOutlet var subLabels: [UILabel]!
-    
-    @IBOutlet var sepLines: [UIView]!
-    
-    @IBOutlet var colorButtons: [UIButton]!
-    
-    @IBOutlet weak var moreButton: UIButton!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var underView: UIView!
-
-    private let userDefaults = UserDefaults.standard
-    
-    @Published var theme: Theme?
+    private var selectedThemeIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUIs()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        setMainColor()
+        setupTableViews()
     }
     
-    private func setupUIs(){
-        sepLines.forEach { $0.backgroundColor = Design.Color.separateLineColor }
+    @IBAction func closeButtonAction(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+}
 
-        self.view.backgroundColor = Design.Color.viewBackgroundColor
-
-        if traitCollection.userInterfaceStyle == .light {
-            cancelButton.setImage(Design.Image.closeButtonImage, for: .normal)
-        }
-        else {
-            cancelButton.setImage(Design.Image.darkCloseButtonImage, for: .normal)
-        }
+extension SettingViewController {
+    private func setupUIs() {
+        view.backgroundColor = Design.backgroundColor
+        settingListTableView.backgroundColor = Design.backgroundColor
+        themeTableView.backgroundColor =  Design.backgroundColor
+        settingsImageView.image = Design.settingsImage
+        settingsImageView.tintColor = Design.mainTextColor
         
-        setupLabels()
-        setupButtons()
+        closeButton.tintColor = Design.mainTextColor
     }
     
-    private func setupLabels(){
-        for titleLabel in titleLabels {
-            titleLabel.font = Design.Font.titleLabelFont
-            titleLabel.textColor = Design.Color.titleLabelTextColor
-        }
+    private func setupTableViews() {
+        settingListTableView.delegate = self
+        settingListTableView.dataSource = self
+        settingListTableView.contentInset = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 0)
         
-        for sublabel in subLabels {
-            sublabel.font = Design.Font.subLabelFont
-            sublabel.textColor = Design.Color.subLabelTextColor
+        themeTableView.delegate = self
+        themeTableView.dataSource = self
+        themeTableView.contentInset = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 0)
+    }
+}
+
+extension SettingViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch tableView {
+        case settingListTableView:
+            return 72
+        default:
+            return 48
         }
     }
     
-    private func setupButtons(){
-        guard let currentTheme = ThemeManager.shared.currentTheme else { return }
-        
-        for (index, theme) in Theme.allCases.enumerated() {
-            colorButtons[index].makeRounded(cornerRadius: 17.5)
-            colorButtons[index].backgroundColor = theme.mainColor
-            if theme == currentTheme {
-                colorButtons[index].alpha = 1
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch tableView {
+        case settingListTableView:
+            if indexPath.row == 0 {
+                let mailComposeViewController = self.configuredMailComposeViewController()
+
+                if MFMailComposeViewController.canSendMail() {
+                    self.present(mailComposeViewController, animated: true, completion: nil)
+                }
             }
-            else {
-                colorButtons[index].alpha = 0.2
-            }
+        default:
+            themeChanged(theme: Theme.allCases[indexPath.row])
         }
-//
-//        for index in 0..<colorButtons.count {
-//            colorButtons[index].makeRounded(cornerRadius: 17.5)
-//            colorButtons[index].backgroundColor = TodoViewController.colors[index]
-//
-//            if TodoViewController.mainColor == TodoViewController.colors[index] {
-//                colorButtons[index].alpha = 1
-//            }
-//            else {
-//                colorButtons[index].alpha = 0.2
-//            }
-//        }
-        
-        if traitCollection.userInterfaceStyle == .light {
-            moreButton.setImage(Design.Image.moreButtonImage, for: .normal)
-        }
-        else {
-            moreButton.setImage(Design.Image.darkMoreButtonImage, for: .normal)
-        }
-        
-        underView.backgroundColor = Design.Color.underViewColor
     }
+}
 
-    private func setMainColor(){
-        guard let currentTheme = ThemeManager.shared.currentTheme else { return }
-        
-        if traitCollection.userInterfaceStyle == .dark {
-            settingImage.image = currentTheme.darkModeSettingImage
+extension SettingViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch tableView {
+        case settingListTableView:
+            return 2
+        default:
+            return Theme.allCases.count
         }
-        settingImage.image = currentTheme.settingImage
     }
     
-    @IBAction func colorButtonAction(_ sender: UIButton) {
-        guard let colorButton = colorButtons.enumerated().first(where: { $0.element == sender }),
-              let theme = Theme(rawValue: colorButton.offset)
-        else { return }
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch tableView {
+        case settingListTableView:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: SettingListTableViewCell.identifier
+            ) as? SettingListTableViewCell else { return UITableViewCell() }
+
+            cell.setupTitle(
+                titleText: Constants.titleTexts[indexPath.row],
+                subtitleText: Constants.subtitleTexts[indexPath.row]
+            )
+
+            return cell
+        default:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: ThemeTableViewCell.identifier
+            ) as? ThemeTableViewCell else { return UITableViewCell() }
+            
+            let theme = Theme.allCases[indexPath.row]
+            cell.setTheme(theme: theme)
+            cell.delegate = self
+            if ThemeManager.shared.currentTheme == theme {
+                cell.setSelectedTheme()
+            }
+            
+            return cell
+        }
+    }
+}
+
+extension SettingViewController: ThemeTableViewCellDelegate {
+    func themeChanged(theme: Theme) {
         ThemeManager.shared.setCurrentTheme(theme)
-
-        setupButtons()
-        setMainColor()
+        themeTableView.reloadData()
     }
-    
-    @IBAction func xButtonAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
+}
 
-    @IBAction func emailButtonAction(_ sender: Any) {
-        let mailComposeViewController = self.configuredMailComposeViewController()
-
-        if MFMailComposeViewController.canSendMail() {
-            self.present(mailComposeViewController, animated: true, completion: nil)
-        }
-    }
-
+extension SettingViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(
         _ controller: MFMailComposeViewController,
         didFinishWith result: MFMailComposeResult,
@@ -157,26 +147,17 @@ class SettingViewController: UIViewController, MFMailComposeViewControllerDelega
 }
 
 extension SettingViewController {
-    enum Design {
-        enum Color {
-            static let separateLineColor = UIColor(named: "inactiveColor")
-            static let viewBackgroundColor = UIColor(named: "bgColor")
-            static let titleLabelTextColor = UIColor(named: "typingTextColor")
-            static let subLabelTextColor = UIColor(named: "subText")
-            static let underViewColor = UIColor(named: "boxColor")
-        }
-        
-        enum Image {
-            static let closeButtonImage = UIImage(named: "btnClose")
-            static let darkCloseButtonImage = UIImage(named: "dkBtnClose")
-            static let moreButtonImage = UIImage(named: "btnMore")
-            static let darkMoreButtonImage = UIImage(named: "dkBtnMore")
-        }
-        
-        enum Font {
-            static let titleLabelFont = UIFont(name: "GmarketSansTTFMedium", size: 15)
-            static let subLabelFont = UIFont(name: "GmarketSansTTFMedium", size: 14)
-        }
+    private enum Constants {
+        static let titleTexts = ["1:1 문의하기", "테마"]
+        static let subtitleTexts = ["누르면 메일 앱으로 이동합니다.", "하이라이트 색상이 변경됩니다."]
+    }
+}
 
+extension SettingViewController {
+    private enum Design {
+        static let backgroundColor = UIColor(named: "bgColor")
+        static let settingsImage = UIImage(named: "imgSettings")?.withRenderingMode(.alwaysTemplate)
+        
+        static let mainTextColor = UIColor(named: "mainText")
     }
 }

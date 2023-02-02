@@ -44,12 +44,10 @@ class TodoViewController: UIViewController {
 
     private var rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
     private var emptyView = EmptyView(type: .main)
-    private var sendButtonEnableImage: UIImage? {
-        didSet {
-            if textField.text != "" && textField.text != nil {
-                sendButton.setImage(sendButtonEnableImage, for: .normal)
-            }
-        }
+    
+    private var mainColor: UIColor {
+        guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
+        return currentTheme.mainColor
     }
     
     override func viewDidLoad() {
@@ -141,24 +139,23 @@ extension TodoViewController {
 
         view.addGestureRecognizer(rightSwipe)
         
-        if traitCollection.userInterfaceStyle == .light {
-            archiveButton.setImage(Design.Button.archiveButtonImage, for: .normal)
-            sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
-            moreButton.setImage(Design.Button.moreButtonImage, for: .normal)
-            
-        }
-        else {
-            archiveButton.setImage(Design.Button.darkModeArchiveButtonImage, for: .normal)
-            sendButton.setImage(Design.Button.darkModeSendButtonImage, for: .normal)
-            moreButton.setImage(Design.Button.darkModeMoreButtonImage, for: .normal)
-        }
+        archiveButton.setImage(Design.Button.archiveButtonImage, for: .normal)
+        archiveButton.tintColor = Design.Button.archiveButtonTintColor
+        moreButton.setImage(Design.Button.moreButtonImage, for: .normal)
+        moreButton.tintColor = Design.Button.archiveButtonTintColor
+        
+        sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
+        sendButton.tintColor = Design.Button.inactiveColor
     }
     
     private func setMainColor(){
         guard let theme = ThemeManager.shared.currentTheme else { return }
         
         flickImageView.tintColor = theme.mainColor
-        sendButtonEnableImage = theme.sendButtonImage
+        
+        if let text = textField.text, text.count > 0 {
+            sendButton.tintColor = theme.mainColor
+        }
     }
     
     private func setupTodoTableView(){
@@ -184,15 +181,11 @@ extension TodoViewController {
         if let text = sender.text {
             // 초과되는 텍스트 제거
             if text.count >= 1 {
-                sendButton.setImage(sendButtonEnableImage, for: .normal)
+                sendButton.tintColor = mainColor
             }
-            else{
-                if traitCollection.userInterfaceStyle == .light {
-                    sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
-                }
-                else {
-                    sendButton.setImage(Design.Button.darkModeSendButtonImage, for: .normal)
-                }
+            else {
+                sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
+                sendButton.tintColor = Design.Button.inactiveColor
             }
         }
     }
@@ -654,15 +647,11 @@ extension TodoViewController: TextBoxDelegate {
 extension TodoViewController: UITextFieldDelegate{
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.text!.count >= 1 {
-            sendButton.setImage(sendButtonEnableImage,for: .normal)
+            sendButton.tintColor = mainColor
         }
         else{
-            if traitCollection.userInterfaceStyle == .light {
-                sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
-            }
-            else {
-                sendButton.setImage(Design.Button.darkModeSendButtonImage, for: .normal)
-            }
+            sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
+            sendButton.tintColor = Design.Button.inactiveColor
         }
     }
 }
@@ -719,13 +708,12 @@ extension TodoViewController {
         }
         
         enum Button {
-            static let archiveButtonImage = UIImage(named: "btnArchive")
-            static let sendButtonImage = UIImage(named: "btnSendInactive")
-            static let moreButtonImage = UIImage(named: "btnMore")
-            
-            static let darkModeArchiveButtonImage = UIImage(named: "dkBtnArchive")
-            static let darkModeSendButtonImage = UIImage(named: "dkBtnSendInactive")
-            static let darkModeMoreButtonImage = UIImage(named: "dkBtnMore")
+            static let archiveButtonImage = UIImage(named: "btnArchive")?.withRenderingMode(.alwaysTemplate)
+            static let sendButtonImage = UIImage(named: "btnSendInactive")?.withRenderingMode(.alwaysTemplate)
+            static let moreButtonImage = UIImage(named: "btnMore")?.withRenderingMode(.alwaysTemplate)
+
+            static let archiveButtonTintColor = UIColor(named: "mainText")
+            static let inactiveColor = UIColor(named: "inactive")
         }
     }
 }
