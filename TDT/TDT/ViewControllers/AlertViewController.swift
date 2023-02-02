@@ -116,7 +116,10 @@ class AlertViewController: UIViewController {
         deleteButton.setTitleColor(mainColor, for: .normal)
 
         if fromArchive {
-            changeButton.setTitleColor(Design.Color.inactiveColor, for: .normal)
+            stackView.removeArrangedSubview(changeButton)
+            stackView.snp.remakeConstraints {
+                $0.height.equalTo(60)
+            }
         }
         
         cancelButton.backgroundColor = Design.Color.boxColor
@@ -178,7 +181,8 @@ class AlertViewController: UIViewController {
             self.editView.alpha = 1
             UIView.animate(
                 withDuration: 0.15,
-                animations: {
+                animations: { [weak self] in
+                    guard let self else { return }
                     self.stackView.transform = CGAffineTransform(translationX: 0, y: 200)
                     self.cancelButton.transform = CGAffineTransform(translationX: 0, y: 200)
                 },
@@ -196,9 +200,10 @@ class AlertViewController: UIViewController {
     @IBAction func cancelButtonAction(_ sender: Any) {
         UIView.animate(
             withDuration: 0.15,
-            animations: {
-            self.stackView.transform = CGAffineTransform(translationX: 0, y: 200)
-            self.cancelButton.transform = CGAffineTransform(translationX: 0, y: 200)
+            animations: { [weak self] in
+                guard let self else { return }
+                self.stackView.transform = CGAffineTransform(translationX: 0, y: 200)
+                self.cancelButton.transform = CGAffineTransform(translationX: 0, y: 200)
                 self.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
             },
             completion: { [weak self] _ in
