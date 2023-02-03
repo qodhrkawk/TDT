@@ -25,6 +25,13 @@ enum EmptyViewType {
         case .archive: return UIImage(named: "imgEmptyArchive")
         }
     }
+    
+    var emojiDarkImage: UIImage? {
+        switch self {
+        case .main: return UIImage(named: "imgEmptyMainDark")
+        case .archive: return UIImage(named: "imgEmptyArchiveDark")
+        }
+    }
 }
 
 class EmptyView: UIView {
@@ -36,7 +43,6 @@ class EmptyView: UIView {
         $0.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
         $0.textAlignment = .center
         $0.textColor = UIColor(named: "subText")
-        $0.alpha = 0.4
     }
 
     private var emojiImageView = UIImageView()
@@ -53,6 +59,12 @@ class EmptyView: UIView {
         self.type = type
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        guard let previousTraitCollection, let type else { return }
+        if previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            setEmojiImage(type: type)
+        }
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -62,9 +74,18 @@ class EmptyView: UIView {
         $type.sink(receiveValue: { [weak self] type in
             guard let self, let type else { return }
             self.titleLabel.text = type.titleText
-            self.emojiImageView.image = type.emojiImage
+            self.setEmojiImage(type: type)
         })
         .store(in: &cancellables)
+    }
+    
+    private func setEmojiImage(type: EmptyViewType) {
+        if self.traitCollection.userInterfaceStyle == .dark {
+            self.emojiImageView.image = type.emojiDarkImage
+        }
+        else {
+            self.emojiImageView.image = type.emojiImage
+        }
     }
     
     private func setupLayout(){

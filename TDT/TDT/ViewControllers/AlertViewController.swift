@@ -81,6 +81,13 @@ class AlertViewController: UIViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        guard let previousTraitCollection else { return }
+        if previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            editTextView.setBorder(borderColor: Design.Color.editTextViewBorderColor, borderWidth: 1.0)
+        }
+    }
+    
     func setupUIs(){
         lineView.backgroundColor = Design.Color.inactiveColor
         
@@ -270,12 +277,12 @@ enum Design {
         static let deleteButtonColor = UIColor(named: "textBoxColor")
         
         static let inactiveColor = UIColor(named: "inactiveColor")
-        static let deleteCancelButtonColor = UIColor(named: "archiveBoxColor")
+        static let deleteCancelButtonColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.08)
         static let deleteCancelButtonTextColor = UIColor(named: "mainText")
         static let deleteOkayButtonColor = UIColor(named: "alertColor")
         static let deleteOkayButtonTextColor = UIColor.white
         
-        static let editTextViewBorderColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.12)
+        static let editTextViewBorderColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.08)
     }
     
     enum Image {
