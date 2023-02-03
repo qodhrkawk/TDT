@@ -31,4 +31,15 @@ extension UIViewController {
             })
         })
     }
+    
+    func adjustToUserInterfaceStyle() {
+        switch TraitInfoManager.shared.currentTraitInfo {
+        case .light:
+            overrideUserInterfaceStyle = .light
+        case .dark:
+            overrideUserInterfaceStyle = .dark
+        default:
+            overrideUserInterfaceStyle = .unspecified
+        }
+    }
 }

@@ -59,7 +59,7 @@ class AlertViewController: UIViewController {
             self.stackView.transform = .identity
             self.cancelButton.transform = .identity
         })
-        
+        adjustToUserInterfaceStyle()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,6 +100,7 @@ class AlertViewController: UIViewController {
         editTextView.backgroundColor = Design.Color.editTextViewBackgroundColor
         editTextView.setBorder(borderColor: Design.Color.editTextViewBorderColor, borderWidth: 1.0)
         editTextView.makeRounded(cornerRadius: 8)
+        editTextView.textColor = Design.Color.mainTextColor
         
         editView.makeRounded(cornerRadius: 8)
         
@@ -263,7 +264,7 @@ enum Design {
         static let mainTextColor = UIColor(named: "mainText")
         static let editLineColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.16)
         static let editViewBackgroundColor = UIColor(named: "boxColor")
-        static let editTextViewBackgroundColor = UIColor.white
+        static let editTextViewBackgroundColor = UIColor(named: "boxColor")
         
         static let changeButtonColor = UIColor(named: "textBoxColor")
         static let deleteButtonColor = UIColor(named: "textBoxColor")

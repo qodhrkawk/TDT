@@ -1,20 +1,17 @@
 //
-//  ThemeTableViewCell.swift
+//  SettingTraitTableViewCell.swift
 //  TDT
 //
-//  Created by Yunjae Kim on 2023/01/31.
+//  Created by Yunjae Kim on 2023/02/02.
 //
 
 import UIKit
 
-protocol ThemeTableViewCellDelegate: AnyObject {
-    func themeChanged(theme: Theme)
-}
+class SettingTraitTableViewCell: UITableViewCell {
+    static let identifier = "SettingTraitTableViewCell"
 
-class ThemeTableViewCell: UITableViewCell {
-    static let identifier = "ThemeTableViewCell"
-
-    @IBOutlet weak var colorView: UIView!
+    @IBOutlet weak var imageContainerView: UIView!
+    @IBOutlet weak var traitImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var checkImageView: UIImageView!
     
@@ -24,8 +21,6 @@ class ThemeTableViewCell: UITableViewCell {
         return view
     }()
     
-    private var theme: Theme?
-        
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUIs()
@@ -40,14 +35,12 @@ class ThemeTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func setTheme(theme: Theme) {
-        self.theme = theme
-
-        colorView.backgroundColor = theme.mainColor
-        titleLabel.text = theme.colorName
+    func setTraitInfo(traitInfo: TraitInfo) {
+        titleLabel.text = traitInfo.text
+        traitImageView.image = traitInfo.image
     }
     
-    func setSelectedTheme() {
+    func setSelectedTrait() {
         checkImageView.alpha = 1
     }
     
@@ -62,7 +55,7 @@ class ThemeTableViewCell: UITableViewCell {
     }
 }
 
-extension ThemeTableViewCell {
+extension SettingTraitTableViewCell {
     private func setupUIs() {
         backgroundColor = Design.backgroundColor
         checkImageView.alpha = 0
@@ -72,7 +65,13 @@ extension ThemeTableViewCell {
         titleLabel.font = Design.titleFont
         titleLabel.textColor = Design.titleTextColor
         
-        colorView.makeRounded(cornerRadius: 12)
+        imageContainerView.setBorder(borderColor: Design.imageContainerBorderColor, borderWidth: 1.0)
+        imageContainerView.makeRounded(cornerRadius: 5)
+        imageContainerView.backgroundColor = Design.backgroundColor
+        
+        traitImageView.makeRounded(cornerRadius: 5)
+        traitImageView.backgroundColor = Design.backgroundColor
+        
         removeSeparator()
     }
     
@@ -81,15 +80,16 @@ extension ThemeTableViewCell {
     }
 }
 
-
-extension ThemeTableViewCell {
+extension SettingTraitTableViewCell {
     private enum Design {
         static let backgroundColor = UIColor(named: "bgColor")
-        static let titleFont = UIFont(name: "GmarketSansTTFMedium", size: 15)?.withFigmaFontSize(500)
+        static let titleFont = UIFont(name: "GmarketSansTTFMedium", size: 14)?.withFigmaFontSize(500)
         static let titleTextColor = UIColor(named: "mainText")
         
         static let checkImage = UIImage(named: "imgCheck")?.withRenderingMode(.alwaysTemplate)
         static let checkImageTintColor = UIColor(named: "mainText")
+        
+        static let imageContainerBorderColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.1)
         static let separatorColor = UIColor(named: "typingTextColor")?.withAlphaComponent(0.06)
     }
 }

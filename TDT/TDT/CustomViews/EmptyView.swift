@@ -14,7 +14,7 @@ enum EmptyViewType {
     
     var titleText: String {
         switch self {
-        case .main: return "혹시 잊고 있던 할 일이 있지 않나요?"
+        case .main: return "할 일을 모두 완료했어요!"
         case .archive: return "앗, 아직 한 일들이 없네요!"
         }
     }
@@ -35,7 +35,7 @@ class EmptyView: UIView {
     private var titleLabel = UILabel().then{
         $0.font = UIFont(name: "GmarketSansTTFMedium", size: 15)
         $0.textAlignment = .center
-        $0.textColor = .brownGreyTwo
+        $0.textColor = UIColor(named: "subText")
         $0.alpha = 0.4
     }
 
@@ -73,11 +73,11 @@ class EmptyView: UIView {
 
         emojiImageView.snp.makeConstraints{
             $0.top.equalToSuperview()
-            $0.width.height.equalTo(31)
+            $0.width.height.equalTo(47)
             $0.centerX.equalToSuperview()
         }
         titleLabel.snp.makeConstraints{
-            $0.top.equalTo(emojiImageView.snp.bottom).offset(14)
+            $0.top.equalTo(emojiImageView.snp.bottom).offset(18)
             $0.centerX.equalToSuperview()
         }
     }

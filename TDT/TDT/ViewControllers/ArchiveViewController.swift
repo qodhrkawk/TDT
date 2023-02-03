@@ -37,6 +37,7 @@ class ArchiveViewController: UIViewController {
         setData()
         wholeTV.reloadData()
         animationStatus = .initialAnimation
+        adjustToUserInterfaceStyle()
     }
     
     override func viewDidAppear(_ animated: Bool) {

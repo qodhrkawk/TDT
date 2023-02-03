@@ -63,11 +63,14 @@ class TodoViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         registerKeyboardSizeChangedNotification()
+        registerForKeyboardNotifications()
         animationStatus = .initialAnimation
+        view.endEditing(true)
+        editView.transform = .identity
         loadData()
         setMainColor()
         todoTableView.reloadData()
-        registerForKeyboardNotifications()
+        adjustToUserInterfaceStyle()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -82,6 +85,13 @@ class TodoViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        guard let previousTraitCollection else { return }
+        if previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            userInterfaceStyleDidChange()
+        }
     }
     
     @IBAction private func archiveButtonAction(_ sender: Any) {
@@ -119,9 +129,11 @@ extension TodoViewController {
         flickImageView.image = Design.flickImage
 
         headerView.alpha = 0.95
-
+        
         textField.addLeftPadding(left: 7)
         textField.addRightPadding(right: 40)
+        textField.makeRounded(cornerRadius: 8)
+        textField.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
         textField.placeholder = Design.TextField.placeHolder
         textField.font = Design.TextField.font
         textField.delegate = self
@@ -131,8 +143,8 @@ extension TodoViewController {
         
         view.isUserInteractionEnabled = true
 
-        editView.setBorder(borderColor: Design.EditView.borderColor, borderWidth: 1.0)
         editView.backgroundColor = Design.EditView.backgrondColor
+        editView.dropShadow(color: UIColor(hexString: "#000000"), offSet: CGSize(width: 0, height: -2), opacity: 0.06, radius: 20 / UIScreen.main.scale)
 
         rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(rightSwiped))
         rightSwipe.direction = .right
@@ -146,6 +158,10 @@ extension TodoViewController {
         
         sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
         sendButton.tintColor = Design.Button.inactiveColor
+    }
+    
+    private func userInterfaceStyleDidChange() {
+        textField.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
     }
     
     private func setMainColor(){
@@ -335,8 +351,8 @@ extension TodoViewController {
             let date = Date()
             let dateString = dateFormatter.string(from: date)
             todoDatas.append([TodoData(date: dateString, todo: "왼쪽으로 밀어서 완료 상태로 만들어 보세요.", isImportant: false),
-                              TodoData(date: dateString, todo: "두번 탭해서 중요 표시를 해 보세요.", isImportant: false),
-                              TodoData(date: dateString, todo: "길게 클릭해서 메모를 삭제하거나 수정할 수 있어요.", isImportant: false)])
+                              TodoData(date: dateString, todo: "두 번 탭해서 중요 표시를 해 보세요.", isImportant: false),
+                              TodoData(date: dateString, todo: "한 번 클릭해서 메모를 삭제하거나 수정할 수 있어요.", isImportant: false)])
           
             dateInfo.append(dateString)
             
@@ -441,6 +457,8 @@ extension TodoViewController: UITableViewDelegate{
         // 텍스트 추가될때 애니메이션
         case .sendAnimation:
             let lastIndexPath = IndexPath(row: tableView.numberOfRows(inSection: tableView.numberOfSections - 1) - 1, section: tableView.numberOfSections - 1)
+            
+            sendButton.tintColor = Design.Button.inactiveColor
             
             tableView.scrollToRow(at: lastIndexPath, at: .top, animated: false)
             let yMove = CGAffineTransform(translationX: 0, y: 300)

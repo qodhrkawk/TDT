@@ -10,4 +10,5 @@ import Foundation
 enum UserDefaultKeys: String {
     case theme
     case initiated
+    case trait
 }
