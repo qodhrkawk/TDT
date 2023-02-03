@@ -55,8 +55,27 @@ extension UIView {
     }
     
     func roundCorners(cornerRadius: CGFloat, maskedCorners: CACornerMask) {
-           clipsToBounds = true
-           layer.cornerRadius = cornerRadius
-           layer.maskedCorners = CACornerMask(arrayLiteral: maskedCorners)
-       }
+        clipsToBounds = true
+        layer.cornerRadius = cornerRadius
+        layer.maskedCorners = CACornerMask(arrayLiteral: maskedCorners)
+    }
+    
+    func setGradient(color1: UIColor, color2: UIColor) {
+        if let layers = layer.sublayers {
+            for layer in layers {
+                if layer is CAGradientLayer {
+                    layer.removeFromSuperlayer()
+                }
+            }
+        }
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = [color1.cgColor, color2.cgColor]
+//        gradient.locations = [0.0 , 1.0]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        gradient.frame = bounds
+
+        layer.addSublayer(gradient)
+    }
 }

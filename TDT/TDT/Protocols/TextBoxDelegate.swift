@@ -7,10 +7,9 @@
 
 import Foundation
 
-protocol TextBoxDelegate {
-    func longTapped(idx: IndexPath)
-    func leftSwiped(idx: IndexPath)
-    func doubleTapped(idx: IndexPath)
+protocol TextBoxDelegate: AnyObject {
+    func longTapped(indexPath: IndexPath)
+    func leftSwiped(indexPath: IndexPath)
+    func doubleTapped(indexPath: IndexPath)
     func shouldMove()
-    
 }
