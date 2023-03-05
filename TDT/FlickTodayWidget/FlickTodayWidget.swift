@@ -1,8 +1,8 @@
 //
-//  FlickWidget.swift
-//  FlickWidget
+//  FlickTodayWidget.swift
+//  FlickTodayWidget
 //
-//  Created by Yunjae Kim on 2023/03/04.
+//  Created by Yunjae Kim on 2023/03/05.
 //
 
 import WidgetKit
@@ -12,28 +12,32 @@ struct Provider: TimelineProvider {
     
     private var todoDatas: [WidgetTodoData] {
         guard let widgetData = WidgetDataManager.shared.widgetData else { return [] }
-        let storedTodoDatas = widgetData.map { WidgetTodoData(todoData: $0) }
+        
+        let todayDateString = Date().stringValue()
+        let todayData = widgetData.filter { $0.date == todayDateString }
+
+        let storedTodoDatas = todayData.map { WidgetTodoData(todoData: $0) }
         
         return storedTodoDatas
     }
     
-    func placeholder(in context: Context) -> FlickWidgetEntry {
-        return FlickWidgetEntry(date: Date(), todoDatas: todoDatas)
+    func placeholder(in context: Context) -> FlickTodayWidgetEntry {
+        return FlickTodayWidgetEntry(date: Date(), todoDatas: todoDatas)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (FlickWidgetEntry) -> ()) {
-        let entry = FlickWidgetEntry(date: Date(), todoDatas: todoDatas)
+    func getSnapshot(in context: Context, completion: @escaping (FlickTodayWidgetEntry) -> ()) {
+        let entry = FlickTodayWidgetEntry(date: Date(), todoDatas: todoDatas)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [FlickWidgetEntry] = []
+        var entries: [FlickTodayWidgetEntry] = []
         
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = FlickWidgetEntry(date: entryDate, todoDatas: todoDatas)
+            let entry = FlickTodayWidgetEntry(date: entryDate, todoDatas: todoDatas)
             entries.append(entry)
         }
 
@@ -42,7 +46,7 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct FlickWidgetEntryView : View {
+struct FlickTodayWidgetEntryView : View {
     @Environment(\.widgetFamily) var family
     var entry: Provider.Entry
 
@@ -50,23 +54,23 @@ struct FlickWidgetEntryView : View {
         switch family {
         case .systemMedium:
             switch entry.todoDatas.count {
-            case let x where x > 5 :
-                FlickMediumWidgetView(todoDatas: Array(entry.todoDatas[x-5..<x]))
-            case let x where x > 0 && x <= 5 :
-                FlickMediumWidgetView(todoDatas: entry.todoDatas)
+            case let x where x > 4 :
+                FlickTodayMediumWidgetView(todoDatas: Array(entry.todoDatas[x-4..<x]))
+            case let x where x > 0 && x <= 4 :
+                FlickTodayMediumWidgetView(todoDatas: entry.todoDatas)
             default:
-                FlickWidgetEmptyView(emptyCase: .entire)
+                FlickWidgetEmptyView(emptyCase: .today)
             }
         default:
             switch entry.todoDatas.count {
-            case let x where x > 10 :
-                FlickLargeWidgetView(todoDatas: Array(entry.todoDatas[x-10..<x]))
-            case let x where x > 0 && x <= 10:
-                FlickLargeWidgetView(todoDatas: entry.todoDatas)
+            case let x where x > 9 :
+                FlickTodayLargeWidgetView(todoDatas: Array(entry.todoDatas[x-9..<x]))
+            case let x where x > 0 && x <= 9:
+                FlickTodayLargeWidgetView(todoDatas: entry.todoDatas)
             default:
                 VStack {
                     Spacer()
-                    FlickWidgetEmptyView(emptyCase: .entire)
+                    FlickWidgetEmptyView(emptyCase: .today)
                     Spacer()
                     FlickLargeWidgetButtonView()
                         .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: 44, maxHeight: 44)
@@ -77,15 +81,15 @@ struct FlickWidgetEntryView : View {
     }
 }
 
-struct FlickWidget: Widget {
-    let kind: String = "FlickWidget"
+struct FlickTodayWidget: Widget {
+    let kind: String = "FlickTodayWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            FlickWidgetEntryView(entry: entry)
+            FlickTodayWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("디폴트 위젯")
-        .description("골라봐~")
+        .configurationDisplayName("오늘의 할 일")
+        .description("예슬방귀 뿡뿡방귀")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }

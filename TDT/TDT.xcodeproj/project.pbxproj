@@ -19,6 +19,43 @@
 		EC975DBB29B4767E0088ACE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECF8731125B9BD270096E766 /* Assets.xcassets */; };
 		EC975DBD29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */; };
 		EC975DBE29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */; };
+		EC975DC729B49A1A0088ACE4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5BAD3B25D2EAB500F142CB /* WidgetKit.framework */; };
+		EC975DC829B49A1A0088ACE4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */; };
+		EC975DCB29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DCA29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift */; };
+		EC975DCD29B49A1A0088ACE4 /* FlickTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DCC29B49A1A0088ACE4 /* FlickTodayWidget.swift */; };
+		EC975DCF29B49A1C0088ACE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC975DCE29B49A1C0088ACE4 /* Assets.xcassets */; };
+		EC975DD329B49A1C0088ACE4 /* FlickTodayWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC975DC629B49A1A0088ACE4 /* FlickTodayWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EC975DD729B49A480088ACE4 /* FlickLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */; };
+		EC975DD829B49A4C0088ACE4 /* WidgetTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */; };
+		EC975DD929B49A4F0088ACE4 /* WidgetTodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */; };
+		EC975DDA29B49A520088ACE4 /* FlickMediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */; };
+		EC975DDB29B49A9E0088ACE4 /* WidgetDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6429B3344900F61DF2 /* WidgetDataManager.swift */; };
+		EC975DDC29B49ABE0088ACE4 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
+		EC975DDD29B49AC80088ACE4 /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */; };
+		EC975DDE29B49ACB0088ACE4 /* UserDefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EE297BD1D30043972F /* UserDefaultKeys.swift */; };
+		EC975DDF29B49AD30088ACE4 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F5C29B3290A00F61DF2 /* UserDefaults+Extensions.swift */; };
+		EC975DE029B49AED0088ACE4 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E9297BD05A0043972F /* ThemeManager.swift */; };
+		EC975DE129B49AF30088ACE4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E6297BCF1A0043972F /* Theme.swift */; };
+		EC975DE229B49B090088ACE4 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */; };
+		EC975DE829B49BB60088ACE4 /* FlickTodayWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DE329B49B600088ACE4 /* FlickTodayWidgetEntry.swift */; };
+		EC975DEA29B49D2E0088ACE4 /* FlickTodayWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DE329B49B600088ACE4 /* FlickTodayWidgetEntry.swift */; };
+		EC975DEB29B49DCB0088ACE4 /* GmarketSansTTFBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */; };
+		EC975DEC29B49DCD0088ACE4 /* GmarketSansTTFLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4B25BB0A1200453FE8 /* GmarketSansTTFLight.ttf */; };
+		EC975DED29B49DD00088ACE4 /* GmarketSansTTFMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4A25BB0A1200453FE8 /* GmarketSansTTFMedium.ttf */; };
+		EC975DEE29B49DDE0088ACE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECF8731125B9BD270096E766 /* Assets.xcassets */; };
+		EC975DF229B49FAF0088ACE4 /* FlickTodayMediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DEF29B49E7D0088ACE4 /* FlickTodayMediumWidgetView.swift */; };
+		EC975DF429B4A0440088ACE4 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DF329B4A0440088ACE4 /* Date+Extensions.swift */; };
+		EC975DF529B4A0440088ACE4 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DF329B4A0440088ACE4 /* Date+Extensions.swift */; };
+		EC975DF929B4A1BA0088ACE4 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DF329B4A0440088ACE4 /* Date+Extensions.swift */; };
+		EC975DFB29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFA29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift */; };
+		EC975DFC29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFA29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift */; };
+		EC975DFD29B4A3CB0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFA29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift */; };
+		EC975DFF29B4A4950088ACE4 /* EmptyCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */; };
+		EC975E0029B4A4950088ACE4 /* EmptyCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */; };
+		EC975E0229B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */; };
+		EC975E0329B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */; };
+		EC975E0429B4A5200088ACE4 /* FlickWidgetEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */; };
+		EC975E0529B4A5330088ACE4 /* EmptyCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */; };
 		EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */; };
 		EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */; };
 		EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */; };
@@ -89,6 +126,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EC975DD129B49A1C0088ACE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ECF872FD25B9BD250096E766 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC975DC529B49A1A0088ACE4;
+			remoteInfo = FlickTodayWidgetExtension;
+		};
 		ECC02F5529B3261100F61DF2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ECF872FD25B9BD250096E766 /* Project object */;
@@ -105,6 +149,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				EC975DD329B49A1C0088ACE4 /* FlickTodayWidgetExtension.appex in Embed App Extensions */,
 				ECC02F5729B3261100F61DF2 /* FlickWidgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -123,6 +168,18 @@
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
 		EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTodoRow.swift; sourceTree = "<group>"; };
 		EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickLargeWidgetView.swift; sourceTree = "<group>"; };
+		EC975DC629B49A1A0088ACE4 /* FlickTodayWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlickTodayWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC975DCA29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayWidgetBundle.swift; sourceTree = "<group>"; };
+		EC975DCC29B49A1A0088ACE4 /* FlickTodayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayWidget.swift; sourceTree = "<group>"; };
+		EC975DCE29B49A1C0088ACE4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EC975DD029B49A1C0088ACE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC975DE329B49B600088ACE4 /* FlickTodayWidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayWidgetEntry.swift; sourceTree = "<group>"; };
+		EC975DE929B49CC70088ACE4 /* FlickTodayWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlickTodayWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
+		EC975DEF29B49E7D0088ACE4 /* FlickTodayMediumWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayMediumWidgetView.swift; sourceTree = "<group>"; };
+		EC975DF329B4A0440088ACE4 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		EC975DFA29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayLargeWidgetView.swift; sourceTree = "<group>"; };
+		EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCase.swift; sourceTree = "<group>"; };
+		EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickWidgetEmptyView.swift; sourceTree = "<group>"; };
 		EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFBold.ttf; sourceTree = "<group>"; };
@@ -186,6 +243,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EC975DC329B49A1A0088ACE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC975DC829B49A1A0088ACE4 /* SwiftUI.framework in Frameworks */,
+				EC975DC729B49A1A0088ACE4 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ECC02F4729B3260F00F61DF2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -214,6 +280,20 @@
 				EC5BAD3D25D2EAB500F142CB /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EC975DC929B49A1A0088ACE4 /* FlickTodayWidget */ = {
+			isa = PBXGroup;
+			children = (
+				EC975DCA29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift */,
+				EC975DCC29B49A1A0088ACE4 /* FlickTodayWidget.swift */,
+				EC975DCE29B49A1C0088ACE4 /* Assets.xcassets */,
+				EC975DD029B49A1C0088ACE4 /* Info.plist */,
+				EC975DE329B49B600088ACE4 /* FlickTodayWidgetEntry.swift */,
+				EC975DEF29B49E7D0088ACE4 /* FlickTodayMediumWidgetView.swift */,
+				EC975DFA29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift */,
+			);
+			path = FlickTodayWidget;
 			sourceTree = "<group>";
 		};
 		EC9D7B4725BB09FB00453FE8 /* SupportFiles */ = {
@@ -266,6 +346,8 @@
 				ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */,
 				EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */,
 				EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */,
+				EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */,
+				EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */,
 			);
 			path = FlickWidget;
 			sourceTree = "<group>";
@@ -292,10 +374,12 @@
 		ECF872FC25B9BD250096E766 = {
 			isa = PBXGroup;
 			children = (
+				EC975DE929B49CC70088ACE4 /* FlickTodayWidgetExtensionDebug.entitlements */,
 				ECC02F5B29B3261D00F61DF2 /* FlickWidgetExtensionDebug.entitlements */,
 				ECDA34F42739123D00CED562 /* TDT.entitlements */,
 				ECF8730725B9BD250096E766 /* TDT */,
 				ECC02F4D29B3260F00F61DF2 /* FlickWidget */,
+				EC975DC929B49A1A0088ACE4 /* FlickTodayWidget */,
 				ECF8730625B9BD250096E766 /* Products */,
 				F75BC93B1CF8FB6787B1DD88 /* Pods */,
 				7F3FE1BF99F1C090BA97DA2A /* Frameworks */,
@@ -307,6 +391,7 @@
 			children = (
 				ECF8730525B9BD250096E766 /* TDT.app */,
 				ECC02F4A29B3260F00F61DF2 /* FlickWidgetExtension.appex */,
+				EC975DC629B49A1A0088ACE4 /* FlickTodayWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -385,6 +470,7 @@
 				ECFDFA0825BC920D001C4D5E /* UIViewController+Extensions.swift */,
 				ECD3267E297D54AD00403374 /* UIFont+Extensions.swift */,
 				ECC02F5C29B3290A00F61DF2 /* UserDefaults+Extensions.swift */,
+				EC975DF329B4A0440088ACE4 /* Date+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -413,6 +499,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		EC975DC529B49A1A0088ACE4 /* FlickTodayWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC975DD429B49A1D0088ACE4 /* Build configuration list for PBXNativeTarget "FlickTodayWidgetExtension" */;
+			buildPhases = (
+				EC975DC229B49A1A0088ACE4 /* Sources */,
+				EC975DC329B49A1A0088ACE4 /* Frameworks */,
+				EC975DC429B49A1A0088ACE4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlickTodayWidgetExtension;
+			productName = FlickTodayWidgetExtension;
+			productReference = EC975DC629B49A1A0088ACE4 /* FlickTodayWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		ECC02F4929B3260F00F61DF2 /* FlickWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ECC02F5829B3261100F61DF2 /* Build configuration list for PBXNativeTarget "FlickWidgetExtension" */;
@@ -445,6 +548,7 @@
 			);
 			dependencies = (
 				ECC02F5629B3261100F61DF2 /* PBXTargetDependency */,
+				EC975DD229B49A1C0088ACE4 /* PBXTargetDependency */,
 			);
 			name = TDT;
 			productName = TDT;
@@ -460,6 +564,9 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
+					EC975DC529B49A1A0088ACE4 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					ECC02F4929B3260F00F61DF2 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -483,11 +590,24 @@
 			targets = (
 				ECF8730425B9BD250096E766 /* TDT */,
 				ECC02F4929B3260F00F61DF2 /* FlickWidgetExtension */,
+				EC975DC529B49A1A0088ACE4 /* FlickTodayWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EC975DC429B49A1A0088ACE4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC975DEC29B49DCD0088ACE4 /* GmarketSansTTFLight.ttf in Resources */,
+				EC975DCF29B49A1C0088ACE4 /* Assets.xcassets in Resources */,
+				EC975DEB29B49DCB0088ACE4 /* GmarketSansTTFBold.ttf in Resources */,
+				EC975DED29B49DD00088ACE4 /* GmarketSansTTFMedium.ttf in Resources */,
+				EC975DEE29B49DDE0088ACE4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ECC02F4829B3260F00F61DF2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -563,6 +683,33 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EC975DC229B49A1A0088ACE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC975DDE29B49ACB0088ACE4 /* UserDefaultKeys.swift in Sources */,
+				EC975DD829B49A4C0088ACE4 /* WidgetTodoRow.swift in Sources */,
+				EC975DDD29B49AC80088ACE4 /* UserDefaultsWrapper.swift in Sources */,
+				EC975DDC29B49ABE0088ACE4 /* TodoData.swift in Sources */,
+				EC975DE129B49AF30088ACE4 /* Theme.swift in Sources */,
+				EC975DE829B49BB60088ACE4 /* FlickTodayWidgetEntry.swift in Sources */,
+				EC975DFD29B4A3CB0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */,
+				EC975DDB29B49A9E0088ACE4 /* WidgetDataManager.swift in Sources */,
+				EC975E0429B4A5200088ACE4 /* FlickWidgetEmptyView.swift in Sources */,
+				EC975E0529B4A5330088ACE4 /* EmptyCase.swift in Sources */,
+				EC975DDA29B49A520088ACE4 /* FlickMediumWidgetView.swift in Sources */,
+				EC975DF929B4A1BA0088ACE4 /* Date+Extensions.swift in Sources */,
+				EC975DCB29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift in Sources */,
+				EC975DCD29B49A1A0088ACE4 /* FlickTodayWidget.swift in Sources */,
+				EC975DF229B49FAF0088ACE4 /* FlickTodayMediumWidgetView.swift in Sources */,
+				EC975DDF29B49AD30088ACE4 /* UserDefaults+Extensions.swift in Sources */,
+				EC975DD729B49A480088ACE4 /* FlickLargeWidgetView.swift in Sources */,
+				EC975DE229B49B090088ACE4 /* UIColor+Extensions.swift in Sources */,
+				EC975DD929B49A4F0088ACE4 /* WidgetTodoData.swift in Sources */,
+				EC975DE029B49AED0088ACE4 /* ThemeManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ECC02F4629B3260F00F61DF2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -575,12 +722,16 @@
 				ECC02F6329B32E9E00F61DF2 /* UserDefaults+Extensions.swift in Sources */,
 				ECC02F4F29B3260F00F61DF2 /* FlickWidgetBundle.swift in Sources */,
 				ECC02F6C29B33C3400F61DF2 /* FlickWidgetEntry.swift in Sources */,
+				EC975E0329B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift in Sources */,
 				EC975DBE29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */,
+				EC975DF529B4A0440088ACE4 /* Date+Extensions.swift in Sources */,
 				ECC02F6D29B33CEB00F61DF2 /* FlickMediumWidgetView.swift in Sources */,
+				EC975E0029B4A4950088ACE4 /* EmptyCase.swift in Sources */,
 				ECC02F5129B3260F00F61DF2 /* FlickWidget.swift in Sources */,
 				ECC02F5F29B32A3400F61DF2 /* UIColor+Extensions.swift in Sources */,
 				ECC02F7029B341E700F61DF2 /* WidgetTodoData.swift in Sources */,
 				ECC02F6229B32E8C00F61DF2 /* UserDefaultKeys.swift in Sources */,
+				EC975DFC29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */,
 				ECC02F6129B32E6F00F61DF2 /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -594,6 +745,8 @@
 				EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */,
 				ECD004ED297BD1A00043972F /* UserDefaultsWrapper.swift in Sources */,
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
+				EC975DFF29B4A4950088ACE4 /* EmptyCase.swift in Sources */,
+				EC975DEA29B49D2E0088ACE4 /* FlickTodayWidgetEntry.swift in Sources */,
 				EC975DB929B475700088ACE4 /* WidgetTodoRow.swift in Sources */,
 				ECC02F6B29B33BD900F61DF2 /* FlickMediumWidgetView.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
@@ -612,6 +765,7 @@
 				ECBCC33F29796EFE00E7C0E5 /* EmptyView.swift in Sources */,
 				ECA1002125BD981C005BA8D1 /* DateHeaderView.swift in Sources */,
 				ECA1001625BD7CCA005BA8D1 /* ControlPageViewController.swift in Sources */,
+				EC975E0229B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift in Sources */,
 				ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */,
 				ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */,
 				ECA1000B25BD739A005BA8D1 /* ArchiveTableViewCell.swift in Sources */,
@@ -620,7 +774,9 @@
 				ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
+				EC975DFB29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */,
 				EC975DBD29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */,
+				EC975DF429B4A0440088ACE4 /* Date+Extensions.swift in Sources */,
 				ECADFED8297FEFFC004369E6 /* GradientView.swift in Sources */,
 				ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,
@@ -639,6 +795,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		EC975DD229B49A1C0088ACE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC975DC529B49A1A0088ACE4 /* FlickTodayWidgetExtension */;
+			targetProxy = EC975DD129B49A1C0088ACE4 /* PBXContainerItemProxy */;
+		};
 		ECC02F5629B3261100F61DF2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = ECC02F4929B3260F00F61DF2 /* FlickWidgetExtension */;
@@ -666,6 +827,65 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		EC975DD529B49A1D0088ACE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = FlickTodayWidgetExtensionDebug.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZTQ76LJPZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlickTodayWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FlickTodayWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickTodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EC975DD629B49A1D0088ACE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZTQ76LJPZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlickTodayWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FlickTodayWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickTodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		ECC02F5929B3261100F61DF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -680,7 +900,7 @@
 				INFOPLIST_FILE = FlickWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FlickWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -709,7 +929,7 @@
 				INFOPLIST_FILE = FlickWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FlickWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -856,7 +1076,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -878,7 +1098,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -889,6 +1109,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EC975DD429B49A1D0088ACE4 /* Build configuration list for PBXNativeTarget "FlickTodayWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC975DD529B49A1D0088ACE4 /* Debug */,
+				EC975DD629B49A1D0088ACE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		ECC02F5829B3261100F61DF2 /* Build configuration list for PBXNativeTarget "FlickWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
