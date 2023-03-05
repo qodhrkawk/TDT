@@ -10,7 +10,9 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
+    override init() {
+        WidgetDataManager.shared.updateData()
+    }
 
 
 

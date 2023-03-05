@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum Theme: Int, CaseIterable, Codable {
+public enum Theme: Int, CaseIterable, Codable {
     case tomato = 0
     case mustard
     case forest
