@@ -18,11 +18,11 @@ struct FlickMediumWidgetView : View {
             }
         }
         .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding(EdgeInsets(top: 16, leading: 16, bottom: 15, trailing: 28))
+        .padding(EdgeInsets(top: 18, leading: 16, bottom: 15, trailing: 28))
     }
 }
 
-struct FlickMediumWidgetEmptyView: View {
+struct FlickWidgetEmptyView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {

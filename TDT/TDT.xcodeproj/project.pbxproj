@@ -17,6 +17,8 @@
 		EC975DB929B475700088ACE4 /* WidgetTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */; };
 		EC975DBA29B475700088ACE4 /* WidgetTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */; };
 		EC975DBB29B4767E0088ACE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECF8731125B9BD270096E766 /* Assets.xcassets */; };
+		EC975DBD29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */; };
+		EC975DBE29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */; };
 		EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */; };
 		EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */; };
 		EC9D7B4C25BB0A1800453FE8 /* GmarketSansTTFBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */; };
@@ -120,6 +122,7 @@
 		EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
 		EC7C4B1525D3C56B00003657 /* AppstoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppstoreCheck.swift; sourceTree = "<group>"; };
 		EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTodoRow.swift; sourceTree = "<group>"; };
+		EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickLargeWidgetView.swift; sourceTree = "<group>"; };
 		EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		EC9D7B4925BB0A1200453FE8 /* GmarketSansTTFBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansTTFBold.ttf; sourceTree = "<group>"; };
@@ -262,6 +265,7 @@
 				ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */,
 				ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */,
 				EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */,
+				EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */,
 			);
 			path = FlickWidget;
 			sourceTree = "<group>";
@@ -571,6 +575,7 @@
 				ECC02F6329B32E9E00F61DF2 /* UserDefaults+Extensions.swift in Sources */,
 				ECC02F4F29B3260F00F61DF2 /* FlickWidgetBundle.swift in Sources */,
 				ECC02F6C29B33C3400F61DF2 /* FlickWidgetEntry.swift in Sources */,
+				EC975DBE29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */,
 				ECC02F6D29B33CEB00F61DF2 /* FlickMediumWidgetView.swift in Sources */,
 				ECC02F5129B3260F00F61DF2 /* FlickWidget.swift in Sources */,
 				ECC02F5F29B32A3400F61DF2 /* UIColor+Extensions.swift in Sources */,
@@ -615,6 +620,7 @@
 				ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
+				EC975DBD29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */,
 				ECADFED8297FEFFC004369E6 /* GradientView.swift in Sources */,
 				ECD004EF297BD1D30043972F /* UserDefaultKeys.swift in Sources */,
 				EC9D7B4525BB07E000453FE8 /* UIColor+Extensions.swift in Sources */,

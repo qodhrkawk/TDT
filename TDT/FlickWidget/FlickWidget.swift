@@ -51,14 +51,28 @@ struct FlickWidgetEntryView : View {
         case .systemMedium:
             switch entry.todoDatas.count {
             case let x where x > 5 :
-                FlickMediumWidgetView(todoDatas: Array(entry.todoDatas[..<5]))
-            case let x where x > 0 :
+                FlickMediumWidgetView(todoDatas: Array(entry.todoDatas[x-5..<x]))
+            case let x where x > 0 && x <= 5 :
                 FlickMediumWidgetView(todoDatas: entry.todoDatas)
             default:
-                FlickMediumWidgetEmptyView()
+                FlickWidgetEmptyView()
             }
         default:
-            Text("??")
+            switch entry.todoDatas.count {
+            case let x where x > 10 :
+                FlickLargeWidgetView(todoDatas: Array(entry.todoDatas[..<10]))
+            case let x where x > 0 && x <= 10:
+                FlickLargeWidgetView(todoDatas: entry.todoDatas)
+            default:
+                VStack {
+                    Spacer()
+                    FlickWidgetEmptyView()
+                    Spacer()
+                    FlickLargeWidgetButtonView()
+                        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: 44, maxHeight: 44)
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16))
+                }
+            }
         }
     }
 }
