@@ -48,6 +48,17 @@ struct FlickWidgetEntryView : View {
 
     var body: some View {
         switch family {
+        case .accessoryRectangular:
+            switch entry.todoDatas.count {
+            case let x where x > 3 :
+                FlickAccessoryRectangularWidgetView(todoDatas: Array(entry.todoDatas[x-3..<x]))
+            case let x where x > 0 && x <= 3 :
+                FlickAccessoryRectangularWidgetView(todoDatas: entry.todoDatas)
+            default:
+                Text(EmptyCase.entire.emptyString)
+                    .font(Font.custom("GmarketSansTTFMedium", size: 13))
+                    .foregroundColor(Color("subText"))
+            }
         case .systemMedium:
             switch entry.todoDatas.count {
             case let x where x > 5 :
@@ -79,6 +90,13 @@ struct FlickWidgetEntryView : View {
 
 struct FlickWidget: Widget {
     let kind: String = "FlickWidget"
+    var supportedFamilies: [WidgetFamily] = [.systemMedium, .systemLarge]
+    
+    init() {
+        if #available(iOS 16.0, *) {
+            supportedFamilies.append(.accessoryRectangular)
+        }
+    }
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
@@ -86,6 +104,6 @@ struct FlickWidget: Widget {
         }
         .configurationDisplayName("할 일 보기")
         .description("최근 작성한 할 일을 모아보세요.")
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .supportedFamilies(supportedFamilies)
     }
 }

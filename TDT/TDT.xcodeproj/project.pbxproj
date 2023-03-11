@@ -111,6 +111,9 @@
 		ECDA3CC529BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC429BC6CD300A21002 /* FlickTodayMediumEmptyView.swift */; };
 		ECDA3CC629BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC429BC6CD300A21002 /* FlickTodayMediumEmptyView.swift */; };
 		ECDA3CC729BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC429BC6CD300A21002 /* FlickTodayMediumEmptyView.swift */; };
+		ECDA3CC929BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */; };
+		ECDA3CCA29BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */; };
+		ECDA3CCB29BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */; };
 		ECDFCAA2298BDBB70065D939 /* SettingTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFCAA1298BDBB70065D939 /* SettingTableViewHeader.swift */; };
 		ECDFCAA4298BE53D0065D939 /* SettingTraitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFCAA3298BE53D0065D939 /* SettingTraitTableViewCell.swift */; };
 		ECDFCAA6298BE65A0065D939 /* TraitInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFCAA5298BE65A0065D939 /* TraitInfo.swift */; };
@@ -229,6 +232,7 @@
 		ECDA3CBC29BC6B2D00A21002 /* FlickWidgetSizeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickWidgetSizeType.swift; sourceTree = "<group>"; };
 		ECDA3CC029BC6CC500A21002 /* FlickTodayLargeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayLargeEmptyView.swift; sourceTree = "<group>"; };
 		ECDA3CC429BC6CD300A21002 /* FlickTodayMediumEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickTodayMediumEmptyView.swift; sourceTree = "<group>"; };
+		ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickAccessoryRectangularWidgetView.swift; sourceTree = "<group>"; };
 		ECDFCAA1298BDBB70065D939 /* SettingTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewHeader.swift; sourceTree = "<group>"; };
 		ECDFCAA3298BE53D0065D939 /* SettingTraitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTraitTableViewCell.swift; sourceTree = "<group>"; };
 		ECDFCAA5298BE65A0065D939 /* TraitInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitInfo.swift; sourceTree = "<group>"; };
@@ -366,6 +370,7 @@
 				EC975DFE29B4A4950088ACE4 /* EmptyCase.swift */,
 				EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */,
 				ECDA3CBC29BC6B2D00A21002 /* FlickWidgetSizeType.swift */,
+				ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */,
 			);
 			path = FlickWidget;
 			sourceTree = "<group>";
@@ -724,6 +729,7 @@
 				EC975DF929B4A1BA0088ACE4 /* Date+Extensions.swift in Sources */,
 				EC975DCB29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift in Sources */,
 				EC975DCD29B49A1A0088ACE4 /* FlickTodayWidget.swift in Sources */,
+				ECDA3CCB29BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */,
 				EC975DF229B49FAF0088ACE4 /* FlickTodayMediumWidgetView.swift in Sources */,
 				EC975DDF29B49AD30088ACE4 /* UserDefaults+Extensions.swift in Sources */,
 				EC975DD729B49A480088ACE4 /* FlickLargeWidgetView.swift in Sources */,
@@ -755,6 +761,7 @@
 				ECDA3CBE29BC6B2D00A21002 /* FlickWidgetSizeType.swift in Sources */,
 				ECC02F5F29B32A3400F61DF2 /* UIColor+Extensions.swift in Sources */,
 				ECC02F7029B341E700F61DF2 /* WidgetTodoData.swift in Sources */,
+				ECDA3CCA29BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */,
 				ECC02F6229B32E8C00F61DF2 /* UserDefaultKeys.swift in Sources */,
 				ECDA3CC229BC6CC500A21002 /* FlickTodayLargeEmptyView.swift in Sources */,
 				ECDA3CC629BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */,
@@ -775,6 +782,7 @@
 				EC9D7B4225BB07C800453FE8 /* UIView+Extensions.swift in Sources */,
 				EC975DFF29B4A4950088ACE4 /* EmptyCase.swift in Sources */,
 				EC975DEA29B49D2E0088ACE4 /* FlickTodayWidgetEntry.swift in Sources */,
+				ECDA3CC929BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */,
 				EC975DB929B475700088ACE4 /* WidgetTodoRow.swift in Sources */,
 				ECC02F6B29B33BD900F61DF2 /* FlickMediumWidgetView.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
