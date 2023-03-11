@@ -17,7 +17,7 @@ struct WidgetTodoRow: View {
                 .fill(isImportant ? Color(ThemeManager.shared.currentTheme?.mainColor ?? UIColor.gray) : Color("inactiveColor") )
                 .frame(width: 8, height: 8)
             Text(todo)
-                .font(Font.custom("GmarketSansTTFMedium", size: 15))
+                .font(Font.custom("GmarketSansTTFMedium", size: 13))
                 .foregroundColor(Color("mainText"))
         }
     }

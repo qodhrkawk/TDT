@@ -12,10 +12,11 @@ struct FlickWidgetEmptyView: View {
     var emptyCase: EmptyCase
 
     var body: some View {
-        VStack(alignment: .center, spacing: 18) {
+        VStack(alignment: .center, spacing: 12) {
             Image(colorScheme != .dark ? "imgEmptyMain" : "imgEmptyMainDark")
+                .frame(width: 44, height: 44)
             Text(emptyCase.emptyString)
-                .font(Font.custom("GmarketSansTTFMedium", size: 15))
+                .font(Font.custom("GmarketSansTTFMedium", size: 13))
                 .foregroundColor(Color("subText"))
         }
     }

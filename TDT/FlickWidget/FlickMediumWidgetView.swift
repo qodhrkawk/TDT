@@ -11,7 +11,7 @@ struct FlickMediumWidgetView : View {
     var todoDatas: [WidgetTodoData]
     
     var body: some View {
-        FlickWidgetTodoListView(todoDatas: todoDatas)
+        FlickWidgetTodoListView(todoDatas: todoDatas, sizeType: .medium)
             .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: .infinity, maxHeight: .infinity, alignment: .top)
             .padding(EdgeInsets(top: 18, leading: 24, bottom: 15, trailing: 28))
     }
@@ -19,9 +19,10 @@ struct FlickMediumWidgetView : View {
 
 struct FlickWidgetTodoListView: View {
     var todoDatas: [WidgetTodoData]
+    var sizeType: FlickWidgetSizeType
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: sizeType == .medium ? 0 : 4) {
             ForEach(todoDatas) { todoData in
                 WidgetTodoRow(todo: todoData.todo, isImportant: todoData.isImportant)
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, idealHeight: 24, maxHeight: 24, alignment: .leading)

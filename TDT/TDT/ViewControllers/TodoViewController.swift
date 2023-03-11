@@ -107,6 +107,10 @@ class TodoViewController: UIViewController {
     }
     
     @IBAction private func settingButtonAction(_ sender: Any) {
+        presentSettingViewController()
+    }
+    
+    @objc private func presentSettingViewController() {
         guard let settingViewController = UIStoryboard(
             name: "Setting",
             bundle: nil
@@ -127,6 +131,8 @@ extension TodoViewController {
         headerView.backgroundColor = Design.backgroundColor
         
         flickImageView.image = Design.flickImage
+        flickImageView.isUserInteractionEnabled = true
+        flickImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(presentSettingViewController)))
 
         headerView.alpha = 0.95
         

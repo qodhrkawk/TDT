@@ -53,13 +53,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let url = URLContexts.first?.url,
             let controlViewController = window?.rootViewController as? ControlViewController
         else { return }
-
+        
+        if window?.rootViewController?.presentedViewController is SettingViewController {
+            window?.rootViewController?.dismiss(animated: true)
+        }
+        
         if url.absoluteString.contains("archive") {
             controlViewController.moveToViewController(to: 0)
         }
         else if url.absoluteString.contains("todo") {
             controlViewController.moveToViewController(to: 1)
-        }        
+            controlViewController.keyboardInputInTodoViewController()
+        }
     }
 
 }

@@ -59,7 +59,7 @@ struct FlickTodayWidgetEntryView : View {
             case let x where x > 0 && x <= 4 :
                 FlickTodayMediumWidgetView(todoDatas: entry.todoDatas)
             default:
-                FlickWidgetEmptyView(emptyCase: .today)
+                FlickTodayMediumEmptyView()
             }
         default:
             switch entry.todoDatas.count {
@@ -68,14 +68,7 @@ struct FlickTodayWidgetEntryView : View {
             case let x where x > 0 && x <= 9:
                 FlickTodayLargeWidgetView(todoDatas: entry.todoDatas)
             default:
-                VStack {
-                    Spacer()
-                    FlickWidgetEmptyView(emptyCase: .today)
-                    Spacer()
-                    FlickLargeWidgetButtonView()
-                        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: 44, maxHeight: 44)
-                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16))
-                }
+                FlickTodayLargeEmptyView()
             }
         }
     }
@@ -89,7 +82,7 @@ struct FlickTodayWidget: Widget {
             FlickTodayWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("오늘의 할 일")
-        .description("예슬방귀 뿡뿡방귀")
+        .description("오늘 등록한 할 일만 모아보세요.")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }

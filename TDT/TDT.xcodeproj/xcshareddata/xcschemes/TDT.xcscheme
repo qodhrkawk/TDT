@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C17AEFC79E770A2906EFAAB1A3757406"
-               BuildableName = "Then.framework"
-               BlueprintName = "Then"
-               ReferencedContainer = "container:Pods.xcodeproj">
+               BlueprintIdentifier = "ECF8730425B9BD250096E766"
+               BuildableName = "TDT.app"
+               BlueprintName = "TDT"
+               ReferencedContainer = "container:TDT.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,6 +40,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "ECF8730425B9BD250096E766"
+            BuildableName = "TDT.app"
+            BlueprintName = "TDT"
+            ReferencedContainer = "container:TDT.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -47,6 +57,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "ECF8730425B9BD250096E766"
+            BuildableName = "TDT.app"
+            BlueprintName = "TDT"
+            ReferencedContainer = "container:TDT.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

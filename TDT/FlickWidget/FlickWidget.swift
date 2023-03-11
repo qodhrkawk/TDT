@@ -69,7 +69,7 @@ struct FlickWidgetEntryView : View {
                     FlickWidgetEmptyView(emptyCase: .entire)
                     Spacer()
                     FlickLargeWidgetButtonView()
-                        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: 44, maxHeight: 44)
+                        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: 38, maxHeight: 38)
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16))
                 }
             }
@@ -84,8 +84,8 @@ struct FlickWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             FlickWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("디폴트 위젯")
-        .description("골라봐~")
+        .configurationDisplayName("할 일 보기")
+        .description("최근 작성한 할 일을 모아보세요.")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }

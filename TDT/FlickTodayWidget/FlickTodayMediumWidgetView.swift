@@ -16,7 +16,7 @@ struct FlickTodayMediumWidgetView : View {
                 .font(Font.custom("GmarketSansTTFBold", size: 14))
                 .foregroundColor(Color(ThemeManager.shared.currentTheme?.mainColor ?? Theme.flickBlue.mainColor))
                 .padding(EdgeInsets(top: 0, leading: 22, bottom: 0, trailing: 0))
-            FlickWidgetTodoListView(todoDatas: todoDatas)
+            FlickWidgetTodoListView(todoDatas: todoDatas, sizeType: .medium)
                 .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: .infinity, maxHeight: .infinity, alignment: .top)
                 .padding(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 28))
         }
