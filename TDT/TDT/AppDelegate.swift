@@ -10,12 +10,18 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    override init() {
-        WidgetDataManager.shared.updateData()
+    
+    private func migrateUserDefaultsIfNeeded() {
+        guard let _ = UserDefaults.grouped.value(forKey: "UserDefaultsMigrated") else {
+            UserDefaults.standard.dictionaryRepresentation().forEach { (key, value) in
+                UserDefaults.grouped.set(value, forKey: key)
+            }
+            
+            UserDefaults.grouped.setValue("migrated", forKey: "UserDefaultsMigrated")
+            return
+        }
+        
     }
-
-
-
 
     func appUpdate() {
 
@@ -43,6 +49,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        migrateUserDefaultsIfNeeded()
+        WidgetDataManager.shared.updateData()
         
         _ = try? AppStoreCheck.isUpdateAvailable { (update, error) in
 

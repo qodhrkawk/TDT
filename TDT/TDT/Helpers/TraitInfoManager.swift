@@ -10,7 +10,7 @@ import Foundation
 class TraitInfoManager {
     static let shared = TraitInfoManager()
     
-    @UserDefaultWrapper<TraitInfo>(key: UserDefaultKeys.trait.rawValue, userDefaults: UserDefaults.standard) private(set) var currentTraitInfo
+    @UserDefaultWrapper<TraitInfo>(key: UserDefaultKeys.trait.rawValue, userDefaults: UserDefaults.grouped) private(set) var currentTraitInfo
     
     init() {
         if currentTraitInfo == nil {

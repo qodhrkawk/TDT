@@ -30,7 +30,7 @@ class TodoViewController: UIViewController {
     
     weak var pageControlDelegate: PageControlDelegate?
 
-    private let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.grouped
     private var dateInfo: [String] = []
     private var todoDatas: [[TodoData]] = []
     private var delaySection = -1

@@ -21,7 +21,11 @@ public class WidgetDataManager {
     }
     
     func updateData() {
-        if let savedData = UserDefaults.standard.value(forKey: "TodoDatas") as? Data{
+        defer {
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+
+        if let savedData = UserDefaults.grouped.value(forKey: "TodoDatas") as? Data {
             guard
                 let dataArray = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData),
                 dataArray.count != 0
@@ -31,7 +35,7 @@ public class WidgetDataManager {
             }
 
             let flattenedArray = Array(dataArray.reduce([], +).reversed())
-            
+
             if flattenedArray.count > 10 {
                 widgetData = flattenedArray[..<10].reversed()
             }
@@ -39,7 +43,8 @@ public class WidgetDataManager {
                 widgetData = flattenedArray.reversed()
             }
         }
-        
-        WidgetCenter.shared.reloadAllTimelines()
+        else {
+            widgetData = []
+        }
     }
 }
