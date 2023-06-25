@@ -16,7 +16,7 @@ class ArchiveViewController: UIViewController {
     
     weak var pageControlDelegate: PageControlDelegate?
 
-    private let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.grouped
     private var animationStatus: TodoAnimationStatus = .initialAnimation
     private var archiveDatas: [[TodoData]] = []
     private var dateInfo: [String] =  []

@@ -7,55 +7,59 @@
 
 import Foundation
 
-@propertyWrapper struct UserDefaultWrapper<T: Codable> {
-    var wrappedValue: T? {
+@propertyWrapper public struct UserDefaultWrapper<T: Codable> {
+    public var wrappedValue: T? {
         get {
-            guard let data = UserDefaults.standard.object(forKey: self.key) as? Data,
+            guard let data = userDefaults.object(forKey: self.key) as? Data,
                let decoded = try? JSONDecoder().decode(T.self, from: data)
             else { return nil }
             
             return decoded
         }
         set {
-            if newValue == nil { UserDefaults.standard.removeObject(forKey: key) }
+            if newValue == nil { userDefaults.removeObject(forKey: key) }
             else {
                 if let encoded = try? JSONEncoder().encode(newValue) {
-                    UserDefaults.standard.setValue(encoded, forKey: key)
+                    userDefaults.setValue(encoded, forKey: key)
                 }
             }
         }
     }
     
-    init(key: String) {
+    public init(key: String, userDefaults: UserDefaults) {
         self.key = key
+        self.userDefaults = userDefaults
     }
     
     private let key: String
+    private let userDefaults: UserDefaults
 }
 
 
-@propertyWrapper struct UserDefaultPropertyWrapper<T: Codable> {
-    var wrappedValue: T? {
+@propertyWrapper public struct UserDefaultPropertyWrapper<T: Codable> {
+    public var wrappedValue: T? {
         get {
-            guard let data = UserDefaults.standard.object(forKey: self.key) as? Data,
+            guard let data = userDefaults.object(forKey: self.key) as? Data,
                let decoded = try? JSONDecoder().decode(T.self, from: data)
             else { return nil }
             
             return decoded
         }
         set {
-            if newValue == nil { UserDefaults.standard.removeObject(forKey: key) }
+            if newValue == nil { userDefaults.removeObject(forKey: key) }
             else {
                 if let encoded = try? JSONEncoder().encode(newValue) {
-                    UserDefaults.standard.setValue(encoded, forKey: key)
+                    userDefaults.setValue(encoded, forKey: key)
                 }
             }
         }
     }
     
-    init(key: String) {
+    public init(key: String, userDefaults: UserDefaults) {
         self.key = key
+        self.userDefaults = userDefaults
     }
     
     private let key: String
+    private let userDefaults: UserDefaults
 }

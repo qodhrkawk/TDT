@@ -2,6 +2,7 @@ import UIKit
 
 class ControlPageViewController: UIPageViewController {
     let identifiers = ["ArchiveViewController","TodoViewController"]
+    var currentViewController: UIViewController?
 
     lazy var viewControllerArray : [UIViewController] = {
         return [
@@ -18,6 +19,7 @@ class ControlPageViewController: UIPageViewController {
         super.viewDidLoad()
         self.delegate = self
 
+        currentViewController = viewControllerArray[1]
         setViewControllers([viewControllerArray[1]], direction: .forward, animated: true, completion: nil)
     }
 }
@@ -36,6 +38,7 @@ extension ControlPageViewController : UIPageViewControllerDelegate {
             return nil
         }
         else {
+            currentViewController = viewControllerArray[previousIndex]
             return viewControllerArray[previousIndex]
         }
     }
@@ -52,6 +55,7 @@ extension ControlPageViewController : UIPageViewControllerDelegate {
             return nil
         }
         else {
+            currentViewController = viewControllerArray[nextIndex]
             return viewControllerArray[nextIndex]
         }
     }

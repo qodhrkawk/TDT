@@ -30,7 +30,7 @@ class TodoViewController: UIViewController {
     
     weak var pageControlDelegate: PageControlDelegate?
 
-    private let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.grouped
     private var dateInfo: [String] = []
     private var todoDatas: [[TodoData]] = []
     private var delaySection = -1
@@ -107,6 +107,10 @@ class TodoViewController: UIViewController {
     }
     
     @IBAction private func settingButtonAction(_ sender: Any) {
+        presentSettingViewController()
+    }
+    
+    @objc private func presentSettingViewController() {
         guard let settingViewController = UIStoryboard(
             name: "Setting",
             bundle: nil
@@ -127,6 +131,8 @@ extension TodoViewController {
         headerView.backgroundColor = Design.backgroundColor
         
         flickImageView.image = Design.flickImage
+        flickImageView.isUserInteractionEnabled = true
+        flickImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(presentSettingViewController)))
 
         headerView.alpha = 0.95
         
@@ -399,6 +405,8 @@ extension TodoViewController {
         
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
         todoTableView.reloadData()
+        
+        WidgetDataManager.shared.updateData()
     }
 }
 
@@ -580,6 +588,8 @@ extension TodoViewController: TextBoxDelegate {
         todoDatas[indexPath.section][indexPath.row].isImportant = !todoDatas[indexPath.section][indexPath.row].isImportant
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
         todoTableView.reloadData()
+        
+        WidgetDataManager.shared.updateData()
     }
     
     func myDeleteRow(indexPath: IndexPath,isEnd: Bool){
@@ -658,6 +668,8 @@ extension TodoViewController: TextBoxDelegate {
         
         todoTableView.endUpdates()
         todoTableView.reloadData()
+        
+        WidgetDataManager.shared.updateData()
     }
 }
 
@@ -682,6 +694,8 @@ extension TodoViewController: ToDoDelegate {
         cell.wasSingleTapped = false
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        
+        WidgetDataManager.shared.updateData()
     }
     func modify(indexPath: IndexPath, str: String){
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
@@ -693,6 +707,8 @@ extension TodoViewController: ToDoDelegate {
         self.showToast(text: "수정되었어요",withDelay: 0.3)
         todoTableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        
+        WidgetDataManager.shared.updateData()
     }
     
     func dismissed(indexPath: IndexPath) {
