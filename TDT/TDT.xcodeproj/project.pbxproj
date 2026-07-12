@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C277E81C99D03579FDDF9852 /* TodoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE680DC6B7B4CD77E984B15 /* TodoStore.swift */; };
 		E5EA9A8F7A3549B88474AD6C /* Pods_TDT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */; };
 		EC778C2725BC0B4100EAE775 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */; };
 		EC778C2E25BC1C1A00EAE775 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */; };
@@ -171,6 +172,7 @@
 
 /* Begin PBXFileReference section */
 		1B42DCB1B925A39C276981B7 /* Pods-TDT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.debug.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.debug.xcconfig"; sourceTree = "<group>"; };
+		ABE680DC6B7B4CD77E984B15 /* TodoStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodoStore.swift; sourceTree = "<group>"; };
 		AC2020E7DB3909549ED23AB0 /* Pods-TDT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.release.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.release.xcconfig"; sourceTree = "<group>"; };
 		CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TDT.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC5BAD3B25D2EAB500F142CB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -351,6 +353,7 @@
 				ECA1001C25BD8677005BA8D1 /* TodoData.swift */,
 				ECD004E6297BCF1A0043972F /* Theme.swift */,
 				ECDFCAA5298BE65A0065D939 /* TraitInfo.swift */,
+				ABE680DC6B7B4CD77E984B15 /* TodoStore.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -827,6 +830,7 @@
 				ECDFCAA6298BE65A0065D939 /* TraitInfo.swift in Sources */,
 				ECD004EA297BD05A0043972F /* ThemeManager.swift in Sources */,
 				ECDA3CC529BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */,
+				C277E81C99D03579FDDF9852 /* TodoStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

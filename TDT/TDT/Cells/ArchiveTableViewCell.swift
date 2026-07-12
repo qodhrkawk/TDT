@@ -16,8 +16,8 @@ class ArchiveTableViewCell: UITableViewCell {
     @IBOutlet weak var gradientView: ReverseGradientView!
     
     weak var textBoxDelegate: TextBoxDelegate?
-    var myIndexpath: IndexPath?
     var wasSingleTapped = false
+    private var isRestoring = false
     @Published var todoData: TodoData?
     @Published var isToday: Bool = false
     
@@ -114,48 +114,48 @@ extension ArchiveTableViewCell {
 
     @objc private func doubleTapped(){
         feedbackGenerator?.impactOccurred()
-        textBoxDelegate?.doubleTapped(indexPath: myIndexpath!)
+        textBoxDelegate?.doubleTapped(cell: self)
     }
-    
+
     @objc private func leftSwiped(){
         textBoxDelegate?.shouldMove()
     }
-    
+
     @objc private func rightSwiped(){
-    
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+        guard !isRestoring else { return }
+        isRestoring = true
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: { [weak self] in
             guard let self else { return }
 
+            let slide = CGAffineTransform(translationX: UIScreen.main.bounds.width, y: 0)
             self.gradientView.alpha = 1
-            self.containView.transform = CGAffineTransform(translationX: 50, y: 0)
-            self.todoLabel.transform = CGAffineTransform(translationX: 50, y: 0)
-            self.gradientView.transform = CGAffineTransform(translationX: 50, y: 0)
-        })
-        UIView.animate(withDuration: 0.5,delay: 0.2,options: .curveEaseIn, animations: { [weak self] in
+            self.containView.transform = slide
+            self.todoLabel.transform = slide
+            self.gradientView.transform = slide
+        }, completion: { [weak self] _ in
             guard let self else { return }
 
-            self.transform = CGAffineTransform(translationX: 400, y: 0)
-            self.containView.transform = CGAffineTransform(translationX: 400, y: 0)
-            self.todoLabel.transform = CGAffineTransform(translationX: 400, y: 0)
-            self.gradientView.transform = CGAffineTransform(translationX: 400, y: 0)
-        }, completion: { finish in
-            self.textBoxDelegate?.leftSwiped(indexPath: self.myIndexpath!)
-            UIView.animate(withDuration: 0,delay: 0.3, animations: { [weak self] in
+            // 애니메이션 완료 시점에 델리게이트가 indexPath(for:)로 실제 위치를 조회한다
+            self.textBoxDelegate?.leftSwiped(cell: self)
+            self.isRestoring = false
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
                 guard let self else { return }
 
                 self.containView.transform = .identity
                 self.todoLabel.transform = .identity
                 self.gradientView.transform = .identity
                 self.gradientView.alpha = 0
-            })
+            }
         })
     }
-    
-   
+
+
     @objc private func singleTapped(){
         if !wasSingleTapped{
             wasSingleTapped = true
-            textBoxDelegate?.longTapped(indexPath: myIndexpath!)
+            textBoxDelegate?.longTapped(cell: self)
         }
     }
     

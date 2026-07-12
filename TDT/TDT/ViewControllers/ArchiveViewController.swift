@@ -292,7 +292,6 @@ extension ArchiveViewController: UITableViewDataSource{
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ArchiveTableViewCell.identifier) as? ArchiveTableViewCell else {return UITableViewCell()}
         
         cell.textBoxDelegate = self
-        cell.myIndexpath = indexPath
         cell.todoData = archiveDatas[indexPath.section][indexPath.row]
        
         let dateFormatter = DateFormatter()
@@ -308,29 +307,34 @@ extension ArchiveViewController: UITableViewDataSource{
 }
 
 extension ArchiveViewController: TextBoxDelegate {
-    func longTapped(indexPath: IndexPath) {
+    func longTapped(cell: UITableViewCell) {
+        guard let indexPath = wholeTV.indexPath(for: cell) else { return }
+
         feedbackGenerator?.impactOccurred()
         self.view.endEditing(true)
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
-        
+
         vcName.contentText = archiveDatas[indexPath.section][indexPath.row].todo
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.fromArchive = true
         vcName.modalPresentationStyle = .overCurrentContext
-        
+
         self.present(vcName, animated: false, completion: nil)
     }
-    
-    func leftSwiped(indexPath: IndexPath) {
+
+    func leftSwiped(cell: UITableViewCell) {
+        guard let indexPath = wholeTV.indexPath(for: cell) else { return }
         myDeleteRow(indexPath: indexPath, isBack: true)
     }
-    
+
     func shouldMove() {
         pageControlDelegate?.moveToViewController(to: 1)
     }
-    
-    func doubleTapped(indexPath: IndexPath) {
+
+    func doubleTapped(cell: UITableViewCell) {
+        guard let indexPath = wholeTV.indexPath(for: cell) else { return }
+
         archiveDatas[indexPath.section][indexPath.row].isImportant = !archiveDatas[indexPath.section][indexPath.row].isImportant
         wholeTV.reloadData()
         userDefaults.set(try? PropertyListEncoder().encode(archiveDatas),forKey: "ArchiveDatas")
