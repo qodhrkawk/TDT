@@ -908,6 +908,18 @@ extension TodoViewController {
             $0.bottom.equalToSuperview().offset(-11)
         }
 
+        // 셀과 동일한 완료 그라데이션 — 스와이프 시 트레일링에서 나타난다
+        let gradient = GradientView()
+        gradient.alpha = 0
+        gradient.tag = Self.pinnedGradientTag
+        row.addSubview(gradient)
+        row.sendSubviewToBack(gradient)
+        gradient.snp.makeConstraints {
+            $0.leading.equalTo(row.snp.trailing).offset(-18)
+            $0.top.bottom.equalToSuperview()
+            $0.width.equalTo(75)
+        }
+
         row.tag = index
         row.isUserInteractionEnabled = true
         row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
@@ -918,6 +930,8 @@ extension TodoViewController {
         return row
     }
 
+    private static let pinnedGradientTag = 987
+
     // 일반 항목과 동일하게 왼쪽 스와이프 = 완료(아카이브)
     @objc private func pinnedRowLeftSwiped(_ gesture: UISwipeGestureRecognizer) {
         guard !isSelectionMode,
@@ -926,9 +940,11 @@ extension TodoViewController {
         else { return }
 
         row.isUserInteractionEnabled = false
+        let gradient = row.viewWithTag(Self.pinnedGradientTag)
+
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            gradient?.alpha = 1
             row.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.width, y: 0)
-            row.alpha = 0
         }, completion: { [weak self] _ in
             guard let self else { return }
 
