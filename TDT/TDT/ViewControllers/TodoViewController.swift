@@ -911,7 +911,32 @@ extension TodoViewController {
         row.tag = index
         row.isUserInteractionEnabled = true
         row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
+
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(pinnedRowLeftSwiped(_:)))
+        leftSwipe.direction = .left
+        row.addGestureRecognizer(leftSwipe)
         return row
+    }
+
+    // 일반 항목과 동일하게 왼쪽 스와이프 = 완료(아카이브)
+    @objc private func pinnedRowLeftSwiped(_ gesture: UISwipeGestureRecognizer) {
+        guard !isSelectionMode,
+              let row = gesture.view,
+              let item = store.pinnedTodo(at: row.tag)
+        else { return }
+
+        row.isUserInteractionEnabled = false
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            row.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.width, y: 0)
+            row.alpha = 0
+        }, completion: { [weak self] _ in
+            guard let self else { return }
+
+            self.store.appendToArchive([item], dateString: self.todayString)
+            self.store.removePinned(at: row.tag)
+            self.refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+        })
     }
 
     @objc private func pinnedRowTapped(_ gesture: UITapGestureRecognizer) {
