@@ -12,9 +12,9 @@ import UIKit  // IndexPath.row / .section 접근자
 
 /// 할 일 데이터의 변형과 영속화를 담당한다. UI 프레임워크 의존이 없어 단독으로 테스트 가능하다.
 ///
-/// 화면 구성은 [고정 섹션(있을 때만) + 날짜 섹션들]이며, 모든 public API의 IndexPath는
-/// 이 "표시 좌표계"를 쓴다 — 고정 항목이 있으면 섹션 0이 고정 영역, 이후가 날짜 섹션.
-/// 고정(pin)은 날짜와 무관한 전역 영역이다. 고정 해제하면 항목의 원래 날짜 섹션으로 돌아간다.
+/// - 테이블은 날짜 섹션만 표시한다. public API의 IndexPath는 날짜 섹션 좌표계다.
+/// - 고정(pin)은 날짜와 무관한 전역 목록(`pinnedDatas`)으로, 리스트가 아닌
+///   스티키 바에 표시된다. 고정 해제하면 항목의 원래 날짜 섹션으로 돌아간다.
 final class TodoStore {
     enum Keys {
         static let todos = "TodoDatas"
@@ -34,49 +34,13 @@ final class TodoStore {
         self.userDefaults = userDefaults
     }
 
-    // MARK: - 표시 좌표계
-
-    var hasPinnedSection: Bool { !pinnedDatas.isEmpty }
-
-    private var dateSectionOffset: Int { hasPinnedSection ? 1 : 0 }
-
-    var sectionCount: Int { dateSectionOffset + todoDatas.count }
-
-    var isEmpty: Bool { pinnedDatas.isEmpty && todoDatas.isEmpty }
-
-    func isPinnedSection(_ section: Int) -> Bool {
-        hasPinnedSection && section == 0
-    }
-
-    func rowCount(inSection section: Int) -> Int {
-        if isPinnedSection(section) { return pinnedDatas.count }
-        let dateIdx = dateIndex(forDisplaySection: section)
-        guard todoDatas.indices.contains(dateIdx) else { return 0 }
-        return todoDatas[dateIdx].count
-    }
-
-    /// 날짜 섹션이면 날짜 문자열, 고정 섹션이면 nil
-    func headerDate(forSection section: Int) -> String? {
-        guard !isPinnedSection(section) else { return nil }
-        let dateIdx = dateIndex(forDisplaySection: section)
-        guard dateInfo.indices.contains(dateIdx) else { return nil }
-        return dateInfo[dateIdx]
-    }
+    var isEmpty: Bool { todoDatas.isEmpty }
 
     func todo(at indexPath: IndexPath) -> TodoData? {
-        if isPinnedSection(indexPath.section) {
-            guard pinnedDatas.indices.contains(indexPath.row) else { return nil }
-            return pinnedDatas[indexPath.row]
-        }
-        let dateIdx = dateIndex(forDisplaySection: indexPath.section)
-        guard todoDatas.indices.contains(dateIdx),
-              todoDatas[dateIdx].indices.contains(indexPath.row)
+        guard todoDatas.indices.contains(indexPath.section),
+              todoDatas[indexPath.section].indices.contains(indexPath.row)
         else { return nil }
-        return todoDatas[dateIdx][indexPath.row]
-    }
-
-    private func dateIndex(forDisplaySection section: Int) -> Int {
-        section - dateSectionOffset
+        return todoDatas[indexPath.section][indexPath.row]
     }
 
     // MARK: - 로드 / 저장
@@ -106,7 +70,7 @@ final class TodoStore {
         migrateScatteredPinsIfNeeded()
     }
 
-    /// 과거 구현(섹션 내 고정)이 날짜 섹션 안에 남긴 isPinned 항목을 전역 고정 영역으로 승격
+    /// 과거 구현(섹션 내 고정)이 날짜 섹션 안에 남긴 isPinned 항목을 전역 고정으로 승격
     private func migrateScatteredPinsIfNeeded() {
         var scattered: [TodoData] = []
         for index in todoDatas.indices {
@@ -128,7 +92,7 @@ final class TodoStore {
         userDefaults.set(try? PropertyListEncoder().encode(pinnedDatas), forKey: Keys.pinned)
     }
 
-    // MARK: - 추가 / 수정 / 삭제
+    // MARK: - 추가 / 수정 / 삭제 (날짜 섹션)
 
     func add(todo: String, dateString: String) {
         let item = TodoData(date: dateString, todo: todo, isImportant: false)
@@ -144,159 +108,66 @@ final class TodoStore {
     }
 
     func updateText(at indexPath: IndexPath, text: String) {
-        mutateTodo(at: indexPath) { $0.todo = text }
-    }
-
-    func toggleImportant(at indexPath: IndexPath) {
-        mutateTodo(at: indexPath) { $0.isImportant.toggle() }
-    }
-
-    private func mutateTodo(at indexPath: IndexPath, _ mutation: (inout TodoData) -> Void) {
-        if isPinnedSection(indexPath.section) {
-            guard pinnedDatas.indices.contains(indexPath.row) else { return }
-            mutation(&pinnedDatas[indexPath.row])
-        }
-        else {
-            let dateIdx = dateIndex(forDisplaySection: indexPath.section)
-            guard todoDatas.indices.contains(dateIdx),
-                  todoDatas[dateIdx].indices.contains(indexPath.row)
-            else { return }
-            mutation(&todoDatas[dateIdx][indexPath.row])
-        }
+        guard todo(at: indexPath) != nil else { return }
+        todoDatas[indexPath.section][indexPath.row].todo = text
         save()
     }
 
-    /// 항목을 삭제하고, 섹션(고정 영역 포함)이 비면 섹션까지 사라졌음을 알린다.
+    func toggleImportant(at indexPath: IndexPath) {
+        guard todo(at: indexPath) != nil else { return }
+        todoDatas[indexPath.section][indexPath.row].isImportant.toggle()
+        save()
+    }
+
+    /// 항목을 삭제하고, 섹션이 비면 섹션까지 제거한다.
     @discardableResult
     func remove(at indexPath: IndexPath) -> (item: TodoData, sectionRemoved: Bool)? {
-        if isPinnedSection(indexPath.section) {
-            guard pinnedDatas.indices.contains(indexPath.row) else { return nil }
-            let item = pinnedDatas.remove(at: indexPath.row)
-            save()
-            return (item, pinnedDatas.isEmpty)
-        }
+        guard let item = todo(at: indexPath) else { return nil }
 
-        let dateIdx = dateIndex(forDisplaySection: indexPath.section)
-        guard todoDatas.indices.contains(dateIdx),
-              todoDatas[dateIdx].indices.contains(indexPath.row)
-        else { return nil }
-
-        let item = todoDatas[dateIdx].remove(at: indexPath.row)
+        todoDatas[indexPath.section].remove(at: indexPath.row)
 
         var sectionRemoved = false
-        if todoDatas[dateIdx].isEmpty {
-            todoDatas.remove(at: dateIdx)
-            dateInfo.remove(at: dateIdx)
+        if todoDatas[indexPath.section].isEmpty {
+            todoDatas.remove(at: indexPath.section)
+            dateInfo.remove(at: indexPath.section)
             sectionRemoved = true
         }
         save()
         return (item, sectionRemoved)
     }
 
-    // MARK: - 고정 (전역 영역, 날짜 무관)
-
-    /// 고정: 날짜 섹션에서 빼내 고정 영역 맨 위로.
-    /// 해제: 항목의 원래 날짜 섹션으로 복귀 (섹션이 없으면 날짜순 위치에 새로 만든다).
-    /// 이동한 새 표시 위치를 반환한다.
-    @discardableResult
-    func togglePin(at indexPath: IndexPath) -> IndexPath? {
-        if isPinnedSection(indexPath.section) {
-            guard pinnedDatas.indices.contains(indexPath.row) else { return nil }
-            var item = pinnedDatas.remove(at: indexPath.row)
-            item.isPinned = false
-            let destination = insertIntoDateSections(item)
-            save()
-            return destination
-        }
-
-        let dateIdx = dateIndex(forDisplaySection: indexPath.section)
-        guard todoDatas.indices.contains(dateIdx),
-              todoDatas[dateIdx].indices.contains(indexPath.row)
-        else { return nil }
-
-        var item = todoDatas[dateIdx].remove(at: indexPath.row)
-        if todoDatas[dateIdx].isEmpty {
-            todoDatas.remove(at: dateIdx)
-            dateInfo.remove(at: dateIdx)
-        }
-        item.isPinned = true
-        pinnedDatas.insert(item, at: 0)
-        save()
-        return IndexPath(row: 0, section: 0)
-    }
-
-    /// 날짜 순서를 지키며 날짜 섹션에 삽입하고, 삽입된 표시 위치를 반환한다.
-    private func insertIntoDateSections(_ item: TodoData) -> IndexPath {
-        if let dateIdx = dateInfo.firstIndex(of: item.date) {
-            todoDatas[dateIdx].append(item)
-            return IndexPath(row: todoDatas[dateIdx].count - 1, section: dateIdx + dateSectionOffset)
-        }
-
-        let insertIdx = dateInfo.firstIndex(where: { $0 > item.date }) ?? dateInfo.count
-        dateInfo.insert(item.date, at: insertIdx)
-        todoDatas.insert([item], at: insertIdx)
-        return IndexPath(row: 0, section: insertIdx + dateSectionOffset)
-    }
-
     // MARK: - 순서 변경 (드래그)
 
-    /// 표시 좌표계 기준 드래그 이동.
-    /// - 고정 영역 안: 고정 순서 변경
-    /// - 고정 영역 → 날짜 섹션: 고정 해제 + 해당 섹션 날짜로 변경
-    /// - 날짜 섹션 → 고정 영역: 고정
-    /// - 날짜 섹션 간: 날짜 변경 (기존 동작)
+    /// 드래그 이동. 다른 날짜 섹션으로 이동하면 항목의 날짜가 해당 섹션 날짜로 바뀐다.
+    /// 실제 삽입된 위치를 반환한다.
     @discardableResult
     func move(from source: IndexPath, to destination: IndexPath) -> IndexPath? {
-        guard source != destination, todo(at: source) != nil else { return nil }
+        guard source != destination, var item = todo(at: source) else { return nil }
 
-        let sourceIsPinned = isPinnedSection(source.section)
-        let destinationIsPinned = isPinnedSection(destination.section)
-        // 소스 제거로 섹션 인덱스가 밀리기 전에 대상 날짜 섹션을 내부 인덱스로 고정해 둔다
-        var destDateIdx: Int? = destinationIsPinned ? nil : dateIndex(forDisplaySection: destination.section)
-
-        var item: TodoData
-        if sourceIsPinned {
-            item = pinnedDatas.remove(at: source.row)
-        }
-        else {
-            let sourceDateIdx = dateIndex(forDisplaySection: source.section)
-            item = todoDatas[sourceDateIdx].remove(at: source.row)
-            if todoDatas[sourceDateIdx].isEmpty {
-                todoDatas.remove(at: sourceDateIdx)
-                dateInfo.remove(at: sourceDateIdx)
-                if let idx = destDateIdx, idx > sourceDateIdx {
-                    destDateIdx = idx - 1
-                }
+        var destSection = destination.section
+        todoDatas[source.section].remove(at: source.row)
+        if todoDatas[source.section].isEmpty {
+            todoDatas.remove(at: source.section)
+            dateInfo.remove(at: source.section)
+            if destSection > source.section {
+                destSection -= 1
             }
         }
 
-        if destinationIsPinned {
-            item.isPinned = true
-            let row = min(destination.row, pinnedDatas.count)
-            pinnedDatas.insert(item, at: row)
-            save()
-            return IndexPath(row: row, section: 0)
-        }
-
-        guard let dateIdx = destDateIdx, todoDatas.indices.contains(dateIdx) || todoDatas.count == dateIdx else {
-            // 대상 섹션이 사라진 예외 상황 — 원래 날짜 위치로 복귀
+        guard dateInfo.indices.contains(destSection) else {
             let fallback = insertIntoDateSections(item)
             save()
             return fallback
         }
 
-        item.isPinned = false
-        if dateInfo.indices.contains(dateIdx) {
-            item.date = dateInfo[dateIdx]
-            let row = min(destination.row, todoDatas[dateIdx].count)
-            todoDatas[dateIdx].insert(item, at: row)
-            save()
-            return IndexPath(row: row, section: dateIdx + dateSectionOffset)
+        if source.section != destination.section {
+            item.date = dateInfo[destSection]
         }
 
-        let fallback = insertIntoDateSections(item)
+        let row = min(destination.row, todoDatas[destSection].count)
+        todoDatas[destSection].insert(item, at: row)
         save()
-        return fallback
+        return IndexPath(row: row, section: destSection)
     }
 
     @discardableResult
@@ -308,6 +179,67 @@ final class TodoStore {
             removed.append(index)
         }
         return removed
+    }
+
+    // MARK: - 고정 (전역, 스티키 바)
+
+    func pinnedTodo(at index: Int) -> TodoData? {
+        guard pinnedDatas.indices.contains(index) else { return nil }
+        return pinnedDatas[index]
+    }
+
+    /// 날짜 섹션 항목을 고정 목록 맨 위로 옮긴다.
+    func pin(at indexPath: IndexPath) {
+        guard var item = todo(at: indexPath) else { return }
+
+        todoDatas[indexPath.section].remove(at: indexPath.row)
+        if todoDatas[indexPath.section].isEmpty {
+            todoDatas.remove(at: indexPath.section)
+            dateInfo.remove(at: indexPath.section)
+        }
+        item.isPinned = true
+        pinnedDatas.insert(item, at: 0)
+        save()
+    }
+
+    /// 고정 해제 — 항목의 원래 날짜 섹션으로 복귀 (섹션이 없으면 날짜순 위치에 새로 만든다).
+    /// 복귀한 위치를 반환한다.
+    @discardableResult
+    func unpin(at index: Int) -> IndexPath? {
+        guard pinnedDatas.indices.contains(index) else { return nil }
+
+        var item = pinnedDatas.remove(at: index)
+        item.isPinned = false
+        let destination = insertIntoDateSections(item)
+        save()
+        return destination
+    }
+
+    func updatePinnedText(at index: Int, text: String) {
+        guard pinnedDatas.indices.contains(index) else { return }
+        pinnedDatas[index].todo = text
+        save()
+    }
+
+    @discardableResult
+    func removePinned(at index: Int) -> TodoData? {
+        guard pinnedDatas.indices.contains(index) else { return nil }
+        let item = pinnedDatas.remove(at: index)
+        save()
+        return item
+    }
+
+    /// 날짜 순서를 지키며 날짜 섹션에 삽입하고, 삽입된 위치를 반환한다.
+    private func insertIntoDateSections(_ item: TodoData) -> IndexPath {
+        if let dateIdx = dateInfo.firstIndex(of: item.date) {
+            todoDatas[dateIdx].append(item)
+            return IndexPath(row: todoDatas[dateIdx].count - 1, section: dateIdx)
+        }
+
+        let insertIdx = dateInfo.firstIndex(where: { $0 > item.date }) ?? dateInfo.count
+        dateInfo.insert(item.date, at: insertIdx)
+        todoDatas.insert([item], at: insertIdx)
+        return IndexPath(row: 0, section: insertIdx)
     }
 
     // MARK: - 아카이브 (완료 처리)
@@ -351,7 +283,7 @@ final class TodoStore {
         userDefaults.setValue(archiveDates, forKey: Keys.archiveDates)
     }
 
-    // MARK: - 일괄 처리
+    // MARK: - 일괄 처리 (날짜 섹션)
 
     /// 선택 항목들을 아카이브로 이동한다.
     func batchArchive(at indexPaths: [IndexPath], dateString: String) {
@@ -367,20 +299,11 @@ final class TodoStore {
     }
 
     private func batchRemove(_ sortedAscending: [IndexPath]) {
-        // 내림차순 처리 — 날짜 섹션들이 먼저, 고정 섹션(0)이 마지막이라
-        // 고정 영역이 비어 표시 오프셋이 바뀌어도 남은 인덱스에 영향이 없다
         for indexPath in sortedAscending.reversed() {
-            if isPinnedSection(indexPath.section) {
-                guard pinnedDatas.indices.contains(indexPath.row) else { continue }
-                pinnedDatas.remove(at: indexPath.row)
-            }
-            else {
-                let dateIdx = dateIndex(forDisplaySection: indexPath.section)
-                guard todoDatas.indices.contains(dateIdx),
-                      todoDatas[dateIdx].indices.contains(indexPath.row)
-                else { continue }
-                todoDatas[dateIdx].remove(at: indexPath.row)
-            }
+            guard todoDatas.indices.contains(indexPath.section),
+                  todoDatas[indexPath.section].indices.contains(indexPath.row)
+            else { continue }
+            todoDatas[indexPath.section].remove(at: indexPath.row)
         }
         removeEmptyDateSections()
         save()

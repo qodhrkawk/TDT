@@ -36,6 +36,18 @@ class TodoViewController: UIViewController {
     private var todoDatas: [[TodoData]] { store.todoDatas }
     private var delaySection = -1
 
+    // 알럿이 어떤 항목에 대해 떠 있는지 (고정 바 항목은 IndexPath가 없어 별도 추적)
+    private enum AlertContext {
+        case todo(IndexPath)
+        case pinnedItem(Int)
+    }
+    private var alertContext: AlertContext?
+
+    // 고정 스티키 바
+    private let pinnedBar = UIView()
+    private let pinnedStack = UIStackView()
+    private var pinnedBarTopInset: CGFloat = 0
+
     // 일괄 선택 모드
     private var isSelectionMode = false
     private var selectedIndexPaths = Set<IndexPath>()
@@ -79,6 +91,8 @@ class TodoViewController: UIViewController {
         loadData()
         setMainColor()
         todoTableView.reloadData()
+        refreshPinnedBar()
+        scrollToLatest(animated: false)
         adjustToUserInterfaceStyle()
     }
     
@@ -175,6 +189,15 @@ extension TodoViewController {
         sendButton.tintColor = Design.Button.inactiveColor
 
         setupMoreButtonMenu()
+        setupPinnedBar()
+    }
+
+    // 실행 시 오늘(마지막 섹션) 위치로 이동 — "매번 맨 아래까지 내려가야 한다"는 리뷰 대응
+    private func scrollToLatest(animated: Bool) {
+        guard let lastSection = todoDatas.indices.last, !todoDatas[lastSection].isEmpty else { return }
+
+        let indexPath = IndexPath(row: todoDatas[lastSection].count - 1, section: lastSection)
+        todoTableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
     }
 
     // 기존 스토리보드 액션(설정 바로 열기)을 메뉴로 대체 — 선택 모드 진입점 추가
@@ -300,9 +323,9 @@ extension TodoViewController {
                 ),
                 animated: false
             )
-            self.todoTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - 29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - 29, right: 0)
-            
+            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
+            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
+
         })
         
         view.layoutIfNeeded()
@@ -324,8 +347,8 @@ extension TodoViewController {
             self.currentOffset = self.todoTableView.contentOffset
 
             self.todoTableView.setContentOffset(CGPoint(x: self.currentOffset.x, y: self.currentOffset.y + keyboardSize.height-29), animated: false)
-            self.todoTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
+            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
         })
         
         view.layoutIfNeeded()
@@ -352,7 +375,7 @@ extension TodoViewController {
         })
         view.layoutIfNeeded()
         previousKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
-        todoTableView.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
+        todoTableView.contentInset = UIEdgeInsets(top: pinnedBarTopInset, left: 0, bottom: 0, right: 0)
     }
 }
 
@@ -476,14 +499,7 @@ extension TodoViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let height: CGFloat = section == 0 ? 103 : 30
         let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: height))
-
-        if store.isPinnedSection(section) {
-            view.setDate(date: "고정됨")
-            view.highlightDateLabel()
-        }
-        else {
-            view.setDate(date: store.headerDate(forSection: section) ?? "")
-        }
+        view.setDate(date: dateInfo[section])
         return view
     }
 
@@ -499,16 +515,16 @@ extension TodoViewController: UITableViewDelegate{
 
 extension TodoViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == store.sectionCount - 1 {
+        if section == todoDatas.count-1 {
             var widgetArr:[String] = []
-            for data in todoDatas.last ?? [] {
+            for data in todoDatas[section] {
                 widgetArr.append(data.todo)
             }
 
             userDefaults.setValue(widgetArr, forKey: "widget")
         }
 
-        return store.rowCount(inSection: section)
+        return todoDatas[section].count
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -525,7 +541,7 @@ extension TodoViewController: UITableViewDataSource{
             emptyView.removeFromSuperview()
         }
 
-        return store.sectionCount
+        return todoDatas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -605,10 +621,11 @@ extension TodoViewController: TextBoxDelegate {
         feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         self.view.endEditing(true)
+        alertContext = .todo(indexPath)
         vcName.contentText = store.todo(at: indexPath)?.todo
         vcName.fromArchive = false
         vcName.showsPinAction = true
-        vcName.isPinned = store.todo(at: indexPath)?.isPinned ?? false
+        vcName.isPinned = false
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
@@ -678,13 +695,34 @@ extension TodoViewController: UITextFieldDelegate{
 
 extension TodoViewController: ToDoDelegate {
     func delete(indexPath: IndexPath){
-        removeRow(at: indexPath, moveToArchive: false)
-        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
+        defer { alertContext = nil }
 
-        cell.wasSingleTapped = false
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            store.removePinned(at: pinnedIndex)
+            refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+            self.showToast(text: "삭제되었어요.",withDelay: 0.6)
+            return
+        }
+
+        removeRow(at: indexPath, moveToArchive: false)
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
+
+        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
+        cell.wasSingleTapped = false
     }
+
     func modify(indexPath: IndexPath, str: String){
+        defer { alertContext = nil }
+
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            store.updatePinnedText(at: pinnedIndex, text: str)
+            refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+            self.showToast(text: "수정되었어요",withDelay: 0.3)
+            return
+        }
+
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
 
         cell.wasSingleTapped = false
@@ -698,22 +736,130 @@ extension TodoViewController: ToDoDelegate {
     }
 
     func dismissed(indexPath: IndexPath) {
+        alertContext = nil
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         cell.wasSingleTapped = false
     }
 
     func togglePin(indexPath: IndexPath) {
-        guard let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell else { return }
-        cell.wasSingleTapped = false
+        defer { alertContext = nil }
 
-        let wasPinned = store.todo(at: indexPath)?.isPinned ?? false
-        guard let newIndexPath = store.togglePin(at: indexPath) else { return }
-
-        todoTableView.reloadData()
-        todoTableView.scrollToRow(at: newIndexPath, at: .middle, animated: true)
-        self.showToast(text: wasPinned ? "고정이 해제되었어요." : "위로 고정했어요.", withDelay: 0.3)
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            // 고정 해제 — 원래 날짜 자리로 복귀
+            guard let destination = store.unpin(at: pinnedIndex) else { return }
+            refreshPinnedBar()
+            todoTableView.reloadData()
+            todoTableView.scrollToRow(at: destination, at: .middle, animated: true)
+            self.showToast(text: "고정이 해제되었어요.", withDelay: 0.3)
+        }
+        else {
+            if let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell {
+                cell.wasSingleTapped = false
+            }
+            store.pin(at: indexPath)
+            refreshPinnedBar()
+            todoTableView.reloadData()
+            self.showToast(text: "위에 고정했어요.", withDelay: 0.3)
+        }
 
         WidgetDataManager.shared.updateData()
+    }
+}
+
+// MARK: - 고정 스티키 바
+extension TodoViewController {
+    private func setupPinnedBar() {
+        pinnedStack.axis = .vertical
+        pinnedStack.alignment = .leading
+        pinnedStack.spacing = 6
+
+        view.addSubview(pinnedBar)
+        pinnedBar.addSubview(pinnedStack)
+
+        pinnedBar.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+        }
+        pinnedStack.snp.makeConstraints { $0.edges.equalToSuperview() }
+        pinnedBar.isHidden = true
+    }
+
+    /// 고정 목록으로 바를 다시 그리고, 바 높이만큼 테이블 상단 여백을 잡는다
+    private func refreshPinnedBar() {
+        pinnedStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        let items = store.pinnedDatas
+        pinnedBar.isHidden = items.isEmpty
+
+        for (index, item) in items.enumerated() {
+            pinnedStack.addArrangedSubview(makePinnedRow(index: index, item: item))
+        }
+        view.layoutIfNeeded()
+
+        pinnedBarTopInset = items.isEmpty ? 0 : pinnedBar.frame.height + 12
+        todoTableView.contentInset.top = pinnedBarTopInset
+        todoTableView.verticalScrollIndicatorInsets.top = pinnedBarTopInset
+    }
+
+    private func makePinnedRow(index: Int, item: TodoData) -> UIView {
+        let row = UIView()
+        row.backgroundColor = TodoTableViewCell.Design.boxColor
+        row.makeRounded(cornerRadius: 8)
+        row.setBorder(borderColor: mainColor, borderWidth: 1.0)
+
+        let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
+        icon.tintColor = mainColor
+        icon.contentMode = .scaleAspectFit
+        icon.transform = CGAffineTransform(rotationAngle: .pi / 4)
+
+        let label = UILabel()
+        label.text = item.todo
+        label.font = UIFont(name: "GmarketSansTTFMedium", size: 14)
+        label.textColor = TodoTableViewCell.Design.textColor
+        label.lineBreakMode = .byTruncatingTail
+
+        row.addSubview(icon)
+        row.addSubview(label)
+
+        icon.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(12)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(12)
+        }
+        label.snp.makeConstraints {
+            $0.leading.equalTo(icon.snp.trailing).offset(7)
+            $0.trailing.equalToSuperview().offset(-14)
+            $0.top.equalToSuperview().offset(11)
+            $0.bottom.equalToSuperview().offset(-11)
+        }
+
+        row.tag = index
+        row.isUserInteractionEnabled = true
+        row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
+        return row
+    }
+
+    @objc private func pinnedRowTapped(_ gesture: UITapGestureRecognizer) {
+        guard !isSelectionMode,
+              let index = gesture.view?.tag,
+              let item = store.pinnedTodo(at: index)
+        else { return }
+
+        feedbackGenerator?.impactOccurred()
+        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else { return }
+
+        view.endEditing(true)
+        alertContext = .pinnedItem(index)
+        vcName.contentText = item.todo
+        vcName.fromArchive = false
+        vcName.showsPinAction = true
+        vcName.isPinned = true
+        vcName.indexPath = IndexPath(row: index, section: 0)
+        vcName.todoDelegate = self
+        vcName.modalPresentationStyle = .overCurrentContext
+
+        present(vcName, animated: false, completion: nil)
     }
 }
 
