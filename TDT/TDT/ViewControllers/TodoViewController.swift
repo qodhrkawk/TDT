@@ -571,6 +571,25 @@ extension TodoViewController: UITableViewDragDelegate, UITableViewDropDelegate {
         return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
     }
 
+    // 셀 전체가 아니라 말풍선 박스만 떠 보이도록 프리뷰를 클리핑
+    func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        bubblePreviewParameters(forRowAt: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        bubblePreviewParameters(forRowAt: indexPath)
+    }
+
+    private func bubblePreviewParameters(forRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell else { return nil }
+
+        let bubbleFrame = cell.containView.convert(cell.containView.bounds, to: cell)
+        let parameters = UIDragPreviewParameters()
+        parameters.visiblePath = UIBezierPath(roundedRect: bubbleFrame, cornerRadius: 8)
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+
     // 로컬 단일 드래그는 moveRowAt으로 처리되므로 여기서 할 일 없음
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
 }
