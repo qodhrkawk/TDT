@@ -791,10 +791,11 @@ extension TodoViewController {
             $0.top.equalTo(headerView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
         }
+        pinnedStack.alignment = .fill
         pinnedStack.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalToSuperview().offset(-12)
         }
         separator.snp.makeConstraints {
@@ -861,7 +862,6 @@ extension TodoViewController {
         }
         chevron.snp.makeConstraints {
             $0.leading.equalTo(label.snp.trailing).offset(5)
-            $0.trailing.equalToSuperview()
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(10)
         }
@@ -876,11 +876,17 @@ extension TodoViewController {
         refreshPinnedBar()
     }
 
+    // 셀과 같은 구조 — 전폭 컨테이너(row) 안에서 말풍선(bubble)이 빠져나간다.
+    // 제스처는 컨테이너 전체에 붙여 히트 영역을 셀과 동일하게 맞춘다.
     private func makePinnedRow(index: Int, item: TodoData) -> UIView {
         let row = UIView()
-        row.backgroundColor = TodoTableViewCell.Design.boxColor
-        row.makeRounded(cornerRadius: 8)
-        row.setBorder(borderColor: mainColor, borderWidth: 1.0)
+        row.backgroundColor = .clear
+
+        let bubble = UIView()
+        bubble.backgroundColor = TodoTableViewCell.Design.boxColor
+        bubble.makeRounded(cornerRadius: 8)
+        bubble.setBorder(borderColor: mainColor, borderWidth: 1.0)
+        bubble.tag = Self.pinnedBubbleTag
 
         let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
         icon.tintColor = mainColor
@@ -893,9 +899,19 @@ extension TodoViewController {
         label.textColor = TodoTableViewCell.Design.textColor
         label.lineBreakMode = .byTruncatingTail
 
-        row.addSubview(icon)
-        row.addSubview(label)
+        let gradient = GradientView()
+        gradient.alpha = 0
+        gradient.tag = Self.pinnedGradientTag
 
+        row.addSubview(gradient)
+        row.addSubview(bubble)
+        bubble.addSubview(icon)
+        bubble.addSubview(label)
+
+        bubble.snp.makeConstraints {
+            $0.leading.top.bottom.equalToSuperview()
+            $0.trailing.lessThanOrEqualToSuperview()
+        }
         icon.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(12)
             $0.centerY.equalToSuperview()
@@ -907,22 +923,17 @@ extension TodoViewController {
             $0.top.equalToSuperview().offset(11)
             $0.bottom.equalToSuperview().offset(-11)
         }
-
-        // 셀과 동일한 완료 그라데이션 — 스와이프 시 트레일링에서 나타난다
-        let gradient = GradientView()
-        gradient.alpha = 0
-        gradient.tag = Self.pinnedGradientTag
-        row.addSubview(gradient)
-        row.sendSubviewToBack(gradient)
         gradient.snp.makeConstraints {
-            $0.leading.equalTo(row.snp.trailing).offset(-18)
-            $0.top.bottom.equalToSuperview()
+            $0.leading.equalTo(bubble.snp.trailing).offset(-18)
+            $0.top.bottom.equalTo(bubble)
             $0.width.equalTo(75)
         }
 
         row.tag = index
         row.isUserInteractionEnabled = true
-        row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
+        // 셀과 동일: 탭은 말풍선 영역, 스와이프는 행 전체
+        bubble.isUserInteractionEnabled = true
+        bubble.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
 
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(pinnedRowLeftSwiped(_:)))
         leftSwipe.direction = .left
@@ -931,6 +942,7 @@ extension TodoViewController {
     }
 
     private static let pinnedGradientTag = 987
+    private static let pinnedBubbleTag = 986
 
     // 일반 항목과 동일하게 왼쪽 스와이프 = 완료(아카이브)
     @objc private func pinnedRowLeftSwiped(_ gesture: UISwipeGestureRecognizer) {
@@ -940,11 +952,14 @@ extension TodoViewController {
         else { return }
 
         row.isUserInteractionEnabled = false
+        let bubble = row.viewWithTag(Self.pinnedBubbleTag)
         let gradient = row.viewWithTag(Self.pinnedGradientTag)
 
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            let slide = CGAffineTransform(translationX: -UIScreen.main.bounds.width, y: 0)
             gradient?.alpha = 1
-            row.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.width, y: 0)
+            bubble?.transform = slide
+            gradient?.transform = slide
         }, completion: { [weak self] _ in
             guard let self else { return }
 
@@ -956,8 +971,9 @@ extension TodoViewController {
     }
 
     @objc private func pinnedRowTapped(_ gesture: UITapGestureRecognizer) {
+        // 탭 제스처는 말풍선(bubble)에 붙어 있으므로 행 인덱스는 부모 row에서 읽는다
         guard !isSelectionMode,
-              let index = gesture.view?.tag,
+              let index = gesture.view?.superview?.tag,
               let item = store.pinnedTodo(at: index)
         else { return }
 
