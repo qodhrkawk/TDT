@@ -25,26 +25,28 @@ public class WidgetDataManager {
             WidgetCenter.shared.reloadAllTimelines()
         }
 
-        if let savedData = UserDefaults.grouped.value(forKey: "TodoDatas") as? Data {
-            guard
-                let dataArray = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData),
-                dataArray.count != 0
-            else {
-                widgetData = []
-                return
-            }
+        // 고정 항목은 날짜와 무관하게 항상 위젯 앞자리에 노출된다
+        var pinned: [TodoData] = []
+        if let savedPinned = UserDefaults.grouped.value(forKey: "PinnedTodoDatas") as? Data,
+           let decoded = try? PropertyListDecoder().decode([TodoData].self, from: savedPinned) {
+            pinned = decoded
+        }
 
+        var recent: [TodoData] = []
+        if let savedData = UserDefaults.grouped.value(forKey: "TodoDatas") as? Data,
+           let dataArray = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData),
+           dataArray.count != 0 {
             let flattenedArray = Array(dataArray.reduce([], +).reversed())
+            let capacity = max(0, 10 - pinned.count)
 
-            if flattenedArray.count > 10 {
-                widgetData = flattenedArray[..<10].reversed()
+            if flattenedArray.count > capacity {
+                recent = flattenedArray[..<capacity].reversed()
             }
             else {
-                widgetData = flattenedArray.reversed()
+                recent = flattenedArray.reversed()
             }
         }
-        else {
-            widgetData = []
-        }
+
+        widgetData = Array((pinned + recent).prefix(10))
     }
 }

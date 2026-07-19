@@ -474,18 +474,17 @@ extension TodoViewController: UITableViewDelegate{
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        switch section {
-        case 0:
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 103))
-            view.setDate(date: dateInfo[section])
-            return view
-        default:
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
-            
-            view.setDate(date: dateInfo[section])
-            return view
+        let height: CGFloat = section == 0 ? 103 : 30
+        let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: height))
+
+        if store.isPinnedSection(section) {
+            view.setDate(date: "고정됨")
+            view.highlightDateLabel()
         }
+        else {
+            view.setDate(date: store.headerDate(forSection: section) ?? "")
+        }
+        return view
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -500,22 +499,22 @@ extension TodoViewController: UITableViewDelegate{
 
 extension TodoViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == todoDatas.count-1 {
+        if section == store.sectionCount - 1 {
             var widgetArr:[String] = []
-            for data in todoDatas[section] {
+            for data in todoDatas.last ?? [] {
                 widgetArr.append(data.todo)
             }
-            
+
             userDefaults.setValue(widgetArr, forKey: "widget")
         }
-        
-        return todoDatas[section].count
+
+        return store.rowCount(inSection: section)
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
-        if todoDatas.count == 0 {
+        if store.isEmpty {
             self.view.addSubview(emptyView)
-            
+
             self.emptyView.snp.makeConstraints{
                 $0.center.equalToSuperview()
                 $0.width.equalToSuperview()
@@ -525,8 +524,8 @@ extension TodoViewController: UITableViewDataSource{
         else {
             emptyView.removeFromSuperview()
         }
-        
-        return todoDatas.count
+
+        return store.sectionCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -535,7 +534,7 @@ extension TodoViewController: UITableViewDataSource{
         ) as? TodoTableViewCell else { return UITableViewCell() }
 
         cell.textBoxDelegate = self
-        cell.todoData = todoDatas[indexPath.section][indexPath.row]
+        cell.todoData = store.todo(at: indexPath)
         cell.isSelectionMode = isSelectionMode
         cell.isChecked = selectedIndexPaths.contains(indexPath)
 
@@ -606,10 +605,10 @@ extension TodoViewController: TextBoxDelegate {
         feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         self.view.endEditing(true)
-        vcName.contentText = todoDatas[indexPath.section][indexPath.row].todo
+        vcName.contentText = store.todo(at: indexPath)?.todo
         vcName.fromArchive = false
         vcName.showsPinAction = true
-        vcName.isPinned = todoDatas[indexPath.section][indexPath.row].isPinned
+        vcName.isPinned = store.todo(at: indexPath)?.isPinned ?? false
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
