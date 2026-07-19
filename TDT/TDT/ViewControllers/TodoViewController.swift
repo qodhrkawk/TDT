@@ -47,6 +47,10 @@ class TodoViewController: UIViewController {
     private let pinnedBar = UIView()
     private let pinnedStack = UIStackView()
     private var pinnedBarTopInset: CGFloat = 0
+    private var isPinnedBarCollapsed: Bool {
+        get { userDefaults.bool(forKey: "pinnedBarCollapsed") }
+        set { userDefaults.set(newValue, forKey: "pinnedBarCollapsed") }
+    }
 
     // 일괄 선택 모드
     private var isSelectionMode = false
@@ -769,19 +773,34 @@ extension TodoViewController: ToDoDelegate {
 // MARK: - 고정 스티키 바
 extension TodoViewController {
     private func setupPinnedBar() {
+        // 스크롤 영역과 분리된 불투명 영역 — 콘텐츠는 이 아래로 지나가며 가려진다
+        pinnedBar.backgroundColor = Design.backgroundColor
+
         pinnedStack.axis = .vertical
         pinnedStack.alignment = .leading
         pinnedStack.spacing = 6
 
+        let separator = UIView()
+        separator.backgroundColor = UIColor(named: "subText")?.withAlphaComponent(0.15)
+
         view.addSubview(pinnedBar)
         pinnedBar.addSubview(pinnedStack)
+        pinnedBar.addSubview(separator)
 
         pinnedBar.snp.makeConstraints {
             $0.top.equalTo(headerView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+        }
+        pinnedStack.snp.makeConstraints {
+            $0.top.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+            $0.bottom.equalToSuperview().offset(-12)
         }
-        pinnedStack.snp.makeConstraints { $0.edges.equalToSuperview() }
+        separator.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.height.equalTo(1)
+        }
         pinnedBar.isHidden = true
     }
 
@@ -792,14 +811,69 @@ extension TodoViewController {
         let items = store.pinnedDatas
         pinnedBar.isHidden = items.isEmpty
 
-        for (index, item) in items.enumerated() {
-            pinnedStack.addArrangedSubview(makePinnedRow(index: index, item: item))
+        if !items.isEmpty {
+            pinnedStack.addArrangedSubview(makePinnedToggleRow(count: items.count))
+
+            if !isPinnedBarCollapsed {
+                for (index, item) in items.enumerated() {
+                    pinnedStack.addArrangedSubview(makePinnedRow(index: index, item: item))
+                }
+            }
         }
         view.layoutIfNeeded()
 
-        pinnedBarTopInset = items.isEmpty ? 0 : pinnedBar.frame.height + 12
+        pinnedBarTopInset = items.isEmpty ? 0 : pinnedBar.frame.height
         todoTableView.contentInset.top = pinnedBarTopInset
         todoTableView.verticalScrollIndicatorInsets.top = pinnedBarTopInset
+    }
+
+    /// "고정됨 N" 헤더 — 탭하면 목록을 접고 펼친다
+    private func makePinnedToggleRow(count: Int) -> UIView {
+        let row = UIView()
+
+        let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
+        icon.tintColor = UIColor(named: "subText")
+        icon.contentMode = .scaleAspectFit
+        icon.transform = CGAffineTransform(rotationAngle: .pi / 4)
+
+        let label = UILabel()
+        label.text = "고정됨 \(count)"
+        label.font = UIFont(name: "GmarketSansTTFLight", size: 12)
+        label.textColor = UIColor(named: "subText")
+
+        let chevron = UIImageView(image: UIImage(systemName: isPinnedBarCollapsed ? "chevron.down" : "chevron.up"))
+        chevron.tintColor = UIColor(named: "subText")
+        chevron.contentMode = .scaleAspectFit
+
+        row.addSubview(icon)
+        row.addSubview(label)
+        row.addSubview(chevron)
+
+        icon.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(10)
+        }
+        label.snp.makeConstraints {
+            $0.leading.equalTo(icon.snp.trailing).offset(5)
+            $0.top.equalToSuperview().offset(6)
+            $0.bottom.equalToSuperview().offset(-6)
+        }
+        chevron.snp.makeConstraints {
+            $0.leading.equalTo(label.snp.trailing).offset(5)
+            $0.trailing.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(10)
+        }
+
+        row.isUserInteractionEnabled = true
+        row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedToggleTapped)))
+        return row
+    }
+
+    @objc private func pinnedToggleTapped() {
+        isPinnedBarCollapsed.toggle()
+        refreshPinnedBar()
     }
 
     private func makePinnedRow(index: Int, item: TodoData) -> UIView {
