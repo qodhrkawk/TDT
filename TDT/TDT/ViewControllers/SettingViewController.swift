@@ -245,7 +245,7 @@ extension SettingViewController {
         static let titleTexts = ["화면 스타일", "테마","1:1 문의하기"]
         static let subtitleTexts = ["어떤 모드를 따를지 설정합니다.", "하이라이트 색상이 변경됩니다.", "누르면 메일 앱으로 이동합니다."]
 
-        static let supportEmail = "theteamkarry@gmail.com"
+        static let supportEmail = "qodhrkawk@gmail.com"
         static let supportMailSubject = "Flick 1:1 문의하기"
     }
 }
