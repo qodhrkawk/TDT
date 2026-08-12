@@ -183,22 +183,60 @@ extension SettingViewController: MFMailComposeViewControllerDelegate {
         })
     }
     
+    // 문의 처리에 필요한 기기 정보 — 본문 하단에 미리 채워둔다
+    private var supportMailBody: String {
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        return "\n\n\n--------\nFlick v\(appVersion) / iOS \(UIDevice.current.systemVersion) / \(UIDevice.current.model)"
+    }
+
     private func configuredMailComposeViewController() -> MFMailComposeViewController {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
-        mailComposerVC.setSubject("Flick 1:1 문의하기")
-        mailComposerVC.setToRecipients(["theteamkarry@gmail.com"])
-        mailComposerVC.setMessageBody("", isHTML: false)
+        mailComposerVC.setSubject(Constants.supportMailSubject)
+        mailComposerVC.setToRecipients([Constants.supportEmail])
+        mailComposerVC.setMessageBody(supportMailBody, isHTML: false)
 
         return mailComposerVC
     }
-    
+
+    // Apple Mail 계정이 없는 기기에서 canSendMail()이 false를 반환하면
+    // 아무 반응이 없던 버그 수정 — mailto:(기본 메일 앱) → 주소 복사 순으로 폴백한다.
     @objc private func showMailViewController() {
-        let mailComposeViewController = self.configuredMailComposeViewController()
-        
         if MFMailComposeViewController.canSendMail() {
-            self.present(mailComposeViewController, animated: true, completion: nil)
+            self.present(configuredMailComposeViewController(), animated: true, completion: nil)
+            return
         }
+
+        var components = URLComponents(string: "mailto:\(Constants.supportEmail)")
+        components?.queryItems = [
+            URLQueryItem(name: "subject", value: Constants.supportMailSubject),
+            URLQueryItem(name: "body", value: supportMailBody)
+        ]
+
+        guard let mailtoURL = components?.url else {
+            showCopyEmailAlert()
+            return
+        }
+
+        UIApplication.shared.open(mailtoURL) { [weak self] success in
+            if !success {
+                DispatchQueue.main.async { self?.showCopyEmailAlert() }
+            }
+        }
+    }
+
+    private func showCopyEmailAlert() {
+        let alert = UIAlertController(
+            title: "메일 앱을 열 수 없어요",
+            message: "아래 주소로 문의를 보내주세요.\n\(Constants.supportEmail)",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "주소 복사", style: .default) { [weak self] _ in
+            UIPasteboard.general.string = Constants.supportEmail
+            self?.showToast(text: "이메일 주소를 복사했어요", withDelay: 0.3)
+        })
+        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        present(alert, animated: true)
     }
 }
 
@@ -206,6 +244,9 @@ extension SettingViewController {
     private enum Constants {
         static let titleTexts = ["화면 스타일", "테마","1:1 문의하기"]
         static let subtitleTexts = ["어떤 모드를 따를지 설정합니다.", "하이라이트 색상이 변경됩니다.", "누르면 메일 앱으로 이동합니다."]
+
+        static let supportEmail = "theteamkarry@gmail.com"
+        static let supportMailSubject = "Flick 1:1 문의하기"
     }
 }
 
