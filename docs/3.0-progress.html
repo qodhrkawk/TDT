@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flick 3.0 — 진행 현황</title>
+<style>
+  :root {
+    --bg: #F0EEE6;
+    --surface: #FAF9F5;
+    --ink: #191919;
+    --ink-soft: #57544D;
+    --ink-faint: #8A867C;
+    --accent: #D97757;
+    --accent-deep: #C25E3F;
+    --accent-soft: #F5E5DE;
+    --line: #E3E0D6;
+    --done: #6A8A5E;
+    --done-soft: #E7EDE3;
+    --todo: #B8442C;
+    --later: #B48A5A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 64px 28px 96px; }
+
+  header { margin-bottom: 48px; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent-deep); font-weight: 600; margin-bottom: 20px;
+  }
+  .kicker::before { content: ""; width: 22px; height: 2px; background: var(--accent); border-radius: 2px; }
+  h1 {
+    font-family: "Tiempos Headline", Georgia, "Apple SD Gothic Neo", serif;
+    font-size: clamp(32px, 5vw, 44px);
+    font-weight: 500; line-height: 1.2; letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  h1 em { font-style: italic; color: var(--accent-deep); }
+  .lede { font-size: 16px; color: var(--ink-soft); max-width: 640px; }
+
+  /* progress summary */
+  .progress-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 22px; min-width: 130px;
+  }
+  .stat .num { font-family: Georgia, serif; font-size: 28px; line-height: 1.2; }
+  .stat .cap { font-size: 12.5px; color: var(--ink-faint); }
+  .stat.done .num { color: var(--done); }
+  .stat.todo .num { color: var(--todo); }
+  .stat.later .num { color: var(--later); }
+
+  .bar-track { margin-top: 20px; height: 8px; border-radius: 100px; background: #E3E0D6; overflow: hidden; }
+  .bar-fill { height: 100%; width: 67%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--done), #86A578); }
+  .bar-label { margin-top: 8px; font-size: 12.5px; color: var(--ink-faint); }
+
+  section { margin-bottom: 48px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+  .sec-tag {
+    font-size: 12px; font-weight: 700; letter-spacing: .06em;
+    padding: 3px 10px; border-radius: 6px; color: #fff;
+  }
+  .sec-tag.done { background: var(--done); }
+  .sec-tag.todo { background: var(--todo); }
+  .sec-tag.later { background: var(--later); }
+  h2 {
+    font-family: "Tiempos Headline", Georgia, "Apple SD Gothic Neo", serif;
+    font-size: 23px; font-weight: 500;
+  }
+  .sec-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 20px; }
+
+  .items { display: flex; flex-direction: column; gap: 10px; }
+  .item {
+    display: grid; grid-template-columns: 30px 1fr auto; gap: 14px; align-items: start;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 20px;
+  }
+  .item .mark { padding-top: 2px; }
+  .item h3 { font-size: 15.5px; font-weight: 650; letter-spacing: -0.01em; }
+  .item p { font-size: 13.5px; color: var(--ink-soft); margin-top: 2px; }
+  .item .meta { font-size: 12px; color: var(--ink-faint); white-space: nowrap; padding-top: 3px; font-family: "SF Mono", Menlo, monospace; }
+  .item.done-item { border-left: 3px solid var(--done); }
+  .item.todo-item { border-left: 3px solid var(--todo); }
+  .item.later-item { border-left: 3px solid var(--later); opacity: .92; }
+
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    border-radius: 100px; padding: 2px 9px; margin-left: 8px; vertical-align: 2px;
+  }
+  .pill.p0 { background: #F3DCD6; color: var(--todo); }
+  .pill.free { background: var(--done-soft); color: var(--done); }
+  .pill.pro { background: var(--accent-soft); color: var(--accent-deep); }
+
+  .note {
+    background: var(--surface); border: 1px dashed var(--line); border-radius: 12px;
+    padding: 16px 20px; font-size: 13.5px; color: var(--ink-soft); margin-top: 14px;
+  }
+  .note strong { color: var(--ink); }
+
+  footer { margin-top: 48px; font-size: 12.5px; color: var(--ink-faint); text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Flick · Progress</div>
+    <h1>Flick <em>3.0</em> 진행 현황</h1>
+    <p class="lede">전략: 3.0은 무료 편의성 개선으로 신뢰 회복, 3.1에서 Flick Pro(일회성 언락) 도입. 브랜치 <code>feature/3.0-ui-batch1</code>, 커밋 10개.</p>
+
+    <div class="progress-row">
+      <div class="stat done"><div class="num">7</div><div class="cap">완료</div></div>
+      <div class="stat todo"><div class="num">2</div><div class="cap">3.0 남은 작업</div></div>
+      <div class="stat later"><div class="num">5+</div><div class="cap">3.1 이후로 이동</div></div>
+    </div>
+    <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+    <div class="bar-label">3.0 스코프 기준 약 80% — 남은 것은 지원 메일, 릴리스 정리</div>
+  </header>
+
+  <!-- ==================== DONE ==================== -->
+  <section>
+    <div class="sec-head"><span class="sec-tag done">완료</span><h2>3.0에 들어간 것</h2></div>
+    <p class="sec-sub">빌드 성공 · TodoStore 테스트 19개 통과 · 시뮬레이터 검증 완료</p>
+    <div class="items">
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>할 일 순서 변경 (드래그)</h3>
+          <p>길게 눌러 드래그. 날짜 섹션 간 이동 시 날짜 자동 변경. 말풍선만 떠 보이는 드래그 프리뷰. 리뷰 최다 요청(10건+).</p>
+        </div>
+        <span class="meta">57d22dc · e91d52d</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>고정 (스티키 바)</h3>
+          <p>날짜 무관 전역 고정 — 헤더 아래 접이식 불투명 바("고정됨 N"). 탭으로 접기/펼치기, 스와이프 완료(셀과 동일한 감각·그라데이션), 해제 시 원래 날짜로 복귀, 위젯 우선 노출, 구버전 데이터 마이그레이션. 두 차례 UX 재설계 거침.</p>
+        </div>
+        <span class="meta">06b0bdd ~ 0f5c550</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>일괄 선택 (다중 완료·삭제)</h3>
+          <p>더보기 메뉴 → 선택 모드 → 체크 후 일괄 완료/삭제(확인 1회). ★3 리뷰의 주 원인이던 "하나씩 지우기 고통" 해결.</p>
+        </div>
+        <span class="meta">57d22dc</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>스와이프 완료 개선 + 오삭제 버그 수정</h3>
+          <p>애니메이션 ~1초 → 0.3초. 셀 재사용 stale indexPath로 엉뚱한 항목이 삭제되던 실제 버그 수정 — 리뷰 신고("이상한 게 지워져요")의 원인 추정.</p>
+        </div>
+        <span class="meta">57d22dc</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>실행 시 오늘 위치로 자동 스크롤</h3>
+          <p>"매번 맨 아래까지 내려가야 한다"는 리뷰 불만 해결. 첫 화면 = 고정 메모 + 오늘 할 일.</p>
+        </div>
+        <span class="meta">1212263</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>위젯 "모두 완료" 고착 버그 근본 수정 <span class="pill p0">P0</span></h3>
+          <p>원인: 위젯 프로세스가 잠금 상태에서 깨어나 앱 그룹 읽기 실패 시 캐시를 빈 배열로 덮어씀. 수정: 위젯 읽기 전용화, 읽기 실패 시 캐시 보존 + 15분 재시도 타임라인. 최다 신고 버그(6건).</p>
+        </div>
+        <span class="meta">68b13eb</span>
+      </div>
+
+      <div class="item done-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#E7EDE3"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#6A8A5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h3>내부 구조 정리 (TodoStore)</h3>
+          <p>754줄 VC에 흩어져 있던 데이터 로직을 TodoStore로 분리, 스탠드얼론 테스트 19개. 구버전(2.0.2) 데이터 하위 호환 디코딩 검증 포함.</p>
+        </div>
+        <span class="meta">57d22dc ~</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TODO 3.0 ==================== -->
+  <section>
+    <div class="sec-head"><span class="sec-tag todo">할 것</span><h2>3.0 남은 작업</h2></div>
+    <p class="sec-sub">이것만 끝나면 3.0 제출 가능</p>
+    <div class="items">
+
+
+      <div class="item todo-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B8442C" stroke-width="1.8"/></svg></div>
+        <div>
+          <h3>지원 메일 발송 수리</h3>
+          <p>"문의 메일이 안 보내진다" — mailto/지원 채널 점검. 작업량 작음. 버그 신고가 리뷰로만 유입되는 상태 해소.</p>
+        </div>
+        <span class="meta">소규모</span>
+      </div>
+
+      <div class="item todo-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B8442C" stroke-width="1.8"/></svg></div>
+        <div>
+          <h3>릴리스 정리</h3>
+          <p>앱·위젯 버전 3.0.0 통일 (현재 앱 2.0.2 / 위젯 1.0.1 불일치), 실기기에서 2.0.2 → 3.0 업그레이드 데이터 호환 테스트, 회귀 확인, PR 머지.</p>
+        </div>
+        <span class="meta">제출 전</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 3.1+ ==================== -->
+  <section>
+    <div class="sec-head"><span class="sec-tag later">3.1+</span><h2>다음 버전으로 이동</h2></div>
+    <p class="sec-sub">3.1 = Flick Pro(일회성 언락) 도입 릴리스</p>
+    <div class="items">
+
+      <div class="item later-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B48A5A" stroke-width="1.6" stroke-dasharray="3 2.5"/></svg></div>
+        <div>
+          <h3>iCloud 동기화 + 아이패드 유니버설 <span class="pill pro">PRO</span></h3>
+          <p>3.1의 간판이자 유료화 축. "유료여도 산다"는 리뷰 4건의 대상. CloudKit 기반(서버비 0), 동기화 레이어는 추상화해 추후 교체 여지.</p>
+        </div>
+        <span class="meta">요청 6건</span>
+      </div>
+
+      <div class="item later-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B48A5A" stroke-width="1.6" stroke-dasharray="3 2.5"/></svg></div>
+        <div>
+          <h3>폰트·글씨 크기 + 커스텀 색상 <span class="pill pro">PRO</span></h3>
+          <p>시스템 글꼴, 폰트 추가, 위젯 폰트/크기, 색상 팔레트. 프리미엄 팩으로 묶기 적합.</p>
+        </div>
+        <span class="meta">요청 7건</span>
+      </div>
+
+      <div class="item later-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B48A5A" stroke-width="1.6" stroke-dasharray="3 2.5"/></svg></div>
+        <div>
+          <h3>1:1 소형 위젯 + 잠금화면 위젯 <span class="pill free">무료</span></h3>
+          <p>3.1에 무료로 포함 — 업데이트가 "돈 내라"로만 보이지 않게 하는 균형추.</p>
+        </div>
+        <span class="meta">요청 5건</span>
+      </div>
+
+      <div class="item later-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B48A5A" stroke-width="1.6" stroke-dasharray="3 2.5"/></svg></div>
+        <div>
+          <h3>날짜 지정 + 못 한 일 자동 미루기 <span class="pill free">무료</span></h3>
+          <p>3.0 스코프에서 제외 — "빨리, 확실하게" 원칙. 3.1 이후 무료 기능으로.</p>
+        </div>
+        <span class="meta">요청 6건</span>
+      </div>
+
+      <div class="item later-item">
+        <div class="mark"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#B48A5A" stroke-width="1.6" stroke-dasharray="3 2.5"/></svg></div>
+        <div>
+          <h3>백로그</h3>
+          <p>복사/하이퍼링크, 줄바꿈, 카테고리, 애플워치, 안드로이드(4.0 = 멀티플랫폼+구독 전환 시점에 재검토).</p>
+        </div>
+        <span class="meta">docs 참고</span>
+      </div>
+
+    </div>
+
+    <div class="note">
+      <strong>수익화 방침 (확정):</strong> 구독·광고 없음. 3.1에서 비소모성 인앱 결제 "Flick Pro" 일회성 언락. 별도 앱 아님 — 기존 앱 안에서 기능 해금. 기존 무료 기능은 전부 무료 유지.
+    </div>
+  </section>
+
+  <footer>
+    Flick 3.0 진행 현황 · 2026-08-12 기준 · 상세: docs/3.0-improvement-plan.md · 리뷰 원문: docs/appstore-reviews-raw.md
+  </footer>
+
+</div>
+</body>
+</html>
