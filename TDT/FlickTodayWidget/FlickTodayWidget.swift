@@ -31,10 +31,23 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [FlickTodayWidgetEntry] = []
-        
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
+
+        // nil = 앱 그룹 읽기 실패(잠금 직후 등). 빈 목록으로 단정해 몇 시간
+        // "모두 완료"를 띄우는 대신 짧게 재시도해 스스로 복구한다.
+        guard WidgetDataManager.shared.widgetData != nil else {
+            let retryDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+            let timeline = Timeline(
+                entries: [FlickTodayWidgetEntry(date: currentDate, todoDatas: [])],
+                policy: .after(retryDate)
+            )
+            completion(timeline)
+            return
+        }
+
+        var entries: [FlickTodayWidgetEntry] = []
+
+        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
             let entry = FlickTodayWidgetEntry(date: entryDate, todoDatas: todoDatas)
