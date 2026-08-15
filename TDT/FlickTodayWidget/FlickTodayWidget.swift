@@ -87,6 +87,7 @@ struct FlickTodayWidgetEntryView : View {
             }
         }
         .widgetBackground(Color("bgColor"))
+        .followAppColorScheme()
     }
 }
 

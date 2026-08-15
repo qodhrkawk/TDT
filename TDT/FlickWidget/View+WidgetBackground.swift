@@ -19,4 +19,15 @@ extension View {
             self
         }
     }
+
+    // 앱의 "화면 스타일" 설정(라이트/다크 강제)을 위젯에도 적용한다 —
+    // 시스템 모드만 따르면 앱과 위젯의 모드가 어긋난다
+    @ViewBuilder
+    func followAppColorScheme() -> some View {
+        switch TraitInfoManager.shared.currentTraitInfo {
+        case .light: environment(\.colorScheme, .light)
+        case .dark: environment(\.colorScheme, .dark)
+        default: self
+        }
+    }
 }
