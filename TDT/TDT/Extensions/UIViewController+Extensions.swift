@@ -16,11 +16,12 @@ extension UIViewController {
         toast.alpha = 0
         self.view.addSubview(toast)
         
+        // 크기는 문구 길이에 맞춰 결정된다 (ToastView 내부 패딩)
         toast.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-114)
-            $0.width.equalTo(125)
-            $0.height.equalTo(35)
+            $0.width.greaterThanOrEqualTo(125)
+            $0.height.greaterThanOrEqualTo(35)
         }
         
         UIView.animate(withDuration: 0.3, delay:  TimeInterval(withDelay), animations: {
