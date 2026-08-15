@@ -31,10 +31,16 @@ class AlertViewController: UIViewController {
 
     var contentText: String?
     var indexPath: IndexPath?
-    
+
     weak var todoDelegate: ToDoDelegate?
-    
+
     var fromArchive = false
+
+    // 고정 액션 (할 일 목록에서만 표시)
+    var showsPinAction = false
+    var isPinned = false
+    private let pinButton = UIButton(type: .system)
+    private let pinSeparator = UIView()
     
     private var mainColor: UIColor {
         guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
@@ -128,6 +134,25 @@ class AlertViewController: UIViewController {
             stackView.snp.remakeConstraints {
                 $0.height.equalTo(60)
             }
+        }
+
+        if showsPinAction && !fromArchive {
+            pinButton.backgroundColor = Design.Color.boxColor
+            pinButton.titleLabel?.font = Design.Font.buttonFont
+            pinButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
+            pinButton.setTitle(isPinned ? "고정 해제" : "고정", for: .normal)
+            pinButton.addTarget(self, action: #selector(pinButtonAction), for: .touchUpInside)
+
+            pinSeparator.backgroundColor = Design.Color.inactiveColor
+
+            stackView.insertArrangedSubview(pinSeparator, at: 0)
+            stackView.insertArrangedSubview(pinButton, at: 0)
+
+            pinButton.snp.makeConstraints { $0.height.equalTo(60) }
+            pinSeparator.snp.makeConstraints { $0.height.equalTo(1) }
+
+            // 스토리보드 높이(121) = 버튼 60 + 선 1 + 버튼 60 — 한 줄 추가만큼 확장
+            stackView.constraints.first { $0.firstAttribute == .height }?.constant = 182
         }
         
         cancelButton.backgroundColor = Design.Color.boxColor
@@ -223,6 +248,13 @@ class AlertViewController: UIViewController {
     }
     
     
+    @objc private func pinButtonAction() {
+        guard let indexPath else { return }
+
+        todoDelegate?.togglePin(indexPath: indexPath)
+        dismiss(animated: false, completion: nil)
+    }
+
     @IBAction func deleteButtonAction(_ sender: Any) {
         deleteCheckView.alpha = 1
         stackView.alpha = 0

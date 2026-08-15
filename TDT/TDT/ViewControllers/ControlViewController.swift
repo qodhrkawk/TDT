@@ -25,6 +25,11 @@ class ControlViewController: UIViewController {
             todoViewController.pageControlDelegate = self
         }
     }
+    
+    func keyboardInputInTodoViewController() {
+        guard let todoViewController = pageInstance?.currentViewController as? TodoViewController else { return }
+        todoViewController.textField.becomeFirstResponder()
+    }
 }
 
 extension ControlViewController: PageControlDelegate {

@@ -30,10 +30,35 @@ class TodoViewController: UIViewController {
     
     weak var pageControlDelegate: PageControlDelegate?
 
-    private let userDefaults = UserDefaults.standard
-    private var dateInfo: [String] = []
-    private var todoDatas: [[TodoData]] = []
+    private let userDefaults = UserDefaults.grouped
+    private let store = TodoStore(userDefaults: .grouped)
+    private var dateInfo: [String] { store.dateInfo }
+    private var todoDatas: [[TodoData]] { store.todoDatas }
     private var delaySection = -1
+
+    // 알럿이 어떤 항목에 대해 떠 있는지 (고정 바 항목은 IndexPath가 없어 별도 추적)
+    private enum AlertContext {
+        case todo(IndexPath)
+        case pinnedItem(Int)
+    }
+    private var alertContext: AlertContext?
+
+    // 고정 스티키 바
+    private let pinnedBar = UIView()
+    private let pinnedStack = UIStackView()
+    private var pinnedBarTopInset: CGFloat = 0
+    private var isPinnedBarCollapsed: Bool {
+        get { userDefaults.bool(forKey: "pinnedBarCollapsed") }
+        set { userDefaults.set(newValue, forKey: "pinnedBarCollapsed") }
+    }
+
+    // 일괄 선택 모드
+    private var isSelectionMode = false
+    private var selectedIndexPaths = Set<IndexPath>()
+    private lazy var selectionBar = makeSelectionBar()
+    private let selectionCompleteButton = UIButton(type: .system)
+    private let selectionDeleteButton = UIButton(type: .system)
+    private let selectionCancelButton = UIButton(type: .system)
     private var animationStatus: TodoAnimationStatus = .initialAnimation
     
     private var previousKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
@@ -70,6 +95,8 @@ class TodoViewController: UIViewController {
         loadData()
         setMainColor()
         todoTableView.reloadData()
+        refreshPinnedBar()
+        scrollToLatest(animated: false)
         adjustToUserInterfaceStyle()
     }
     
@@ -107,6 +134,10 @@ class TodoViewController: UIViewController {
     }
     
     @IBAction private func settingButtonAction(_ sender: Any) {
+        presentSettingViewController()
+    }
+    
+    @objc private func presentSettingViewController() {
         guard let settingViewController = UIStoryboard(
             name: "Setting",
             bundle: nil
@@ -127,6 +158,8 @@ extension TodoViewController {
         headerView.backgroundColor = Design.backgroundColor
         
         flickImageView.image = Design.flickImage
+        flickImageView.isUserInteractionEnabled = true
+        flickImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(presentSettingViewController)))
 
         headerView.alpha = 0.95
         
@@ -155,9 +188,33 @@ extension TodoViewController {
         archiveButton.tintColor = Design.Button.archiveButtonTintColor
         moreButton.setImage(Design.Button.moreButtonImage, for: .normal)
         moreButton.tintColor = Design.Button.archiveButtonTintColor
-        
+
         sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
         sendButton.tintColor = Design.Button.inactiveColor
+
+        setupMoreButtonMenu()
+        setupPinnedBar()
+    }
+
+    // 실행 시 오늘(마지막 섹션) 위치로 이동 — "매번 맨 아래까지 내려가야 한다"는 리뷰 대응
+    private func scrollToLatest(animated: Bool) {
+        guard let lastSection = todoDatas.indices.last, !todoDatas[lastSection].isEmpty else { return }
+
+        let indexPath = IndexPath(row: todoDatas[lastSection].count - 1, section: lastSection)
+        todoTableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
+    }
+
+    // 기존 스토리보드 액션(설정 바로 열기)을 메뉴로 대체 — 선택 모드 진입점 추가
+    private func setupMoreButtonMenu() {
+        moreButton.showsMenuAsPrimaryAction = true
+        moreButton.menu = UIMenu(children: [
+            UIAction(title: "선택", image: UIImage(systemName: "checkmark.circle")) { [weak self] _ in
+                self?.enterSelectionMode()
+            },
+            UIAction(title: "설정", image: UIImage(systemName: "gearshape")) { [weak self] _ in
+                self?.presentSettingViewController()
+            }
+        ])
     }
     
     private func userInterfaceStyleDidChange() {
@@ -178,9 +235,13 @@ extension TodoViewController {
         todoTableView.delegate = self
         todoTableView.dataSource = self
 
+        todoTableView.dragDelegate = self
+        todoTableView.dropDelegate = self
+        todoTableView.dragInteractionEnabled = true
+
         todoTableView.isUserInteractionEnabled = true
         todoTableView.backgroundColor = Design.backgroundColor
-        
+
         let tableViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTouched))
         todoTableView.addGestureRecognizer(tableViewTapGesture)
     }
@@ -266,9 +327,9 @@ extension TodoViewController {
                 ),
                 animated: false
             )
-            self.todoTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - 29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - 29, right: 0)
-            
+            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
+            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
+
         })
         
         view.layoutIfNeeded()
@@ -290,8 +351,8 @@ extension TodoViewController {
             self.currentOffset = self.todoTableView.contentOffset
 
             self.todoTableView.setContentOffset(CGPoint(x: self.currentOffset.x, y: self.currentOffset.y + keyboardSize.height-29), animated: false)
-            self.todoTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height-29, right: 0)
+            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
+            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
         })
         
         view.layoutIfNeeded()
@@ -318,87 +379,42 @@ extension TodoViewController {
         })
         view.layoutIfNeeded()
         previousKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
-        todoTableView.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
+        todoTableView.contentInset = UIEdgeInsets(top: pinnedBarTopInset, left: 0, bottom: 0, right: 0)
     }
 }
 
 // Extension about data
 extension TodoViewController {
-    private func loadData(){
-        if let savedData = userDefaults.value(forKey: "TodoDatas") as? Data{
-            let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
-            
-            if originalData != nil{
-                self.todoDatas = originalData!
-            }
-        }
+    private var todayString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        return dateFormatter.string(from: Date())
+    }
 
-        if todoDatas.count > 0 {
-            if let tmpDate = userDefaults.stringArray(forKey: "dates") {
-                dateInfo = tmpDate
-            }
-        }
+    private func loadData(){
+        store.load()
         todoTableView.reloadData()
     }
-    
+
     private func showGuideBoxesIfNeeded() {
         if let _ = userDefaults.string(forKey: UserDefaultKeys.initiated.rawValue) {
             return
         }
         else {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy.MM.dd"
-            let date = Date()
-            let dateString = dateFormatter.string(from: date)
-            todoDatas.append([TodoData(date: dateString, todo: "왼쪽으로 밀어서 완료 상태로 만들어 보세요.", isImportant: false),
-                              TodoData(date: dateString, todo: "두 번 탭해서 중요 표시를 해 보세요.", isImportant: false),
-                              TodoData(date: dateString, todo: "한 번 클릭해서 메모를 삭제하거나 수정할 수 있어요.", isImportant: false)])
-          
-            dateInfo.append(dateString)
-            
-            userDefaults.setValue(dateInfo, forKey: "dates")
-            
-            userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+            let dateString = todayString
+            store.load()
+            store.add(todo: "왼쪽으로 밀어서 완료 상태로 만들어 보세요.", dateString: dateString)
+            store.add(todo: "두 번 탭해서 중요 표시를 해 보세요.", dateString: dateString)
+            store.add(todo: "한 번 클릭해서 메모를 삭제하거나 수정할 수 있어요.", dateString: dateString)
             userDefaults.setValue("yes", forKey: UserDefaultKeys.initiated.rawValue)
         }
     }
-    
+
     private func addData(todo: String){
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-        let date = Date()
-        let dateString = dateFormatter.string(from: date)
-        
-        // 기존 데이터가 1개 이상
-        if todoDatas.count > 0 {
-            if let myDate = userDefaults.stringArray(forKey: "dates") {
-                
-                // 마지막이 같은 날짜이면
-                if dateInfo[todoDatas.count-1] == dateString {
-                    todoDatas[todoDatas.count-1].append(TodoData(date: dateString, todo: todo, isImportant: false))
-                    
-                }
-                // 날짜 추가
-                else{
-                    var tmpDate = myDate
-                    tmpDate.append(dateString)
-                    userDefaults.setValue(tmpDate, forKey: "dates")
-                    dateInfo.append(dateString)
-                    todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
-                }
-            }
-        }
-        
-        else {
-            let newDate = [dateString]
-            userDefaults.setValue(newDate, forKey: "dates")
-            todoDatas.append([TodoData(date: dateString, todo: todo, isImportant: false)])
-            
-            dateInfo.append(dateString)
-        }
-        
-        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+        store.add(todo: todo, dateString: todayString)
         todoTableView.reloadData()
+
+        WidgetDataManager.shared.updateData()
     }
 }
 
@@ -485,18 +501,10 @@ extension TodoViewController: UITableViewDelegate{
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        switch section {
-        case 0:
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 103))
-            view.setDate(date: dateInfo[section])
-            return view
-        default:
-            let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 30))
-            
-            view.setDate(date: dateInfo[section])
-            return view
-        }
+        let height: CGFloat = section == 0 ? 103 : 30
+        let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: height))
+        view.setDate(date: dateInfo[section])
+        return view
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -516,17 +524,17 @@ extension TodoViewController: UITableViewDataSource{
             for data in todoDatas[section] {
                 widgetArr.append(data.todo)
             }
-            
+
             userDefaults.setValue(widgetArr, forKey: "widget")
         }
-        
+
         return todoDatas[section].count
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
-        if todoDatas.count == 0 {
+        if store.isEmpty {
             self.view.addSubview(emptyView)
-            
+
             self.emptyView.snp.makeConstraints{
                 $0.center.equalToSuperview()
                 $0.width.equalToSuperview()
@@ -536,7 +544,7 @@ extension TodoViewController: UITableViewDataSource{
         else {
             emptyView.removeFromSuperview()
         }
-        
+
         return todoDatas.count
     }
     
@@ -546,118 +554,133 @@ extension TodoViewController: UITableViewDataSource{
         ) as? TodoTableViewCell else { return UITableViewCell() }
 
         cell.textBoxDelegate = self
-        cell.todoData = todoDatas[indexPath.section][indexPath.row]        
-        cell.myIndexpath = indexPath
-        
+        cell.todoData = store.todo(at: indexPath)
+        cell.isSelectionMode = isSelectionMode
+        cell.isChecked = selectedIndexPaths.contains(indexPath)
+
         return cell
+    }
+
+    // 드래그 재정렬 — UIKit이 로컬 드래그를 이 메서드로 위임한다
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // 핀 그룹 클램프/빈 섹션 정리는 store가 담당한다.
+        // UIKit이 그린 이동 결과와 달라질 수 있으므로 다음 런루프에서 정합화한다.
+        store.move(from: sourceIndexPath, to: destinationIndexPath)
+        WidgetDataManager.shared.updateData()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.todoTableView.reloadData()
+        }
     }
 }
 
+extension TodoViewController: UITableViewDragDelegate, UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        guard !isSelectionMode else { return [] }
+
+        view.endEditing(true)
+        feedbackGenerator?.impactOccurred()
+        return [UIDragItem(itemProvider: NSItemProvider())]
+    }
+
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        guard session.localDragSession != nil else {
+            return UITableViewDropProposal(operation: .cancel)
+        }
+        return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    // 셀 전체가 아니라 말풍선 박스만 떠 보이도록 프리뷰를 클리핑
+    func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        bubblePreviewParameters(forRowAt: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        bubblePreviewParameters(forRowAt: indexPath)
+    }
+
+    private func bubblePreviewParameters(forRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell else { return nil }
+
+        let bubbleFrame = cell.containView.convert(cell.containView.bounds, to: cell)
+        let parameters = UIDragPreviewParameters()
+        parameters.visiblePath = UIBezierPath(roundedRect: bubbleFrame, cornerRadius: 8)
+        parameters.backgroundColor = .clear
+        return parameters
+    }
+
+    // 로컬 단일 드래그는 moveRowAt으로 처리되므로 여기서 할 일 없음
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {}
+}
+
 extension TodoViewController: TextBoxDelegate {
-    func longTapped(indexPath: IndexPath) {
+    func longTapped(cell: UITableViewCell) {
+        guard let indexPath = todoTableView.indexPath(for: cell) else { return }
+
+        if isSelectionMode {
+            toggleSelection(at: indexPath)
+            return
+        }
+
         feedbackGenerator?.impactOccurred()
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
         self.view.endEditing(true)
-        vcName.contentText = todoDatas[indexPath.section][indexPath.row].todo
+        alertContext = .todo(indexPath)
+        vcName.contentText = store.todo(at: indexPath)?.todo
         vcName.fromArchive = false
+        vcName.showsPinAction = true
+        vcName.isPinned = false
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
-        
-        
+
+
         self.present(vcName, animated: false, completion: nil)
     }
-    
-    func leftSwiped(indexPath: IndexPath) {
-        myDeleteRow(indexPath: indexPath,isEnd: true)
+
+    func leftSwiped(cell: UITableViewCell) {
+        guard !isSelectionMode,
+              let indexPath = todoTableView.indexPath(for: cell)
+        else { return }
+
+        removeRow(at: indexPath, moveToArchive: true)
     }
 
     func shouldMove() {
         pageControlDelegate?.moveToViewController(to: 0)
     }
-    
-    func doubleTapped(indexPath: IndexPath) {
-        todoDatas[indexPath.section][indexPath.row].isImportant = !todoDatas[indexPath.section][indexPath.row].isImportant
-        userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
+
+    func doubleTapped(cell: UITableViewCell) {
+        guard !isSelectionMode,
+              let indexPath = todoTableView.indexPath(for: cell)
+        else { return }
+
+        store.toggleImportant(at: indexPath)
         todoTableView.reloadData()
+
+        WidgetDataManager.shared.updateData()
     }
-    
-    func myDeleteRow(indexPath: IndexPath,isEnd: Bool){
+
+    /// 한 항목 제거 — 완료(아카이브 이동) 또는 완전 삭제
+    private func removeRow(at indexPath: IndexPath, moveToArchive: Bool) {
+        if moveToArchive {
+            guard let item = store.todo(at: indexPath) else { return }
+            store.appendToArchive([item], dateString: todayString)
+        }
+
+        guard let result = store.remove(at: indexPath) else { return }
+
         todoTableView.beginUpdates()
-        
-        if isEnd {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy.MM.dd"
-            let date = Date()
-            let dateString = dateFormatter.string(from: date)
-            if let savedData = userDefaults.value(forKey: "ArchiveDatas") as? Data{
-                let originalData = try? PropertyListDecoder().decode([[TodoData]].self, from: savedData)
-                
-                var archiveTmpData = originalData
-                
-                if let archiveDate = userDefaults.stringArray(forKey: "ArchiveDates") {
-                    var archiveTmpDate = archiveDate
-                    if archiveDate.count > 0 {
-                        var flag = false
-                        for i in 0...archiveDate.count-1 {
-                            
-                            // 원래 있던 날짜
-                            if dateString == archiveDate[i] {
-                                flag = true
-                                archiveTmpData![i].append(todoDatas[indexPath.section][indexPath.row])
-                            }
-                        }
-                        
-                        // 날짜 추가해야함
-                        if !flag {
-                            archiveTmpData!.insert([todoDatas[indexPath.section][indexPath.row]], at: 0)
-                            archiveTmpDate.insert(dateString, at: 0)
-
-                        }
-                        
-                    }
-                    else {
-                        archiveTmpData = [[todoDatas[indexPath.section][indexPath.row]]]
-                        archiveTmpDate = [dateString]
-                        
-                        userDefaults.setValue([dateString], forKey: "ArchiveDates")
-                        
-                    }
-                    userDefaults.setValue(archiveTmpDate, forKey: "ArchiveDates")
-                    
-                }
-                
-                userDefaults.set(try? PropertyListEncoder().encode(archiveTmpData),forKey: "ArchiveDatas")
-                
-            }
-            // 기존에 archive data 없음
-            else {
-                userDefaults.set(try? PropertyListEncoder().encode([[todoDatas[indexPath.section][indexPath.row]]]),forKey: "ArchiveDatas")
-                userDefaults.setValue([dateString], forKey: "ArchiveDates")
-            }
-
-        }
-        
-        todoDatas[indexPath.section].remove(at: indexPath.row)
-     
-        // 삭제 (날짜 + 데이터)
-        if todoDatas[indexPath.section].count == 0{
-            todoDatas.remove(at: indexPath.section)
-        }
-        
-        userDefaults.set(try? PropertyListEncoder().encode(todoDatas), forKey: "TodoDatas")
-        
-        if todoTableView.numberOfRows(inSection: indexPath.section) == 1 {
-            dateInfo.remove(at: indexPath.section)
-            userDefaults.setValue(dateInfo, forKey: "dates")
+        if result.sectionRemoved {
             todoTableView.deleteSections([indexPath.section], with: .fade)
         }
-        else{
+        else {
             todoTableView.deleteRows(at: [indexPath], with: .fade)
         }
-        
         todoTableView.endUpdates()
         todoTableView.reloadData()
+
+        WidgetDataManager.shared.updateData()
     }
 }
 
@@ -676,28 +699,429 @@ extension TodoViewController: UITextFieldDelegate{
 
 extension TodoViewController: ToDoDelegate {
     func delete(indexPath: IndexPath){
-        myDeleteRow(indexPath: indexPath, isEnd: false)
-        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
-        
-        cell.wasSingleTapped = false
+        defer { alertContext = nil }
+
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            store.removePinned(at: pinnedIndex)
+            refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+            self.showToast(text: "삭제되었어요.",withDelay: 0.6)
+            return
+        }
+
+        removeRow(at: indexPath, moveToArchive: false)
         self.showToast(text: "삭제되었어요.",withDelay: 0.6)
-        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
-    }
-    func modify(indexPath: IndexPath, str: String){
+
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
-        
         cell.wasSingleTapped = false
-        
-        todoDatas[indexPath.section][indexPath.row].todo = str
+    }
+
+    func modify(indexPath: IndexPath, str: String){
+        defer { alertContext = nil }
+
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            store.updatePinnedText(at: pinnedIndex, text: str)
+            refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+            self.showToast(text: "수정되었어요",withDelay: 0.3)
+            return
+        }
+
+        guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
+
+        cell.wasSingleTapped = false
+
+        store.updateText(at: indexPath, text: str)
         todoTableView.reloadData()
         self.showToast(text: "수정되었어요",withDelay: 0.3)
         todoTableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-        userDefaults.set(try? PropertyListEncoder().encode(todoDatas),forKey: "TodoDatas")
+
+        WidgetDataManager.shared.updateData()
     }
-    
+
     func dismissed(indexPath: IndexPath) {
+        alertContext = nil
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         cell.wasSingleTapped = false
+    }
+
+    func togglePin(indexPath: IndexPath) {
+        defer { alertContext = nil }
+
+        if case .pinnedItem(let pinnedIndex) = alertContext {
+            // 고정 해제 — 원래 날짜 자리로 복귀
+            guard let destination = store.unpin(at: pinnedIndex) else { return }
+            refreshPinnedBar()
+            todoTableView.reloadData()
+            todoTableView.scrollToRow(at: destination, at: .middle, animated: true)
+            self.showToast(text: "고정이 해제되었어요.", withDelay: 0.3)
+        }
+        else {
+            if let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell {
+                cell.wasSingleTapped = false
+            }
+            store.pin(at: indexPath)
+            refreshPinnedBar()
+            todoTableView.reloadData()
+            self.showToast(text: "위에 고정했어요.", withDelay: 0.3)
+        }
+
+        WidgetDataManager.shared.updateData()
+    }
+}
+
+// MARK: - 고정 스티키 바
+extension TodoViewController {
+    private func setupPinnedBar() {
+        // 스크롤 영역과 분리된 불투명 영역 — 콘텐츠는 이 아래로 지나가며 가려진다
+        pinnedBar.backgroundColor = Design.backgroundColor
+
+        pinnedStack.axis = .vertical
+        pinnedStack.alignment = .leading
+        pinnedStack.spacing = 6
+
+        let separator = UIView()
+        separator.backgroundColor = UIColor(named: "subText")?.withAlphaComponent(0.15)
+
+        view.addSubview(pinnedBar)
+        pinnedBar.addSubview(pinnedStack)
+        pinnedBar.addSubview(separator)
+
+        pinnedBar.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+        }
+        pinnedStack.alignment = .fill
+        pinnedStack.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.bottom.equalToSuperview().offset(-12)
+        }
+        separator.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        pinnedBar.isHidden = true
+    }
+
+    /// 고정 목록으로 바를 다시 그리고, 바 높이만큼 테이블 상단 여백을 잡는다
+    private func refreshPinnedBar() {
+        pinnedStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        let items = store.pinnedDatas
+        pinnedBar.isHidden = items.isEmpty
+
+        if !items.isEmpty {
+            pinnedStack.addArrangedSubview(makePinnedToggleRow(count: items.count))
+
+            if !isPinnedBarCollapsed {
+                for (index, item) in items.enumerated() {
+                    pinnedStack.addArrangedSubview(makePinnedRow(index: index, item: item))
+                }
+            }
+        }
+        view.layoutIfNeeded()
+
+        pinnedBarTopInset = items.isEmpty ? 0 : pinnedBar.frame.height
+        todoTableView.contentInset.top = pinnedBarTopInset
+        todoTableView.verticalScrollIndicatorInsets.top = pinnedBarTopInset
+    }
+
+    /// "고정됨 N" 헤더 — 탭하면 목록을 접고 펼친다
+    private func makePinnedToggleRow(count: Int) -> UIView {
+        let row = UIView()
+
+        let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
+        icon.tintColor = UIColor(named: "subText")
+        icon.contentMode = .scaleAspectFit
+        icon.transform = CGAffineTransform(rotationAngle: .pi / 4)
+
+        let label = UILabel()
+        label.text = "고정됨 \(count)"
+        label.font = UIFont(name: "GmarketSansTTFLight", size: 12)
+        label.textColor = UIColor(named: "subText")
+
+        let chevron = UIImageView(image: UIImage(systemName: isPinnedBarCollapsed ? "chevron.down" : "chevron.up"))
+        chevron.tintColor = UIColor(named: "subText")
+        chevron.contentMode = .scaleAspectFit
+
+        row.addSubview(icon)
+        row.addSubview(label)
+        row.addSubview(chevron)
+
+        icon.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(10)
+        }
+        label.snp.makeConstraints {
+            $0.leading.equalTo(icon.snp.trailing).offset(5)
+            $0.top.equalToSuperview().offset(6)
+            $0.bottom.equalToSuperview().offset(-6)
+        }
+        chevron.snp.makeConstraints {
+            $0.leading.equalTo(label.snp.trailing).offset(5)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(10)
+        }
+
+        row.isUserInteractionEnabled = true
+        row.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedToggleTapped)))
+        return row
+    }
+
+    @objc private func pinnedToggleTapped() {
+        isPinnedBarCollapsed.toggle()
+        refreshPinnedBar()
+    }
+
+    // 셀과 같은 구조 — 전폭 컨테이너(row) 안에서 말풍선(bubble)이 빠져나간다.
+    // 제스처는 컨테이너 전체에 붙여 히트 영역을 셀과 동일하게 맞춘다.
+    private func makePinnedRow(index: Int, item: TodoData) -> UIView {
+        let row = UIView()
+        row.backgroundColor = .clear
+
+        let bubble = UIView()
+        bubble.backgroundColor = TodoTableViewCell.Design.boxColor
+        bubble.makeRounded(cornerRadius: 8)
+        bubble.setBorder(borderColor: mainColor, borderWidth: 1.0)
+        bubble.tag = Self.pinnedBubbleTag
+
+        let icon = UIImageView(image: UIImage(systemName: "pin.fill"))
+        icon.tintColor = mainColor
+        icon.contentMode = .scaleAspectFit
+        icon.transform = CGAffineTransform(rotationAngle: .pi / 4)
+
+        let label = UILabel()
+        label.text = item.todo
+        label.font = UIFont(name: "GmarketSansTTFMedium", size: 14)
+        label.textColor = TodoTableViewCell.Design.textColor
+        label.lineBreakMode = .byTruncatingTail
+
+        let gradient = GradientView()
+        gradient.alpha = 0
+        gradient.tag = Self.pinnedGradientTag
+
+        row.addSubview(gradient)
+        row.addSubview(bubble)
+        bubble.addSubview(icon)
+        bubble.addSubview(label)
+
+        bubble.snp.makeConstraints {
+            $0.leading.top.bottom.equalToSuperview()
+            $0.trailing.lessThanOrEqualToSuperview()
+        }
+        icon.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(12)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(12)
+        }
+        label.snp.makeConstraints {
+            $0.leading.equalTo(icon.snp.trailing).offset(7)
+            $0.trailing.equalToSuperview().offset(-14)
+            $0.top.equalToSuperview().offset(11)
+            $0.bottom.equalToSuperview().offset(-11)
+        }
+        gradient.snp.makeConstraints {
+            $0.leading.equalTo(bubble.snp.trailing).offset(-18)
+            $0.top.bottom.equalTo(bubble)
+            $0.width.equalTo(75)
+        }
+
+        row.tag = index
+        row.isUserInteractionEnabled = true
+        // 셀과 동일: 탭은 말풍선 영역, 스와이프는 행 전체
+        bubble.isUserInteractionEnabled = true
+        bubble.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinnedRowTapped(_:))))
+
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(pinnedRowLeftSwiped(_:)))
+        leftSwipe.direction = .left
+        row.addGestureRecognizer(leftSwipe)
+        return row
+    }
+
+    private static let pinnedGradientTag = 987
+    private static let pinnedBubbleTag = 986
+
+    // 일반 항목과 동일하게 왼쪽 스와이프 = 완료(아카이브)
+    @objc private func pinnedRowLeftSwiped(_ gesture: UISwipeGestureRecognizer) {
+        guard !isSelectionMode,
+              let row = gesture.view,
+              let item = store.pinnedTodo(at: row.tag)
+        else { return }
+
+        row.isUserInteractionEnabled = false
+        let bubble = row.viewWithTag(Self.pinnedBubbleTag)
+        let gradient = row.viewWithTag(Self.pinnedGradientTag)
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            let slide = CGAffineTransform(translationX: -UIScreen.main.bounds.width, y: 0)
+            gradient?.alpha = 1
+            bubble?.transform = slide
+            gradient?.transform = slide
+        }, completion: { [weak self] _ in
+            guard let self else { return }
+
+            self.store.appendToArchive([item], dateString: self.todayString)
+            self.store.removePinned(at: row.tag)
+            self.refreshPinnedBar()
+            WidgetDataManager.shared.updateData()
+        })
+    }
+
+    @objc private func pinnedRowTapped(_ gesture: UITapGestureRecognizer) {
+        // 탭 제스처는 말풍선(bubble)에 붙어 있으므로 행 인덱스는 부모 row에서 읽는다
+        guard !isSelectionMode,
+              let index = gesture.view?.superview?.tag,
+              let item = store.pinnedTodo(at: index)
+        else { return }
+
+        feedbackGenerator?.impactOccurred()
+        guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else { return }
+
+        view.endEditing(true)
+        alertContext = .pinnedItem(index)
+        vcName.contentText = item.todo
+        vcName.fromArchive = false
+        vcName.showsPinAction = true
+        vcName.isPinned = true
+        vcName.indexPath = IndexPath(row: index, section: 0)
+        vcName.todoDelegate = self
+        vcName.modalPresentationStyle = .overCurrentContext
+
+        present(vcName, animated: false, completion: nil)
+    }
+}
+
+// MARK: - 일괄 선택 모드
+extension TodoViewController {
+    private func makeSelectionBar() -> UIView {
+        let bar = UIView()
+        bar.backgroundColor = Design.EditView.backgrondColor
+
+        let font = UIFont(name: "GmarketSansTTFMedium", size: 15)
+
+        selectionCancelButton.setTitle("취소", for: .normal)
+        selectionCancelButton.titleLabel?.font = font
+        selectionCancelButton.setTitleColor(UIColor(named: "mainText"), for: .normal)
+        selectionCancelButton.addTarget(self, action: #selector(selectionCancelTapped), for: .touchUpInside)
+
+        selectionCompleteButton.setTitle("완료", for: .normal)
+        selectionCompleteButton.titleLabel?.font = font
+        selectionCompleteButton.addTarget(self, action: #selector(selectionCompleteTapped), for: .touchUpInside)
+
+        selectionDeleteButton.setTitle("삭제", for: .normal)
+        selectionDeleteButton.titleLabel?.font = font
+        selectionDeleteButton.setTitleColor(UIColor(named: "alertColor") ?? .systemRed, for: .normal)
+        selectionDeleteButton.addTarget(self, action: #selector(selectionDeleteTapped), for: .touchUpInside)
+
+        bar.addSubview(selectionCancelButton)
+        bar.addSubview(selectionCompleteButton)
+        bar.addSubview(selectionDeleteButton)
+
+        selectionCancelButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(24)
+            $0.top.equalToSuperview().offset(14)
+            $0.height.equalTo(30)
+        }
+        selectionDeleteButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-24)
+            $0.centerY.equalTo(selectionCancelButton)
+            $0.height.equalTo(30)
+        }
+        selectionCompleteButton.snp.makeConstraints {
+            $0.trailing.equalTo(selectionDeleteButton.snp.leading).offset(-28)
+            $0.centerY.equalTo(selectionCancelButton)
+            $0.height.equalTo(30)
+        }
+        return bar
+    }
+
+    private func enterSelectionMode() {
+        guard !isSelectionMode else { return }
+
+        view.endEditing(true)
+        isSelectionMode = true
+        selectedIndexPaths.removeAll()
+
+        if selectionBar.superview == nil {
+            editView.addSubview(selectionBar)
+            selectionBar.snp.makeConstraints { $0.edges.equalToSuperview() }
+        }
+        selectionBar.isHidden = false
+        updateSelectionButtons()
+
+        animationStatus = .none
+        todoTableView.reloadData()
+    }
+
+    private func exitSelectionMode() {
+        isSelectionMode = false
+        selectedIndexPaths.removeAll()
+        selectionBar.isHidden = true
+        todoTableView.reloadData()
+    }
+
+    private func toggleSelection(at indexPath: IndexPath) {
+        if selectedIndexPaths.contains(indexPath) {
+            selectedIndexPaths.remove(indexPath)
+        }
+        else {
+            selectedIndexPaths.insert(indexPath)
+        }
+
+        if let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell {
+            cell.isChecked = selectedIndexPaths.contains(indexPath)
+        }
+        updateSelectionButtons()
+    }
+
+    private func updateSelectionButtons() {
+        let count = selectedIndexPaths.count
+        let hasSelection = count > 0
+
+        selectionCompleteButton.setTitle(hasSelection ? "완료 \(count)" : "완료", for: .normal)
+        selectionDeleteButton.setTitle(hasSelection ? "삭제 \(count)" : "삭제", for: .normal)
+        selectionCompleteButton.isEnabled = hasSelection
+        selectionDeleteButton.isEnabled = hasSelection
+        selectionCompleteButton.setTitleColor(hasSelection ? mainColor : Design.Button.inactiveColor, for: .normal)
+    }
+
+    @objc private func selectionCancelTapped() {
+        exitSelectionMode()
+    }
+
+    @objc private func selectionCompleteTapped() {
+        guard !selectedIndexPaths.isEmpty else { return }
+
+        let count = selectedIndexPaths.count
+        store.batchArchive(at: Array(selectedIndexPaths), dateString: todayString)
+        finishBatchAction(message: "\(count)개를 완료했어요.")
+    }
+
+    @objc private func selectionDeleteTapped() {
+        guard !selectedIndexPaths.isEmpty else { return }
+
+        let count = selectedIndexPaths.count
+        let alert = UIAlertController(
+            title: nil,
+            message: "선택한 \(count)개를 삭제할까요?\n삭제하면 되돌릴 수 없어요.",
+            preferredStyle: .actionSheet
+        )
+        alert.addAction(UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            self.store.batchDelete(at: Array(self.selectedIndexPaths))
+            self.finishBatchAction(message: "\(count)개를 삭제했어요.")
+        })
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func finishBatchAction(message: String) {
+        exitSelectionMode()
+        WidgetDataManager.shared.updateData()
+        showToast(text: message, withDelay: 0.3)
     }
 }
 

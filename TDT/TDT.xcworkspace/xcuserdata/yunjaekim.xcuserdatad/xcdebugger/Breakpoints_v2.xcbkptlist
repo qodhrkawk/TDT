@@ -46,8 +46,8 @@
             filePath = "TDT/Helpers/ThemeManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
             landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "TDT/ViewControllers/TodoViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "668"
-            endingLineNumber = "668"
+            startingLineNumber = "680"
+            endingLineNumber = "680"
             landmarkName = "textFieldDidEndEditing(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "TDT/ViewControllers/TodoViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "textFieldDidChange(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -274,6 +274,688 @@
             endingLineNumber = "280"
             landmarkName = "Color"
             landmarkType = "13">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4EB29F84-2142-4A7A-A4C1-384ED73D57B3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/ThemeManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "migrateThemeFromLegacyIfNeeded()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2BA2005E-1DD6-4D47-A4ED-905EC61B08E9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/ThemeManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "migrateThemeFromLegacyIfNeeded()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2BA2005E-1DD6-4D47-A4ED-905EC61B08E9 - ed581f4d9efb6c7b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.ThemeManager.migrateThemeFromLegacyIfNeeded() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/ThemeManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41"
+                  offsetFromSymbolStart = "702">
+               </Location>
+               <Location
+                  uuid = "2BA2005E-1DD6-4D47-A4ED-905EC61B08E9 - ed581f4d9efb6c7b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.ThemeManager.migrateThemeFromLegacyIfNeeded() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/ThemeManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41"
+                  offsetFromSymbolStart = "733">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EDD6DF1A-120B-4782-9F2B-9AE7E8517D2D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EDD6DF1A-120B-4782-9F2B-9AE7E8517D2D - b3982dc77b73be92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "975">
+               </Location>
+               <Location
+                  uuid = "EDD6DF1A-120B-4782-9F2B-9AE7E8517D2D - 5f8d99b324c7a849"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 (Swift.Array&lt;TDT.TodoData&gt;, Swift.Array&lt;TDT.TodoData&gt;) -&gt; Swift.Array&lt;TDT.TodoData&gt; in implicit closure #1 (Swift.Array&lt;TDT.TodoData&gt;.Type) -&gt; (Swift.Array&lt;TDT.TodoData&gt;, Swift.Array&lt;TDT.TodoData&gt;) -&gt; Swift.Array&lt;TDT.TodoData&gt; in TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B42DA151-2AB3-4B20-9F33-E262E94F9645"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FlickWidget/FlickWidget.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5C73FBC9-FE64-4910-BF9F-63D3FB72BC95"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FlickWidget/FlickWidget.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2FA371A8-B954-4501-8FBC-273D6752C75B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2FA371A8-B954-4501-8FBC-273D6752C75B - b3982dc77b73be16"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "2FA371A8-B954-4501-8FBC-273D6752C75B - b3982dc77b73be16"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "2FA371A8-B954-4501-8FBC-273D6752C75B - b3982dc77b73be16"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "606">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "152FB692-FDC3-4112-B76A-541B72E71F1E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D54BB3F9-EEED-44BF-B972-A3ABEFD89643"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/ViewControllers/AlertViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "changeButtonAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "91D30C54-6959-4A65-8E10-6ACF9C39F6DC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "scene(_:openURLContexts:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "35ABA17C-6369-4A7B-B49C-CFD250B05628"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "scene(_:openURLContexts:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EDF63F4E-9377-4E61-BE24-163C090A6BA8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FlickTodayWidget/FlickTodayLargeWidgetView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "224464F6-7C4F-4B9C-97EA-C7D958D1231F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "scene(_:openURLContexts:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8564AEE3-CDE9-46AA-9AA8-A03209426C45"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "scene(_:openURLContexts:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C89D2135-466F-4C6C-B7C8-E206CF6DF24E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "scene(_:openURLContexts:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B5EFEDD6-133C-41C3-A66A-487C156F8105"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/ViewControllers/ControlViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "keyboardInputInTodoViewController()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "62A57827-54E7-4AAB-88B8-8070A1B38328"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C2ABC6D1-77E1-48D6-A752-51D3FC620CC9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "migrateUserDefaultsIfNeeded()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "047849BD-EA36-44F9-83CE-D3C89932F969"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "migrateUserDefaultsIfNeeded()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "047849BD-EA36-44F9-83CE-D3C89932F969 - 8c84587ca0b885e4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.AppDelegate.appUpdate() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "047849BD-EA36-44F9-83CE-D3C89932F969 - 4781a41d83d9c062"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.AppDelegate.migrateUserDefaultsIfNeeded() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "047849BD-EA36-44F9-83CE-D3C89932F969 - 4781a41d83d9c062"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.AppDelegate.migrateUserDefaultsIfNeeded() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "564">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4AE2EF70-F1E2-44E1-A7EC-AE34A5094876"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D06DEFD1-F644-4780-AA4C-C5BDDC492353"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D06DEFD1-F644-4780-AA4C-C5BDDC492353 - b3982dc77b73bf7f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "954">
+               </Location>
+               <Location
+                  uuid = "D06DEFD1-F644-4780-AA4C-C5BDDC492353 - e354640ea253553f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #1 (Swift.Array&lt;TDT.TodoData&gt;, Swift.Array&lt;TDT.TodoData&gt;) -&gt; Swift.Array&lt;TDT.TodoData&gt; in TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "46">
+               </Location>
+               <Location
+                  uuid = "D06DEFD1-F644-4780-AA4C-C5BDDC492353 - b3982dc77b73bf7f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "764">
+               </Location>
+               <Location
+                  uuid = "D06DEFD1-F644-4780-AA4C-C5BDDC492353 - e354640ea253553f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #1 (Swift.Array&lt;TDT.TodoData&gt;, Swift.Array&lt;TDT.TodoData&gt;) -&gt; Swift.Array&lt;TDT.TodoData&gt; in TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "52">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F1012F13-8E1A-4127-B008-65251D27E9FA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F1012F13-8E1A-4127-B008-65251D27E9FA - b3982dc77b73be50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "524">
+               </Location>
+               <Location
+                  uuid = "F1012F13-8E1A-4127-B008-65251D27E9FA - b3982dc77b73be50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "688">
+               </Location>
+               <Location
+                  uuid = "F1012F13-8E1A-4127-B008-65251D27E9FA - b3982dc77b73be50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "658">
+               </Location>
+               <Location
+                  uuid = "F1012F13-8E1A-4127-B008-65251D27E9FA - b3982dc77b73be50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "862">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6F9772A3-B2F7-4792-AE54-5D225EE18E95"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "updateData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6F9772A3-B2F7-4792-AE54-5D225EE18E95 - b3982dc77b73beb1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "31"
+                  endingLineNumber = "31"
+                  offsetFromSymbolStart = "712">
+               </Location>
+               <Location
+                  uuid = "6F9772A3-B2F7-4792-AE54-5D225EE18E95 - b3982dc77b73beb1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TDT.WidgetDataManager.updateData() -&gt; ()"
+                  moduleName = "TDT"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yunjaekim/Desktop/iOS_WorkPlace/SeulJam/TDT/TDT/TDT/Helpers/WidgetDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "31"
+                  endingLineNumber = "31"
+                  offsetFromSymbolStart = "888">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9288A131-46E1-421C-A572-A346F9ECE9AB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TDT/Helpers/WidgetDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "updateData()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

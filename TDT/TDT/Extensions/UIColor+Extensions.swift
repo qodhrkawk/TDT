@@ -2,7 +2,7 @@
 
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     convenience init(hexString: String, alpha: CGFloat = 1.0) {
         var hexString: String = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if hexString.hasPrefix("#") { hexString.removeFirst() }

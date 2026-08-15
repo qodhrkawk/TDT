@@ -7,8 +7,9 @@
 
 import Foundation
 
-enum UserDefaultKeys: String {
+public enum UserDefaultKeys: String {
     case theme
     case initiated
     case trait
+    case widgetData
 }
