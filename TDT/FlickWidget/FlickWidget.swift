@@ -108,7 +108,7 @@ struct FlickWidgetEntryView : View {
             }
             }
         }
-        .widgetBackground(isAccessoryFamily ? Color.clear : Color("bgColor"))
+        .widgetBackground(isAccessoryFamily ? Color.clear : WidgetAppearance.background())
         .followAppColorScheme()
     }
 }
