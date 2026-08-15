@@ -192,7 +192,6 @@ extension TodoViewController {
         sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
         sendButton.tintColor = Design.Button.inactiveColor
 
-        setupMoreButtonMenu()
         setupPinnedBar()
     }
 
@@ -204,19 +203,6 @@ extension TodoViewController {
         todoTableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
     }
 
-    // 기존 스토리보드 액션(설정 바로 열기)을 메뉴로 대체 — 선택 모드 진입점 추가
-    private func setupMoreButtonMenu() {
-        moreButton.showsMenuAsPrimaryAction = true
-        moreButton.menu = UIMenu(children: [
-            UIAction(title: "선택", image: UIImage(systemName: "checkmark.circle")) { [weak self] _ in
-                self?.enterSelectionMode()
-            },
-            UIAction(title: "설정", image: UIImage(systemName: "gearshape")) { [weak self] _ in
-                self?.presentSettingViewController()
-            }
-        ])
-    }
-    
     private func userInterfaceStyleDidChange() {
         textField.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
     }
@@ -630,6 +616,7 @@ extension TodoViewController: TextBoxDelegate {
         vcName.fromArchive = false
         vcName.showsPinAction = true
         vcName.isPinned = false
+        vcName.showsSelectAction = true
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.modalPresentationStyle = .overCurrentContext
@@ -743,6 +730,17 @@ extension TodoViewController: ToDoDelegate {
         alertContext = nil
         guard let cell = todoTableView.cellForRow(at: IndexPath(row: indexPath.row, section: indexPath.section)) as? TodoTableViewCell else { return}
         cell.wasSingleTapped = false
+    }
+
+    // 다이얼로그의 "선택" — 누른 항목이 체크된 채로 선택 모드 시작
+    func startSelection(indexPath: IndexPath) {
+        alertContext = nil
+        if let cell = todoTableView.cellForRow(at: indexPath) as? TodoTableViewCell {
+            cell.wasSingleTapped = false
+        }
+
+        enterSelectionMode()
+        toggleSelection(at: indexPath)
     }
 
     func togglePin(indexPath: IndexPath) {

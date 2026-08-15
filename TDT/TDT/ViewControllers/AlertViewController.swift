@@ -36,11 +36,14 @@ class AlertViewController: UIViewController {
 
     var fromArchive = false
 
-    // 고정 액션 (할 일 목록에서만 표시)
+    // 고정/선택 액션 (할 일 목록에서만 표시)
     var showsPinAction = false
     var isPinned = false
+    var showsSelectAction = false
     private let pinButton = UIButton(type: .system)
     private let pinSeparator = UIView()
+    private let selectButton = UIButton(type: .system)
+    private let selectSeparator = UIView()
     
     private var mainColor: UIColor {
         guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
@@ -136,6 +139,8 @@ class AlertViewController: UIViewController {
             }
         }
 
+        var extraRows = 0
+
         if showsPinAction && !fromArchive {
             pinButton.backgroundColor = Design.Color.boxColor
             pinButton.titleLabel?.font = Design.Font.buttonFont
@@ -150,9 +155,31 @@ class AlertViewController: UIViewController {
 
             pinButton.snp.makeConstraints { $0.height.equalTo(60) }
             pinSeparator.snp.makeConstraints { $0.height.equalTo(1) }
+            extraRows += 1
+        }
 
-            // 스토리보드 높이(121) = 버튼 60 + 선 1 + 버튼 60 — 한 줄 추가만큼 확장
-            stackView.constraints.first { $0.firstAttribute == .height }?.constant = 182
+        if showsSelectAction && !fromArchive {
+            selectButton.backgroundColor = Design.Color.boxColor
+            selectButton.titleLabel?.font = Design.Font.buttonFont
+            selectButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
+            selectButton.setTitle("선택", for: .normal)
+            selectButton.addTarget(self, action: #selector(selectButtonAction), for: .touchUpInside)
+
+            selectSeparator.backgroundColor = Design.Color.inactiveColor
+
+            // 고정 다음 자리: [고정, 선, 선택, 선, 수정, 선, 삭제]
+            let insertIndex = showsPinAction ? 2 : 0
+            stackView.insertArrangedSubview(selectSeparator, at: insertIndex)
+            stackView.insertArrangedSubview(selectButton, at: insertIndex)
+
+            selectButton.snp.makeConstraints { $0.height.equalTo(60) }
+            selectSeparator.snp.makeConstraints { $0.height.equalTo(1) }
+            extraRows += 1
+        }
+
+        if extraRows > 0 {
+            // 스토리보드 높이(121) = 버튼 60 + 선 1 + 버튼 60 — 추가 줄만큼 확장
+            stackView.constraints.first { $0.firstAttribute == .height }?.constant = CGFloat(121 + extraRows * 61)
         }
         
         cancelButton.backgroundColor = Design.Color.boxColor
@@ -252,6 +279,13 @@ class AlertViewController: UIViewController {
         guard let indexPath else { return }
 
         todoDelegate?.togglePin(indexPath: indexPath)
+        dismiss(animated: false, completion: nil)
+    }
+
+    @objc private func selectButtonAction() {
+        guard let indexPath else { return }
+
+        todoDelegate?.startSelection(indexPath: indexPath)
         dismiss(animated: false, completion: nil)
     }
 
