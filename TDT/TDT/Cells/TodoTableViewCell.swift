@@ -26,7 +26,10 @@ class TodoTableViewCell: UITableViewCell {
 
     /// 일괄 선택 모드 — 스와이프/더블탭 대신 탭으로 선택을 토글한다
     var isSelectionMode = false {
-        didSet { updateSelectionAppearance() }
+        didSet {
+            updateSelectionAppearance()
+            updateGestureEnabling()
+        }
     }
     var isChecked = false {
         didSet { updateSelectionAppearance() }
@@ -43,6 +46,8 @@ class TodoTableViewCell: UITableViewCell {
     private var doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
     private var singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
     private var leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwiped))
+    // 선택 모드 전용 — 행 전체가 탭 영역이고, 더블탭 대기 없이 즉시 반응한다
+    private var selectionTap = UITapGestureRecognizer(target: self, action: #selector(selectionTapped))
 
     private var mainColor: UIColor {
         guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
@@ -134,8 +139,23 @@ class TodoTableViewCell: UITableViewCell {
         containView.addGestureRecognizer(singleTap)
         addGestureRecognizer(leftSwipe)
 
+        selectionTap = UITapGestureRecognizer(target: self, action: #selector(selectionTapped))
+        contentView.addGestureRecognizer(selectionTap)
+
         setupPinImageView()
         setupCheckImageView()
+        updateGestureEnabling()
+    }
+
+    // 선택 모드: 더블탭/단일탭(더블탭 대기 있음)을 끄고 행 전체 즉시 탭으로 전환
+    private func updateGestureEnabling() {
+        doubletap.isEnabled = !isSelectionMode
+        singleTap.isEnabled = !isSelectionMode
+        selectionTap.isEnabled = isSelectionMode
+    }
+
+    @objc private func selectionTapped() {
+        textBoxDelegate?.longTapped(cell: self)
     }
 
     private func setupPinImageView() {
@@ -222,11 +242,6 @@ class TodoTableViewCell: UITableViewCell {
     }
 
     @objc func singleTapped(){
-        if isSelectionMode {
-            textBoxDelegate?.longTapped(cell: self)
-            return
-        }
-
         if !wasSingleTapped{
             wasSingleTapped = true
             textBoxDelegate?.longTapped(cell: self)
