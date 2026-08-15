@@ -200,11 +200,13 @@ class TodoTableViewCell: UITableViewCell {
         }
     }
 
+    // 상태 표시는 체크 아이콘만 담당한다 — 말풍선을 흐리게 하면
+    // 터치 시 음영이 생기는 것처럼 보여 오동작으로 오인된다
     private func updateSelectionAppearance() {
         checkImageView.isHidden = !isSelectionMode
         checkImageView.image = isChecked ? Design.checkedImage : Design.uncheckedImage
         checkImageView.tintColor = isChecked ? mainColor : Design.inactiveColor
-        containView.alpha = isSelectionMode && !isChecked ? 0.55 : 1
+        containView.alpha = 1
     }
 
     private func prepareFeedbackGenerator() {
