@@ -64,26 +64,29 @@ struct FlickTodayWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        switch family {
-        case .systemMedium:
-            switch entry.todoDatas.count {
-            case let x where x > 4 :
-                FlickTodayMediumWidgetView(todoDatas: Array(entry.todoDatas[x-4..<x]))
-            case let x where x > 0 && x <= 4 :
-                FlickTodayMediumWidgetView(todoDatas: entry.todoDatas)
+        Group {
+            switch family {
+            case .systemMedium:
+                switch entry.todoDatas.count {
+                case let x where x > 4 :
+                    FlickTodayMediumWidgetView(todoDatas: Array(entry.todoDatas[x-4..<x]))
+                case let x where x > 0 && x <= 4 :
+                    FlickTodayMediumWidgetView(todoDatas: entry.todoDatas)
+                default:
+                    FlickTodayMediumEmptyView()
+                }
             default:
-                FlickTodayMediumEmptyView()
-            }
-        default:
-            switch entry.todoDatas.count {
-            case let x where x > 9 :
-                FlickTodayLargeWidgetView(todoDatas: Array(entry.todoDatas[x-9..<x]))
-            case let x where x > 0 && x <= 9:
-                FlickTodayLargeWidgetView(todoDatas: entry.todoDatas)
-            default:
-                FlickTodayLargeEmptyView()
+                switch entry.todoDatas.count {
+                case let x where x > 9 :
+                    FlickTodayLargeWidgetView(todoDatas: Array(entry.todoDatas[x-9..<x]))
+                case let x where x > 0 && x <= 9:
+                    FlickTodayLargeWidgetView(todoDatas: entry.todoDatas)
+                default:
+                    FlickTodayLargeEmptyView()
+                }
             }
         }
+        .widgetBackground(Color("bgColor"))
     }
 }
 

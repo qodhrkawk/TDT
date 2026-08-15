@@ -59,9 +59,18 @@ struct FlickWidgetEntryView : View {
     @Environment(\.widgetFamily) var family
     var entry: Provider.Entry
 
+    // 잠금화면(액세서리) 계열은 시스템이 배경을 그린다
+    private var isAccessoryFamily: Bool {
+        if #available(iOSApplicationExtension 16.0, *) {
+            return family == .accessoryRectangular
+        }
+        return false
+    }
+
     var body: some View {
-        switch family {
-        case .accessoryRectangular:
+        Group {
+            switch family {
+            case .accessoryRectangular:
             switch entry.todoDatas.count {
             case let x where x > 3 :
                 FlickAccessoryRectangularWidgetView(todoDatas: Array(entry.todoDatas[x-3..<x]))
@@ -97,7 +106,9 @@ struct FlickWidgetEntryView : View {
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16))
                 }
             }
+            }
         }
+        .widgetBackground(isAccessoryFamily ? Color.clear : Color("bgColor"))
     }
 }
 

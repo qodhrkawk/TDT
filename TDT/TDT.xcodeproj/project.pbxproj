@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		247397F939EB7C695B53284C /* View+WidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDFC2F0303B93D65938453E /* View+WidgetBackground.swift */; };
 		C277E81C99D03579FDDF9852 /* TodoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE680DC6B7B4CD77E984B15 /* TodoStore.swift */; };
 		E5EA9A8F7A3549B88474AD6C /* Pods_TDT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */; };
 		EC778C2725BC0B4100EAE775 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC778C2625BC0B4100EAE775 /* TodoTableViewCell.swift */; };
@@ -136,6 +137,7 @@
 		ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */; };
 		ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */; };
 		ECFDFA0925BC920D001C4D5E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0825BC920D001C4D5E /* UIViewController+Extensions.swift */; };
+		FB386C9800042828759CFA7D /* View+WidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDFC2F0303B93D65938453E /* View+WidgetBackground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +174,7 @@
 
 /* Begin PBXFileReference section */
 		1B42DCB1B925A39C276981B7 /* Pods-TDT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.debug.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.debug.xcconfig"; sourceTree = "<group>"; };
+		3BDFC2F0303B93D65938453E /* View+WidgetBackground.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "View+WidgetBackground.swift"; sourceTree = "<group>"; };
 		ABE680DC6B7B4CD77E984B15 /* TodoStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodoStore.swift; sourceTree = "<group>"; };
 		AC2020E7DB3909549ED23AB0 /* Pods-TDT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDT.release.xcconfig"; path = "Target Support Files/Pods-TDT/Pods-TDT.release.xcconfig"; sourceTree = "<group>"; };
 		CD2ED4ED3B394B9D686204D4 /* Pods_TDT.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TDT.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -374,6 +377,7 @@
 				EC975E0129B4A4BE0088ACE4 /* FlickWidgetEmptyView.swift */,
 				ECDA3CBC29BC6B2D00A21002 /* FlickWidgetSizeType.swift */,
 				ECDA3CC829BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift */,
+				3BDFC2F0303B93D65938453E /* View+WidgetBackground.swift */,
 			);
 			path = FlickWidget;
 			sourceTree = "<group>";
@@ -740,6 +744,7 @@
 				EC975DE229B49B090088ACE4 /* UIColor+Extensions.swift in Sources */,
 				EC975DD929B49A4F0088ACE4 /* WidgetTodoData.swift in Sources */,
 				EC975DE029B49AED0088ACE4 /* ThemeManager.swift in Sources */,
+				247397F939EB7C695B53284C /* View+WidgetBackground.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,6 +775,7 @@
 				ECDA3CC629BC6CD300A21002 /* FlickTodayMediumEmptyView.swift in Sources */,
 				EC975DFC29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */,
 				ECC02F6129B32E6F00F61DF2 /* ThemeManager.swift in Sources */,
+				FB386C9800042828759CFA7D /* View+WidgetBackground.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
