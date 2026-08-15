@@ -125,6 +125,11 @@ class TodoTableViewCell: UITableViewCell {
         containView.alpha = 1
         containView.isUserInteractionEnabled = true
 
+        // prepareForReuse마다 인식기를 새로 만들어 붙이므로, 먼저 기존 것을
+        // 전부 제거한다 — 누적된 낡은 인식기가 선택 모드에서도 발화해
+        // 색 고착/탭 무시를 일으키던 버그의 원인
+        removeAllGestureRecognizers()
+
         doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
 
@@ -145,6 +150,12 @@ class TodoTableViewCell: UITableViewCell {
         setupPinImageView()
         setupCheckImageView()
         updateGestureEnabling()
+    }
+
+    private func removeAllGestureRecognizers() {
+        containView.gestureRecognizers?.forEach { containView.removeGestureRecognizer($0) }
+        contentView.gestureRecognizers?.forEach { contentView.removeGestureRecognizer($0) }
+        gestureRecognizers?.forEach { removeGestureRecognizer($0) }
     }
 
     // 선택 모드: 더블탭/단일탭(더블탭 대기 있음)을 끄고 행 전체 즉시 탭으로 전환

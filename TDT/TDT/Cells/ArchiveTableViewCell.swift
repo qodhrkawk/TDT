@@ -83,13 +83,17 @@ extension ArchiveTableViewCell {
     
     private func setupUIs(){
         backgroundColor = Design.backgroundColor
-        
+
         gradientView.alpha = 0
-        
+
         containView.backgroundColor = Design.boxColor
         containView.makeRounded(cornerRadius: 8)
         containView.isUserInteractionEnabled = true
-     
+
+        // prepareForReuse마다 인식기를 새로 만들므로 기존 것을 먼저 제거 (누적 방지)
+        containView.gestureRecognizers?.forEach { containView.removeGestureRecognizer($0) }
+        gestureRecognizers?.forEach { removeGestureRecognizer($0) }
+
         doubletap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapped))
         
