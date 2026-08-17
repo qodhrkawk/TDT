@@ -61,10 +61,7 @@ struct FlickWidgetEntryView : View {
 
     // 잠금화면(액세서리) 계열은 시스템이 배경을 그린다
     private var isAccessoryFamily: Bool {
-        if #available(iOSApplicationExtension 16.0, *) {
-            return family == .accessoryRectangular
-        }
-        return false
+        family == .accessoryRectangular
     }
 
     var body: some View {
@@ -115,13 +112,7 @@ struct FlickWidgetEntryView : View {
 
 struct FlickWidget: Widget {
     let kind: String = "FlickWidget"
-    var supportedFamilies: [WidgetFamily] = [.systemMedium, .systemLarge]
-    
-    init() {
-        if #available(iOS 16.0, *) {
-            supportedFamilies.append(.accessoryRectangular)
-        }
-    }
+    let supportedFamilies: [WidgetFamily] = [.systemMedium, .systemLarge, .accessoryRectangular]
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
