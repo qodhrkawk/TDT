@@ -39,6 +39,11 @@ class FlickAppState(
         private set
     var pinnedCollapsed by mutableStateOf(settings.pinnedBarCollapsed)
         private set
+    var toastMessage by mutableStateOf<String?>(null)
+
+    fun showToast(message: String) {
+        toastMessage = message
+    }
 
     fun start() {
         store.load()
@@ -46,7 +51,7 @@ class FlickAppState(
             val today = todayString()
             store.add("왼쪽으로 밀어서 완료 상태로 만들어 보세요.", today)
             store.add("두 번 탭해서 중요 표시를 해 보세요.", today)
-            store.add("길게 눌러서 메모를 삭제하거나 수정할 수 있어요.", today)
+            store.add("한 번 클릭해서 메모를 삭제하거나 수정할 수 있어요.", today)
             settings.initiated = true
         }
         refresh()

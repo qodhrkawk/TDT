@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +30,7 @@ import com.qodhrkawk.flick.data.SharedPrefsKeyValueStore
 import com.qodhrkawk.flick.data.TodoStore
 import com.qodhrkawk.flick.ui.ArchiveScreen
 import com.qodhrkawk.flick.ui.FlickAppState
+import com.qodhrkawk.flick.ui.FlickToast
 import com.qodhrkawk.flick.ui.SettingsScreen
 import com.qodhrkawk.flick.ui.TodoScreen
 import com.qodhrkawk.flick.ui.theme.Flick
@@ -40,6 +45,10 @@ class MainActivity : ComponentActivity() {
         setContent { FlickRoot() }
     }
 }
+
+// iOS ControlPageViewController: [아카이브(0), 오늘 할 일(1)], 시작은 오늘 할 일
+private const val PAGE_ARCHIVE = 0
+private const val PAGE_MAIN = 1
 
 @Composable
 fun FlickRoot() {
@@ -56,7 +65,7 @@ fun FlickRoot() {
         val colors = Flick.colors
         val scope = rememberCoroutineScope()
         var showSettings by remember { mutableStateOf(false) }
-        val pagerState = rememberPagerState(pageCount = { 2 })
+        val pagerState = rememberPagerState(initialPage = PAGE_MAIN, pageCount = { 2 })
 
         Box(
             modifier = Modifier
@@ -68,31 +77,39 @@ fun FlickRoot() {
         ) {
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
                 when (page) {
-                    0 -> TodoScreen(
+                    PAGE_ARCHIVE -> ArchiveScreen(
                         state = state,
-                        onOpenSettings = { showSettings = true },
-                        onOpenArchive = { scope.launch { pagerState.animateScrollToPage(1) } },
+                        active = pagerState.currentPage == PAGE_ARCHIVE,
+                        onBack = { scope.launch { pagerState.animateScrollToPage(PAGE_MAIN) } },
                     )
-                    else -> ArchiveScreen(
+                    else -> TodoScreen(
                         state = state,
-                        active = pagerState.currentPage == 1,
-                        onBack = { scope.launch { pagerState.animateScrollToPage(0) } },
+                        active = pagerState.currentPage == PAGE_MAIN && !showSettings,
+                        onOpenSettings = { showSettings = true },
+                        onOpenArchive = { scope.launch { pagerState.animateScrollToPage(PAGE_ARCHIVE) } },
                     )
                 }
             }
 
-            if (showSettings) {
+            // 설정: 아래에서 올라오는 풀스크린 모달 (iOS present modal)
+            AnimatedVisibility(
+                visible = showSettings,
+                enter = slideInVertically(tween(300)) { it },
+                exit = slideOutVertically(tween(300)) { it },
+            ) {
                 Box(Modifier.fillMaxSize().background(colors.bg)) {
-                    SettingsScreen(state, onBack = { showSettings = false })
+                    SettingsScreen(state, onClose = { showSettings = false })
                 }
             }
+
+            FlickToast(state.toastMessage) { state.toastMessage = null }
         }
 
-        BackHandler(enabled = showSettings || pagerState.currentPage == 1) {
+        BackHandler(enabled = showSettings || pagerState.currentPage == PAGE_ARCHIVE) {
             if (showSettings) {
                 showSettings = false
             } else {
-                scope.launch { pagerState.animateScrollToPage(0) }
+                scope.launch { pagerState.animateScrollToPage(PAGE_MAIN) }
             }
         }
     }

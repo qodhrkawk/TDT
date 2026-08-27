@@ -29,6 +29,11 @@ val GmarketSans = FontFamily(
     Font(R.font.gmarket_sans_medium, FontWeight.Medium),
 )
 
+/** 날짜 헤더·고정 바 라벨용 (iOS GmarketSansTTFLight 12) */
+val GmarketSansLight = FontFamily(
+    Font(R.font.gmarket_sans_light, FontWeight.Normal),
+)
+
 /** iOS Assets.xcassets 색상셋과 동일한 팔레트 */
 data class FlickColors(
     val theme: Color,

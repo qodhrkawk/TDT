@@ -34,52 +34,6 @@ import kotlinx.coroutines.launch
 // 시스템 이모지 금지 — 아이콘은 전부 Canvas로 그린다
 
 @Composable
-fun ArchiveIcon(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val w = size.width
-        val h = size.height
-        val stroke = Stroke(width = w * 0.09f, cap = StrokeCap.Round)
-        // 뚜껑
-        drawRoundRect(
-            color = color,
-            topLeft = Offset(0f, h * 0.08f),
-            size = Size(w, h * 0.22f),
-            cornerRadius = CornerRadius(w * 0.06f),
-            style = stroke,
-        )
-        // 본체
-        drawRoundRect(
-            color = color,
-            topLeft = Offset(w * 0.08f, h * 0.34f),
-            size = Size(w * 0.84f, h * 0.58f),
-            cornerRadius = CornerRadius(w * 0.06f),
-            style = stroke,
-        )
-        // 손잡이
-        drawLine(
-            color = color,
-            start = Offset(w * 0.36f, h * 0.52f),
-            end = Offset(w * 0.64f, h * 0.52f),
-            strokeWidth = w * 0.09f,
-            cap = StrokeCap.Round,
-        )
-    }
-}
-
-@Composable
-fun SendIcon(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val w = size.width
-        val h = size.height
-        val stroke = w * 0.11f
-        // 위쪽 화살표
-        drawLine(color, Offset(w * 0.5f, h * 0.78f), Offset(w * 0.5f, h * 0.24f), stroke, StrokeCap.Round)
-        drawLine(color, Offset(w * 0.26f, h * 0.46f), Offset(w * 0.5f, h * 0.22f), stroke, StrokeCap.Round)
-        drawLine(color, Offset(w * 0.74f, h * 0.46f), Offset(w * 0.5f, h * 0.22f), stroke, StrokeCap.Round)
-    }
-}
-
-@Composable
 fun ChevronIcon(color: Color, expanded: Boolean, modifier: Modifier = Modifier) {
     Canvas(modifier) {
         val w = size.width
@@ -113,38 +67,6 @@ fun PinIcon(color: Color, modifier: Modifier = Modifier) {
             strokeWidth = w * 0.12f,
             cap = StrokeCap.Round,
         )
-    }
-}
-
-@Composable
-fun GearIcon(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val w = size.width
-        val c = Offset(w / 2f, size.height / 2f)
-        drawCircle(color, radius = w * 0.18f, center = c, style = Stroke(w * 0.1f))
-        for (i in 0 until 8) {
-            val angle = Math.toRadians(i * 45.0)
-            val from = c + Offset(
-                (Math.cos(angle) * w * 0.3f).toFloat(),
-                (Math.sin(angle) * w * 0.3f).toFloat(),
-            )
-            val to = c + Offset(
-                (Math.cos(angle) * w * 0.42f).toFloat(),
-                (Math.sin(angle) * w * 0.42f).toFloat(),
-            )
-            drawLine(color, from, to, strokeWidth = w * 0.1f, cap = StrokeCap.Round)
-        }
-    }
-}
-
-@Composable
-fun BackIcon(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val w = size.width
-        val h = size.height
-        val stroke = w * 0.11f
-        drawLine(color, Offset(w * 0.7f, h * 0.2f), Offset(w * 0.32f, h * 0.5f), stroke, StrokeCap.Round)
-        drawLine(color, Offset(w * 0.32f, h * 0.5f), Offset(w * 0.7f, h * 0.8f), stroke, StrokeCap.Round)
     }
 }
 
@@ -186,6 +108,7 @@ fun SwipeToActionCell(
     val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
     val thresholdPx = with(density) { 90.dp.toPx() }
     val currentId by rememberUpdatedState(itemId)
+    var lastVelocity = remember(itemId) { floatArrayOf(0f, 0f) } // (velocity px/s, lastTime ms)
     val currentEnabled by rememberUpdatedState(enabled)
     val currentAction by rememberUpdatedState(onAction)
 
@@ -197,6 +120,10 @@ fun SwipeToActionCell(
                     onHorizontalDrag = { change, amount ->
                         if (!currentEnabled) return@detectHorizontalDragGestures
                         change.consume()
+                        val now = change.uptimeMillis
+                        val dt = (now - lastVelocity[1].toLong()).coerceAtLeast(1)
+                        lastVelocity[0] = amount / dt * 1000f
+                        lastVelocity[1] = now.toFloat()
                         scope.launch {
                             swipeX.snapTo((swipeX.value + amount).coerceIn(-screenWidthPx, 0f))
                         }
@@ -204,7 +131,8 @@ fun SwipeToActionCell(
                     onDragEnd = {
                         if (!currentEnabled) return@detectHorizontalDragGestures
                         scope.launch {
-                            if (swipeX.value < -thresholdPx) {
+                            // 임계값 통과 또는 빠른 왼쪽 플릭(iOS UISwipeGestureRecognizer 감각)
+                            if (swipeX.value < -thresholdPx || (swipeX.value < 0 && lastVelocity[0] < -1500f)) {
                                 swipeX.animateTo(-screenWidthPx, tween(300))
                                 currentAction(currentId)
                             } else {
@@ -237,3 +165,33 @@ fun SwipeToActionCell(
 val BubbleShape = RoundedCornerShape(8.dp)
 val BubblePaddingH: Dp = 18.dp
 val BubblePaddingV: Dp = 15.dp
+
+/**
+ * 진입 슬라이드인 (iOS willDisplay 애니메이션):
+ * 0.1 + 0.05*섹션 + 0.02*행 지연, 0.4초 easeOut, 250px 이동 + 알파 0.2→1
+ */
+@Composable
+fun EnterSlide(
+    active: Boolean,
+    sectionIndex: Int,
+    rowIndex: Int,
+    fromRight: Boolean,
+    content: @Composable () -> Unit,
+) {
+    val progress = remember { Animatable(if (active) 1f else 0f) }
+    androidx.compose.runtime.LaunchedEffect(active) {
+        if (active) {
+            progress.snapTo(1f)
+            kotlinx.coroutines.delay(100L + sectionIndex * 50L + rowIndex * 20L)
+            progress.animateTo(0f, tween(400, easing = androidx.compose.animation.core.EaseOut))
+        }
+    }
+    Box(
+        modifier = Modifier.graphicsLayer {
+            translationX = (if (fromRight) 250.dp.toPx() else -250.dp.toPx()) * progress.value
+            alpha = 1f - progress.value * 0.8f
+        },
+    ) {
+        content()
+    }
+}

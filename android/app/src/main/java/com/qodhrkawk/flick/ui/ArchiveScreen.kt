@@ -1,7 +1,6 @@
 package com.qodhrkawk.flick.ui
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,50 +15,58 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.qodhrkawk.flick.R
 import com.qodhrkawk.flick.data.TodoData
 import com.qodhrkawk.flick.ui.theme.Flick
 import com.qodhrkawk.flick.ui.theme.GmarketSans
-import kotlinx.coroutines.delay
+import com.qodhrkawk.flick.ui.theme.GmarketSansLight
 
 /**
- * 아카이브: 날짜별 최신순. 왼쪽 스와이프로 원래 날짜에 복원.
- * 진입 시 헤더·셀이 오른쪽에서 슬라이드인 (섹션 +0.05초, 행 +0.02초).
+ * 아카이브 (페이저 왼쪽 페이지): 날짜별 최신순, 왼쪽 스와이프 = 원래 날짜로 복원.
+ * 진입 시 왼쪽에서 슬라이드인 (메인과 반대 방향 — iOS와 동일).
  */
 @Composable
 fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
     val colors = Flick.colors
     val listState = rememberLazyListState()
-    var actionDialogId by remember { mutableStateOf<String?>(null) }
-    var editDialogId by remember { mutableStateOf<String?>(null) }
+    var menuTarget by remember { mutableStateOf<MenuTarget?>(null) }
 
+    Box(modifier = Modifier.fillMaxSize()) {
     Column(modifier = Modifier.fillMaxSize().background(colors.bg)) {
+        // 헤더: imgArchive 타이틀 (왼쪽) + btnMain(오늘 할 일로) (오른쪽)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BackIcon(
-                colors.mainText,
+            Image(
+                painterResource(R.drawable.img_archive),
+                contentDescription = "아카이브",
+                colorFilter = ColorFilter.tint(colors.mainText),
+                modifier = Modifier.height(25.dp),
+            )
+            Spacer(Modifier.weight(1f))
+            Image(
+                painterResource(R.drawable.btn_main),
+                contentDescription = "오늘 할 일",
+                colorFilter = ColorFilter.tint(colors.mainText),
                 modifier = Modifier
                     .size(24.dp)
                     .clickable(
@@ -67,47 +74,49 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
                         indication = null,
                     ) { onBack() },
             )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                "아카이브",
-                fontSize = 18.sp,
-                fontFamily = GmarketSans,
-                fontWeight = FontWeight.Bold,
-                color = colors.mainText,
-            )
         }
 
-        if (state.archiveSections.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    "완료한 할 일이 여기에 쌓여요.",
-                    fontSize = 14.sp,
-                    fontFamily = GmarketSans,
-                    color = colors.subText,
+        Box(Modifier.fillMaxSize()) {
+            if (state.archiveSections.isEmpty()) {
+                EmptyPlaceholder(
+                    imageRes = if (colors.isDark) R.drawable.img_empty_archive_dark else R.drawable.img_empty_archive,
+                    text = "앗, 아직 한 일들이 없네요!",
                 )
             }
-        } else {
             LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
                 state.archiveSections.forEachIndexed { sectionIndex, section ->
+                    val isTodaySection = section.date == todayString()
                     item(key = "ah:${section.date}") {
-                        SlideInOnEnter(active, sectionIndex, 0) {
-                            Text(
-                                section.date,
-                                fontSize = 12.sp,
-                                fontFamily = GmarketSans,
-                                color = colors.archiveText,
-                                modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 4.dp),
-                            )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(if (sectionIndex == 0) 80.dp else 30.dp),
+                            contentAlignment = Alignment.BottomStart,
+                        ) {
+                            EnterSlide(active, sectionIndex, 0, fromRight = false) {
+                                Text(
+                                    "${section.date} 한 일",
+                                    fontSize = 12.sp,
+                                    fontFamily = GmarketSansLight,
+                                    color = if (isTodaySection) colors.theme else colors.subText,
+                                    modifier = Modifier.padding(start = 20.dp),
+                                )
+                            }
                         }
                     }
                     items(section.items, key = { "at:${it.id}" }) { todo ->
                         val rowIndex = section.items.indexOfFirst { it.id == todo.id } + 1
-                        SlideInOnEnter(active, sectionIndex, rowIndex) {
+                        EnterSlide(active, sectionIndex, rowIndex, fromRight = false) {
                             ArchiveCell(
                                 todo = todo,
+                                isToday = isTodaySection,
+                                menuOpen = menuTarget?.id == todo.id,
                                 onRestore = { state.restore(it) },
                                 onDoubleTap = { state.archiveToggleImportant(it) },
-                                onLongPress = { actionDialogId = it },
+                                onTap = { id ->
+                                    val item = state.findInArchive(id) ?: return@ArchiveCell
+                                    menuTarget = MenuTarget(id, item.todo, fromArchive = true)
+                                },
                             )
                         }
                     }
@@ -117,84 +126,31 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
         }
     }
 
-    // 길게 누르기: 수정 / 삭제
-    actionDialogId?.let { id ->
-        val todo = state.findInArchive(id)
-        if (todo == null) {
-            actionDialogId = null
-        } else {
-            AlertDialog(
-                onDismissRequest = { actionDialogId = null },
-                containerColor = colors.box,
-                title = {
-                    Text(todo.todo, fontSize = 15.sp, fontFamily = GmarketSans, color = colors.mainText)
-                },
-                text = {
-                    Column {
-                        DialogAction("수정", colors.theme) {
-                            actionDialogId = null
-                            editDialogId = id
-                        }
-                        DialogAction("삭제", colors.alert) {
-                            actionDialogId = null
-                            state.archiveDelete(id)
-                        }
-                    }
-                },
-                confirmButton = {},
-            )
-        }
-    }
-
-    editDialogId?.let { id ->
-        val todo = state.findInArchive(id)
-        if (todo == null) {
-            editDialogId = null
-        } else {
-            EditDialog(
-                initialText = todo.todo,
-                onCancel = { editDialogId = null },
-                onSave = { text ->
-                    editDialogId = null
-                    if (text.isNotBlank()) state.archiveUpdateText(id, text)
-                },
-            )
-        }
-    }
-}
-
-/** 진입 시 오른쪽에서 슬라이드인. active가 될 때마다 다시 재생 */
-@Composable
-private fun SlideInOnEnter(
-    active: Boolean,
-    sectionIndex: Int,
-    rowIndex: Int,
-    content: @Composable () -> Unit,
-) {
-    val progress = remember { Animatable(if (active) 0f else 1f) }
-    LaunchedEffect(active) {
-        if (active) {
-            progress.snapTo(1f)
-            delay(sectionIndex * 50L + rowIndex * 20L)
-            progress.animateTo(0f, tween(220))
-        }
-    }
-    Box(
-        modifier = Modifier.graphicsLayer {
-            translationX = progress.value * size.width * 0.6f
-            alpha = 1f - progress.value * 0.9f
+    FlickActionMenu(
+        target = menuTarget,
+        onDismiss = { menuTarget = null },
+        onPinToggle = {},
+        onSelect = {},
+        onEdit = { id, text ->
+            state.archiveUpdateText(id, text)
+            state.showToast("수정되었어요")
         },
-    ) {
-        content()
+        onDelete = { id ->
+            state.archiveDelete(id)
+            state.showToast("삭제되었어요.")
+        },
+    )
     }
 }
 
 @Composable
 private fun ArchiveCell(
     todo: TodoData,
+    isToday: Boolean,
+    menuOpen: Boolean,
     onRestore: (String) -> Unit,
     onDoubleTap: (String) -> Unit,
-    onLongPress: (String) -> Unit,
+    onTap: (String) -> Unit,
 ) {
     val colors = Flick.colors
     SwipeToActionCell(
@@ -208,11 +164,11 @@ private fun ArchiveCell(
             modifier = gestureModifier
                 .pointerInput(todo.id) {
                     detectTapGestures(
+                        onTap = { onTap(todo.id) },
                         onDoubleTap = { onDoubleTap(todo.id) },
-                        onLongPress = { onLongPress(todo.id) },
                     )
                 }
-                .background(colors.archiveBox, BubbleShape)
+                .background(if (menuOpen) colors.box else colors.archiveBox, BubbleShape)
                 .then(
                     if (todo.isImportant)
                         Modifier.border(1.5.dp, colors.theme, BubbleShape)
@@ -220,7 +176,12 @@ private fun ArchiveCell(
                 )
                 .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
         ) {
-            Text(todo.todo, fontSize = 15.sp, fontFamily = GmarketSans, color = colors.doneText)
+            Text(
+                todo.todo,
+                fontSize = 15.sp,
+                fontFamily = GmarketSans,
+                color = if (isToday) colors.mainText else colors.doneText,
+            )
         }
     }
 }
