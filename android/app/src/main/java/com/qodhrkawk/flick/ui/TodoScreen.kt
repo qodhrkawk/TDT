@@ -421,37 +421,45 @@ private fun PinnedBar(state: FlickAppState, onLongPress: (String) -> Unit) {
         }
         if (!state.pinnedCollapsed) {
             state.pinned.forEach { todo ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                ) {
+                // 스와이프 완료 히트 영역은 행 전체 (말풍선 오른쪽 빈 곳 포함)
+                SwipeToActionCell(
+                    itemId = todo.id,
+                    enabled = true,
+                    gradientColor = colors.theme,
+                    onAction = { state.complete(it) },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                ) { gestureModifier ->
                     Box(
-                        modifier = Modifier
+                        modifier = gestureModifier
+                            .fillMaxWidth()
                             .pointerInput(todo.id) {
                                 detectTapGestures(onLongPress = { onLongPress(todo.id) })
-                            }
-                            .background(colors.box, BubbleShape)
-                            .then(
-                                if (todo.isImportant)
-                                    Modifier.border(1.5.dp, colors.theme, BubbleShape)
-                                else Modifier
-                            )
-                            .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
+                            },
                     ) {
-                        Text(
-                            todo.todo,
-                            fontSize = 15.sp,
-                            fontFamily = GmarketSans,
-                            color = colors.mainText,
-                            modifier = Modifier.padding(end = 18.dp),
-                        )
-                        PinIcon(
-                            colors.theme,
+                        Box(
                             modifier = Modifier
-                                .size(14.dp)
-                                .align(Alignment.TopEnd),
-                        )
+                                .background(colors.box, BubbleShape)
+                                .then(
+                                    if (todo.isImportant)
+                                        Modifier.border(1.5.dp, colors.theme, BubbleShape)
+                                    else Modifier
+                                )
+                                .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
+                        ) {
+                            Text(
+                                todo.todo,
+                                fontSize = 15.sp,
+                                fontFamily = GmarketSans,
+                                color = colors.mainText,
+                                modifier = Modifier.padding(end = 18.dp),
+                            )
+                            PinIcon(
+                                colors.theme,
+                                modifier = Modifier
+                                    .size(14.dp)
+                                    .align(Alignment.TopEnd),
+                            )
+                        }
                     }
                 }
             }

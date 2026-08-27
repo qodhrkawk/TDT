@@ -96,10 +96,15 @@ class FlickAppState(
         refresh()
     }
 
-    /** 완료: 완료 시점의 오늘 날짜로 아카이브 이동 (원래 적은 날짜가 아님) */
+    /** 완료: 완료 시점의 오늘 날짜로 아카이브 이동 (원래 적은 날짜가 아님). 고정 항목도 동일 */
     fun complete(id: String) {
-        val position = positionOf(id) ?: return
-        val (item, _) = store.remove(position) ?: return
+        val pinnedIndex = pinned.indexOfFirst { it.id == id }
+        val item = if (pinnedIndex != -1) {
+            store.removePinned(pinnedIndex)
+        } else {
+            val position = positionOf(id) ?: return
+            store.remove(position)?.first
+        } ?: return
         store.appendToArchive(listOf(item), todayString())
         refresh()
     }
