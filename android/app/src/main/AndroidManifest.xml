@@ -2,17 +2,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:label="Flick Spike"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar"
-        android:allowBackup="false">
+        android:label="Flick"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:allowBackup="true">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".widget.FlickHomeWidgetReceiver"
+            android:exported="true"
+            android:label="Flick">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_home" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.FlickTodayWidgetReceiver"
+            android:exported="true"
+            android:label="Flick 오늘">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today" />
+        </receiver>
     </application>
 
 </manifest>

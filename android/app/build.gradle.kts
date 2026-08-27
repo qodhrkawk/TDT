@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.qodhrkawk.flick.spike"
+    namespace = "com.qodhrkawk.flick"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.qodhrkawk.flick.spike"
+        applicationId = "com.qodhrkawk.flick"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -32,6 +32,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -43,6 +44,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("androidx.glance:glance-appwidget:1.1.1")
 
     testImplementation("junit:junit:4.13.2")
 }

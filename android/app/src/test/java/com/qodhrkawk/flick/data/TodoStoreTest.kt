@@ -284,6 +284,57 @@ class TodoStoreTest {
         assertEquals(listOf("d1", "d2"), store.dateInfo)
     }
 
+    // 이하 안드로이드 확장 — 아카이브 조작 (iOS는 ArchiveViewController에 산재하던 로직)
+
+    @Test
+    fun `A1 restoreFromArchive - 원래 날짜 섹션으로 복원, 섹션 없으면 날짜순 재생성`() {
+        val store = freshStore(listOf(listOf(td("a", "d1")), listOf(td("c", "d3"))))
+        store.appendToArchive(listOf(td("x", "d2")), dateString = "d9")
+        val restorePos = store.restoreFromArchive(pos(0, 0))
+
+        assertEquals(pos(1, 0), restorePos)
+        assertEquals(listOf("d1", "d2", "d3"), store.dateInfo)
+        assertEquals(listOf("x"), texts(store.todoDatas[1]))
+        val (datas, dates) = store.loadArchive()
+        assertTrue(datas.isEmpty())
+        assertTrue(dates.isEmpty())
+    }
+
+    @Test
+    fun `A2 archiveRemove - 아카이브에서 삭제, 빈 섹션 정리`() {
+        val store = freshStore(listOf(listOf(td("a", "d1"))))
+        store.appendToArchive(listOf(td("x", "d2"), td("y", "d2")), dateString = "d9")
+        val removed = store.archiveRemove(pos(0, 0))
+
+        assertEquals("x", removed?.todo)
+        val (datas, dates) = store.loadArchive()
+        assertEquals(listOf("y"), texts(datas[0]))
+        assertEquals(listOf("d9"), dates)
+
+        store.archiveRemove(pos(0, 0))
+        val (datas2, dates2) = store.loadArchive()
+        assertTrue(datas2.isEmpty())
+        assertTrue(dates2.isEmpty())
+    }
+
+    @Test
+    fun `A3 archiveUpdateText - 아카이브 항목 텍스트 수정`() {
+        val store = freshStore(listOf(listOf(td("a", "d1"))))
+        store.appendToArchive(listOf(td("x", "d2")), dateString = "d9")
+        store.archiveUpdateText(pos(0, 0), "x-수정")
+        val (datas, _) = store.loadArchive()
+        assertEquals("x-수정", datas[0][0].todo)
+    }
+
+    @Test
+    fun `A4 archiveToggleImportant - 아카이브 항목 중요 토글`() {
+        val store = freshStore(listOf(listOf(td("a", "d1"))))
+        store.appendToArchive(listOf(td("x", "d2")), dateString = "d9")
+        store.archiveToggleImportant(pos(0, 0))
+        val (datas, _) = store.loadArchive()
+        assertTrue(datas[0][0].isImportant)
+    }
+
     @Test
     fun `15 save-load 라운드트립 - 고정 목록 유지`() {
         val storage = freshStorage(

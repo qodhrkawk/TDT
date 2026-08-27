@@ -258,6 +258,57 @@ class TodoStore(private val storage: KeyValueStore) {
         batchRemove(sorted)
     }
 
+    // 아카이브 조작 (안드로이드 확장 — iOS는 ArchiveViewController에 산재)
+
+    /** 아카이브 항목을 원래 날짜 섹션으로 복원. 복원 위치 반환 */
+    fun restoreFromArchive(position: Position): Position? {
+        val item = archiveRemove(position) ?: return null
+        val destination = insertIntoDateSections(item.copy(isPinned = false))
+        save()
+        return destination
+    }
+
+    /** 아카이브 항목 삭제 */
+    fun archiveRemove(position: Position): TodoData? =
+        mutateArchive(position) { datas, _ -> datas[position.section].removeAt(position.row) }
+
+    /** 아카이브 항목 텍스트 수정 */
+    fun archiveUpdateText(position: Position, text: String) {
+        mutateArchive(position) { datas, item ->
+            datas[position.section][position.row] = item.copy(todo = text)
+        }
+    }
+
+    /** 아카이브 항목 중요 표시 토글 */
+    fun archiveToggleImportant(position: Position) {
+        mutateArchive(position) { datas, item ->
+            datas[position.section][position.row] = item.copy(isImportant = !item.isImportant)
+        }
+    }
+
+    /** 아카이브를 읽어 변형하고 빈 섹션 정리 후 저장한다. 대상 항목 반환 */
+    private fun mutateArchive(
+        position: Position,
+        mutation: (MutableList<MutableList<TodoData>>, TodoData) -> Any?,
+    ): TodoData? {
+        val (loadedDatas, loadedDates) = loadArchive()
+        val datas = loadedDatas.map { it.toMutableList() }.toMutableList()
+        val dates = loadedDates.toMutableList()
+        val item = datas.getOrNull(position.section)?.getOrNull(position.row) ?: return null
+
+        mutation(datas, item)
+
+        for (index in datas.indices.reversed()) {
+            if (datas[index].isEmpty()) {
+                datas.removeAt(index)
+                dates.removeAt(index)
+            }
+        }
+        storage.putString(Keys.ARCHIVE_TODOS, json.encodeToString<List<List<TodoData>>>(datas))
+        storage.putString(Keys.ARCHIVE_DATES, json.encodeToString<List<String>>(dates))
+        return item
+    }
+
     /** 선택 항목들을 완전히 삭제 (아카이브로 가지 않음) */
     fun batchDelete(positions: List<Position>) {
         batchRemove(positions.sortedWith(compareBy({ it.section }, { it.row })))
