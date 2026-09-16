@@ -25,8 +25,13 @@ class TodoViewController: UIViewController {
     
     @IBOutlet weak var headerView: UIView!
     
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var typingTextView: UITextView!
+    @IBOutlet weak var typingTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var editViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var sendButton: UIButton!
+
+    // UITextView에는 placeholder가 없어 직접 얹는다
+    private let typingPlaceholderLabel = UILabel()
     
     weak var pageControlDelegate: PageControlDelegate?
 
@@ -126,9 +131,10 @@ class TodoViewController: UIViewController {
     }
 
     @IBAction private func sendButtonAction(_ sender: Any) {
-        if textField.text != ""{
-            addData(todo: textField.text!)
-            textField.text = ""
+        if typingTextView.text != ""{
+            addData(todo: typingTextView.text!)
+            typingTextView.text = ""
+            textViewDidChange(typingTextView)
             animationStatus = .sendAnimation
         }
     }
@@ -163,16 +169,24 @@ extension TodoViewController {
 
         headerView.alpha = 0.95
         
-        textField.addLeftPadding(left: 7)
-        textField.addRightPadding(right: 40)
-        textField.makeRounded(cornerRadius: 8)
-        textField.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
-        textField.placeholder = Design.TextField.placeHolder
-        textField.font = Design.TextField.font
-        textField.delegate = self
-        textField.addTarget(self, action: #selector(textFieldDidChange(sender:)), for: .editingChanged)
-        textField.backgroundColor = Design.TextField.backgroundColor
-        textField.textColor = Design.TextField.textColor
+        // 좌우 여백은 textField 시절(왼쪽 7, 오른쪽 전송 버튼 40)과 동일하게 맞춘다
+        typingTextView.textContainerInset = UIEdgeInsets(top: 11, left: 7, bottom: 9, right: 40)
+        typingTextView.makeRounded(cornerRadius: 8)
+        typingTextView.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
+        typingTextView.font = Design.TextField.font
+        typingTextView.delegate = self
+        typingTextView.backgroundColor = Design.TextField.backgroundColor
+        typingTextView.textColor = Design.TextField.textColor
+        typingTextView.isScrollEnabled = false
+
+        typingPlaceholderLabel.text = Design.TextField.placeHolder
+        typingPlaceholderLabel.font = Design.TextField.font
+        typingPlaceholderLabel.textColor = Design.TextField.placeHolderColor
+        typingTextView.addSubview(typingPlaceholderLabel)
+        typingPlaceholderLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(12)
+            $0.top.equalToSuperview().offset(11)
+        }
         
         view.isUserInteractionEnabled = true
 
@@ -204,7 +218,7 @@ extension TodoViewController {
     }
 
     private func userInterfaceStyleDidChange() {
-        textField.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
+        typingTextView.setBorder(borderColor: UIColor(named: "bgColor"), borderWidth: 1.0)
     }
     
     private func setMainColor(){
@@ -212,7 +226,7 @@ extension TodoViewController {
         
         flickImageView.tintColor = theme.mainColor
         
-        if let text = textField.text, text.count > 0 {
+        if let text = typingTextView.text, text.count > 0 {
             sendButton.tintColor = theme.mainColor
         }
     }
@@ -240,18 +254,6 @@ extension TodoViewController {
         self.view.endEditing(true)
     }
     
-    @objc private func textFieldDidChange(sender:UITextField) {
-        if let text = sender.text {
-            // 초과되는 텍스트 제거
-            if text.count >= 1 {
-                sendButton.tintColor = mainColor
-            }
-            else {
-                sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
-                sendButton.tintColor = Design.Button.inactiveColor
-            }
-        }
-    }
 }
 
 // Extension about Keyboard animation
@@ -673,15 +675,50 @@ extension TodoViewController: TextBoxDelegate {
 }
 
 
-extension TodoViewController: UITextFieldDelegate{
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.text!.count >= 1 {
+extension TodoViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        let isEmpty = textView.text.isEmpty
+        typingPlaceholderLabel.isHidden = !isEmpty
+
+        if isEmpty {
+            sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
+            sendButton.tintColor = Design.Button.inactiveColor
+        }
+        else {
+            sendButton.tintColor = mainColor
+        }
+
+        adjustTypingTextViewHeight()
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.count >= 1 {
             sendButton.tintColor = mainColor
         }
         else{
             sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
             sendButton.tintColor = Design.Button.inactiveColor
         }
+    }
+
+    /// 내용에 맞춰 입력창을 늘린다 — 리턴은 줄바꿈, 전송은 전송 버튼만.
+    /// 최대 높이를 넘으면 확장을 멈추고 내부 스크롤로 전환한다
+    private func adjustTypingTextViewHeight() {
+        let minHeight: CGFloat = 40
+        let maxHeight: CGFloat = 120
+
+        let fittingHeight = ceil(typingTextView.sizeThatFits(
+            CGSize(width: typingTextView.bounds.width, height: .greatestFiniteMagnitude)
+        ).height)
+        let newHeight = min(max(minHeight, fittingHeight), maxHeight)
+
+        typingTextView.isScrollEnabled = fittingHeight > maxHeight
+
+        guard typingTextViewHeightConstraint.constant != newHeight else { return }
+        typingTextViewHeightConstraint.constant = newHeight
+        // 스토리보드 기본: 컨테이너 90 = 입력창 40 + 상하 여백 50
+        editViewHeightConstraint.constant = newHeight + 50
+        view.layoutIfNeeded()
     }
 }
 
@@ -1143,6 +1180,7 @@ extension TodoViewController {
             static let backgroundColor = UIColor(named: "textBoxColor")
             static let textColor = UIColor(named: "typingTextColor")
             static let placeHolder = "해야 할 일을 입력해주세요."
+            static let placeHolderColor = UIColor.placeholderText
         }
         
         enum EditView {
