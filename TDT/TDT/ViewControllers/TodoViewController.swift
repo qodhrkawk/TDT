@@ -613,6 +613,7 @@ extension TodoViewController: TextBoxDelegate {
         self.view.endEditing(true)
         alertContext = .todo(indexPath)
         vcName.contentText = store.todo(at: indexPath)?.todo
+        vcName.linkURL = store.todo(at: indexPath)?.todo.firstContainedURL
         vcName.fromArchive = false
         vcName.showsPinAction = true
         vcName.isPinned = false
@@ -896,6 +897,7 @@ extension TodoViewController {
         label.font = UIFont(name: "GmarketSansTTFMedium", size: 14)
         label.textColor = TodoTableViewCell.Design.textColor
         label.lineBreakMode = .byTruncatingTail
+        label.highlightContainedLinks()
 
         let gradient = GradientView()
         gradient.alpha = 0
@@ -981,6 +983,7 @@ extension TodoViewController {
         view.endEditing(true)
         alertContext = .pinnedItem(index)
         vcName.contentText = item.todo
+        vcName.linkURL = item.todo.firstContainedURL
         vcName.fromArchive = false
         vcName.showsPinAction = true
         vcName.isPinned = true

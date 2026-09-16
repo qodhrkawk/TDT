@@ -315,6 +315,7 @@ extension ArchiveViewController: TextBoxDelegate {
         guard let vcName = UIStoryboard(name: "Alert", bundle: nil).instantiateViewController(identifier: "AlertViewController") as? AlertViewController else {return}
 
         vcName.contentText = archiveDatas[indexPath.section][indexPath.row].todo
+        vcName.linkURL = archiveDatas[indexPath.section][indexPath.row].todo.firstContainedURL
         vcName.indexPath = indexPath
         vcName.todoDelegate = self
         vcName.fromArchive = true

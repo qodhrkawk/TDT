@@ -140,6 +140,7 @@
 		ECF8732425B9BDC80096E766 /* Todo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECF8732325B9BDC80096E766 /* Todo.storyboard */; };
 		ECF8732725B9BDDC0096E766 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8732625B9BDDC0096E766 /* TodoViewController.swift */; };
 		ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */; };
+		FA0301A12F5A000100000006 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A000100000005 /* String+Extensions.swift */; };
 		ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */; };
 		ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */; };
 		ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */; };
@@ -268,6 +269,7 @@
 		ECF8732325B9BDC80096E766 /* Todo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Todo.storyboard; sourceTree = "<group>"; };
 		ECF8732625B9BDDC0096E766 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
+		FA0301A12F5A000100000005 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDelegate.swift; sourceTree = "<group>"; };
 		ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extensions.swift"; sourceTree = "<group>"; };
 		ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToastView.swift; sourceTree = "<group>"; };
@@ -505,6 +507,7 @@
 			isa = PBXGroup;
 			children = (
 				ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */,
+				FA0301A12F5A000100000005 /* String+Extensions.swift */,
 				EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */,
 				EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */,
 				EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */,
@@ -815,6 +818,7 @@
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
 				ECE2DDC12989137B000E01EF /* SettingListTableViewCell.swift in Sources */,
 				ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */,
+				FA0301A12F5A000100000006 /* String+Extensions.swift in Sources */,
 				ECC02F6529B3344900F61DF2 /* WidgetDataManager.swift in Sources */,
 				ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */,
 				ECDFCAA2298BDBB70065D939 /* SettingTableViewHeader.swift in Sources */,

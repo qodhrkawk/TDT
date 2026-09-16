@@ -44,6 +44,11 @@ class AlertViewController: UIViewController {
     private let pinSeparator = UIView()
     private let selectButton = UIButton(type: .system)
     private let selectSeparator = UIView()
+
+    // 링크 열기 액션 — 메모에 링크가 있으면 맨 위에 표시
+    var linkURL: URL?
+    private let openLinkButton = UIButton(type: .system)
+    private let openLinkSeparator = UIView()
     
     private var mainColor: UIColor {
         guard let currentTheme = ThemeManager.shared.currentTheme else { return Theme.flickBlue.mainColor }
@@ -177,9 +182,28 @@ class AlertViewController: UIViewController {
             extraRows += 1
         }
 
+        if linkURL != nil {
+            openLinkButton.backgroundColor = Design.Color.boxColor
+            openLinkButton.titleLabel?.font = Design.Font.buttonFont
+            openLinkButton.setTitleColor(Design.Color.mainTextColor, for: .normal)
+            openLinkButton.setTitle("링크 열기", for: .normal)
+            openLinkButton.addTarget(self, action: #selector(openLinkButtonAction), for: .touchUpInside)
+
+            openLinkSeparator.backgroundColor = Design.Color.inactiveColor
+
+            // 다른 액션들보다 위, 맨 첫 줄
+            stackView.insertArrangedSubview(openLinkSeparator, at: 0)
+            stackView.insertArrangedSubview(openLinkButton, at: 0)
+
+            openLinkButton.snp.makeConstraints { $0.height.equalTo(60) }
+            openLinkSeparator.snp.makeConstraints { $0.height.equalTo(1) }
+            extraRows += 1
+        }
+
         if extraRows > 0 {
-            // 스토리보드 높이(121) = 버튼 60 + 선 1 + 버튼 60 — 추가 줄만큼 확장
-            stackView.constraints.first { $0.firstAttribute == .height }?.constant = CGFloat(121 + extraRows * 61)
+            // 기본 높이: 수정 60 + 선 1 + 삭제 60 = 121, 아카이브는 삭제만 60 — 추가 줄만큼 확장
+            let baseHeight = fromArchive ? 60 : 121
+            stackView.constraints.first { $0.firstAttribute == .height }?.constant = CGFloat(baseHeight + extraRows * 61)
         }
         
         cancelButton.backgroundColor = Design.Color.boxColor
@@ -280,6 +304,15 @@ class AlertViewController: UIViewController {
 
         todoDelegate?.togglePin(indexPath: indexPath)
         dismiss(animated: false, completion: nil)
+    }
+
+    @objc private func openLinkButtonAction() {
+        guard let linkURL, let indexPath else { return }
+
+        todoDelegate?.dismissed(indexPath: indexPath)
+        dismiss(animated: false) {
+            UIApplication.shared.open(linkURL)
+        }
     }
 
     @objc private func selectButtonAction() {
