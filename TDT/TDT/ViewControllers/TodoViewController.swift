@@ -933,7 +933,8 @@ extension TodoViewController {
         label.text = item.todo
         label.font = UIFont(name: "GmarketSansTTFMedium", size: 14)
         label.textColor = TodoTableViewCell.Design.textColor
-        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 0
+        label.lineBreakMode = .byCharWrapping
         label.highlightContainedLinks()
 
         let gradient = GradientView()
