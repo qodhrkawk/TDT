@@ -28,7 +28,7 @@ class ControlViewController: UIViewController {
     
     func keyboardInputInTodoViewController() {
         guard let todoViewController = pageInstance?.currentViewController as? TodoViewController else { return }
-        todoViewController.textField.becomeFirstResponder()
+        todoViewController.typingTextView.becomeFirstResponder()
     }
 }
 

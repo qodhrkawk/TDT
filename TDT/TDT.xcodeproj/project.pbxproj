@@ -35,6 +35,7 @@
 		EC975DD829B49A4C0088ACE4 /* WidgetTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */; };
 		EC975DD929B49A4F0088ACE4 /* WidgetTodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */; };
 		EC975DDA29B49A520088ACE4 /* FlickMediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */; };
+		FA0301A12F5A000100000004 /* FlickSmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A000100000001 /* FlickSmallWidgetView.swift */; };
 		EC975DDB29B49A9E0088ACE4 /* WidgetDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6429B3344900F61DF2 /* WidgetDataManager.swift */; };
 		EC975DDC29B49ABE0088ACE4 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
 		EC975DDD29B49AC80088ACE4 /* UserDefaultsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004EC297BD1A00043972F /* UserDefaultsWrapper.swift */; };
@@ -99,8 +100,10 @@
 		ECC02F6729B3354A00F61DF2 /* TodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1001C25BD8677005BA8D1 /* TodoData.swift */; };
 		ECC02F6929B33AEF00F61DF2 /* FlickWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6829B33AEF00F61DF2 /* FlickWidgetEntry.swift */; };
 		ECC02F6B29B33BD900F61DF2 /* FlickMediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */; };
+		FA0301A12F5A000100000002 /* FlickSmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A000100000001 /* FlickSmallWidgetView.swift */; };
 		ECC02F6C29B33C3400F61DF2 /* FlickWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6829B33AEF00F61DF2 /* FlickWidgetEntry.swift */; };
 		ECC02F6D29B33CEB00F61DF2 /* FlickMediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */; };
+		FA0301A12F5A000100000003 /* FlickSmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A000100000001 /* FlickSmallWidgetView.swift */; };
 		ECC02F6F29B3411A00F61DF2 /* WidgetTodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */; };
 		ECC02F7029B341E700F61DF2 /* WidgetTodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */; };
 		ECD004E7297BCF1A0043972F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD004E6297BCF1A0043972F /* Theme.swift */; };
@@ -137,6 +140,7 @@
 		ECF8732425B9BDC80096E766 /* Todo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECF8732325B9BDC80096E766 /* Todo.storyboard */; };
 		ECF8732725B9BDDC0096E766 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8732625B9BDDC0096E766 /* TodoViewController.swift */; };
 		ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */; };
+		FA0301A12F5A000100000006 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A000100000005 /* String+Extensions.swift */; };
 		ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */; };
 		ECFDFA0225BC77F3001C4D5E /* UITextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */; };
 		ECFDFA0625BC91CA001C4D5E /* CustomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */; };
@@ -231,6 +235,7 @@
 		ECC02F6429B3344900F61DF2 /* WidgetDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataManager.swift; sourceTree = "<group>"; };
 		ECC02F6829B33AEF00F61DF2 /* FlickWidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickWidgetEntry.swift; sourceTree = "<group>"; };
 		ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickMediumWidgetView.swift; sourceTree = "<group>"; };
+		FA0301A12F5A000100000001 /* FlickSmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickSmallWidgetView.swift; sourceTree = "<group>"; };
 		ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTodoData.swift; sourceTree = "<group>"; };
 		ECD004E6297BCF1A0043972F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		ECD004E9297BD05A0043972F /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
@@ -264,6 +269,7 @@
 		ECF8732325B9BDC80096E766 /* Todo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Todo.storyboard; sourceTree = "<group>"; };
 		ECF8732625B9BDDC0096E766 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
+		FA0301A12F5A000100000005 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		ECFDF9FE25BC67A2001C4D5E /* ToDoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDelegate.swift; sourceTree = "<group>"; };
 		ECFDFA0125BC77F3001C4D5E /* UITextView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extensions.swift"; sourceTree = "<group>"; };
 		ECFDFA0525BC91CA001C4D5E /* CustomToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToastView.swift; sourceTree = "<group>"; };
@@ -374,6 +380,7 @@
 				ECC02F5429B3261100F61DF2 /* Info.plist */,
 				ECC02F6829B33AEF00F61DF2 /* FlickWidgetEntry.swift */,
 				ECC02F6A29B33BD900F61DF2 /* FlickMediumWidgetView.swift */,
+				FA0301A12F5A000100000001 /* FlickSmallWidgetView.swift */,
 				ECC02F6E29B3411A00F61DF2 /* WidgetTodoData.swift */,
 				EC975DB829B475700088ACE4 /* WidgetTodoRow.swift */,
 				EC975DBC29B480EF0088ACE4 /* FlickLargeWidgetView.swift */,
@@ -500,6 +507,7 @@
 			isa = PBXGroup;
 			children = (
 				ECF8733525BA00A30096E766 /* UILabel+Extensions.swift */,
+				FA0301A12F5A000100000005 /* String+Extensions.swift */,
 				EC9D7B4125BB07C800453FE8 /* UIView+Extensions.swift */,
 				EC9D7B4425BB07E000453FE8 /* UIColor+Extensions.swift */,
 				EC778C2D25BC1C1A00EAE775 /* UITextField+Extensions.swift */,
@@ -737,6 +745,7 @@
 				EC975E0529B4A5330088ACE4 /* EmptyCase.swift in Sources */,
 				ECDA3CBF29BC6B2D00A21002 /* FlickWidgetSizeType.swift in Sources */,
 				EC975DDA29B49A520088ACE4 /* FlickMediumWidgetView.swift in Sources */,
+				FA0301A12F5A000100000004 /* FlickSmallWidgetView.swift in Sources */,
 				EC975DF929B4A1BA0088ACE4 /* Date+Extensions.swift in Sources */,
 				EC975DCB29B49A1A0088ACE4 /* FlickTodayWidgetBundle.swift in Sources */,
 				EC975DCD29B49A1A0088ACE4 /* FlickTodayWidget.swift in Sources */,
@@ -770,6 +779,7 @@
 				EC975DBE29B480EF0088ACE4 /* FlickLargeWidgetView.swift in Sources */,
 				EC975DF529B4A0440088ACE4 /* Date+Extensions.swift in Sources */,
 				ECC02F6D29B33CEB00F61DF2 /* FlickMediumWidgetView.swift in Sources */,
+				FA0301A12F5A000100000003 /* FlickSmallWidgetView.swift in Sources */,
 				EC975E0029B4A4950088ACE4 /* EmptyCase.swift in Sources */,
 				ECC02F5129B3260F00F61DF2 /* FlickWidget.swift in Sources */,
 				ECDA3CBE29BC6B2D00A21002 /* FlickWidgetSizeType.swift in Sources */,
@@ -802,11 +812,13 @@
 				ECDA3CC929BC796000A21002 /* FlickAccessoryRectangularWidgetView.swift in Sources */,
 				EC975DB929B475700088ACE4 /* WidgetTodoRow.swift in Sources */,
 				ECC02F6B29B33BD900F61DF2 /* FlickMediumWidgetView.swift in Sources */,
+				FA0301A12F5A000100000002 /* FlickSmallWidgetView.swift in Sources */,
 				ECFDF9FF25BC67A2001C4D5E /* ToDoDelegate.swift in Sources */,
 				ECDFCAA8298BE68D0065D939 /* TraitInfoManager.swift in Sources */,
 				EC9D7B5A25BB394D00453FE8 /* TextBoxDelegate.swift in Sources */,
 				ECE2DDC12989137B000E01EF /* SettingListTableViewCell.swift in Sources */,
 				ECF8733625BA00A30096E766 /* UILabel+Extensions.swift in Sources */,
+				FA0301A12F5A000100000006 /* String+Extensions.swift in Sources */,
 				ECC02F6529B3344900F61DF2 /* WidgetDataManager.swift in Sources */,
 				ECA1001D25BD8677005BA8D1 /* TodoData.swift in Sources */,
 				ECDFCAA2298BDBB70065D939 /* SettingTableViewHeader.swift in Sources */,
@@ -904,7 +916,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickTodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -935,7 +947,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickTodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -966,7 +978,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -997,7 +1009,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT.FlickWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1139,7 +1151,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1167,7 +1179,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = YunaeKim.TDT;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

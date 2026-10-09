@@ -170,6 +170,7 @@ extension ArchiveTableViewCell {
         
         todoLabel.setSpacing(spacing: 5, kernValue: -1)
         todoLabel.textColor = Design.textColor
+        todoLabel.highlightContainedLinks()
 
         containView.snp.remakeConstraints{
             $0.leading.equalTo(todoLabel.snp.leading).offset(-18)

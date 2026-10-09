@@ -53,6 +53,24 @@ extension UILabel {
         }
       }
     
+    /// 텍스트에 포함된 링크 부분만 파란 하이퍼링크(밑줄)로 강조한다.
+    /// 기존 attributedText 스타일(자간·행간) 위에 덧입히므로 setSpacing 뒤에 호출할 것
+    func highlightContainedLinks() {
+        guard let text, !text.containedLinks.isEmpty else { return }
+
+        let attributedString = NSMutableAttributedString(
+            attributedString: attributedText ?? NSAttributedString(string: text)
+        )
+        for link in text.containedLinks {
+            attributedString.addAttributes([
+                .foregroundColor: UIColor.systemBlue,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                .underlineColor: UIColor.systemBlue
+            ], range: link.range)
+        }
+        attributedText = attributedString
+    }
+
     func setSpacing(spacing: CGFloat,kernValue: Double){
         if let labelText = text, labelText.count > 0 {
             let attributedString = NSMutableAttributedString(string: labelText)

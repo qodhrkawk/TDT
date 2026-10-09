@@ -123,14 +123,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzE-xC-ok5">
                                 <rect key="frame" x="0.0" y="806" width="414" height="90"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FAu-0m-kq9">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="FAu-0m-kq9">
                                         <rect key="frame" x="23" y="11" width="368" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="6qS-yi-j17"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
-                                    </textField>
+                                    </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0EM-ZY-Gta">
                                         <rect key="frame" x="351" y="11" width="40" height="40"/>
                                         <constraints>
@@ -176,7 +176,9 @@
                         <outlet property="headerView" destination="p1W-Xe-Znr" id="RfZ-2G-OYo"/>
                         <outlet property="moreButton" destination="jHa-Mr-CmA" id="PkK-xL-py6"/>
                         <outlet property="sendButton" destination="0EM-ZY-Gta" id="e3Y-VI-HPC"/>
-                        <outlet property="textField" destination="FAu-0m-kq9" id="CUd-S9-VOl"/>
+                        <outlet property="typingTextView" destination="FAu-0m-kq9" id="CUd-S9-VOl"/>
+                        <outlet property="typingTextViewHeightConstraint" destination="6qS-yi-j17" id="FAc-01-hc1"/>
+                        <outlet property="editViewHeightConstraint" destination="on9-hS-aQW" id="FAc-02-hc2"/>
                         <outlet property="todoTableView" destination="K95-Yr-f9a" id="gSW-Mi-jjg"/>
                         <outlet property="todoTableViewBottomConstraint" destination="GlX-15-Yot" id="i6R-lt-tWn"/>
                     </connections>
