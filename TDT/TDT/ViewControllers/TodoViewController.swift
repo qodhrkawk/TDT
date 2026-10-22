@@ -489,6 +489,10 @@ extension TodoViewController: UITableViewDelegate{
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        // 드래그 이동으로 빈 섹션이 제거된 직후, 지연된 reloadData 전까지
+        // UIKit이 옛 섹션 번호로 물어올 수 있다 — 직접 인덱싱하면 크래시
+        guard dateInfo.indices.contains(section) else { return nil }
+
         let height: CGFloat = section == 0 ? 103 : 30
         let view = DateHeaderView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: height))
         view.setDate(date: dateInfo[section])
@@ -507,6 +511,9 @@ extension TodoViewController: UITableViewDelegate{
 
 extension TodoViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // viewForHeaderInSection과 동일 — 섹션 제거와 지연 reloadData 사이의 창
+        guard todoDatas.indices.contains(section) else { return 0 }
+
         if section == todoDatas.count-1 {
             var widgetArr:[String] = []
             for data in todoDatas[section] {
