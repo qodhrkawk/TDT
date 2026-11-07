@@ -50,6 +50,37 @@ struct LegacyTodoData: Codable {
     var todo: String
     var isImportant: Bool
 }
+expect(FlickBackup.isValidDate("2026.11.07"), "isValidDate: 정상")
+expect(!FlickBackup.isValidDate("2026.11.07\n"), "isValidDate: 끝 줄바꿈 거절")
+expect(!FlickBackup.isValidDate("٢٠٢٦.١١.٠٧"), "isValidDate: 아라비아 숫자 거절")
+
+// MARK: 17. 내보내기 정리
+func bi(_ text: String, _ date: String, important: Bool = false) -> BackupItem {
+    BackupItem(date: date, todo: text, isImportant: important)
+}
+func bs(_ date: String, _ items: [BackupItem]) -> BackupSection { BackupSection(date: date, items: items) }
+
+let dirty = BackupContent(
+    todos: [
+        bs("2021.01.25 10:30", [bi("옛 날짜", "2021.01.25 10:30"), bi(" \n", "2021.01.25 10:30")]),
+        bs("2021.01.25", [bi("같은 날", "2021.01.25")]),
+        bs("", [bi("섹션 날짜 없음", "2021.02.01")]),
+        bs("", [bi("날짜 모두 없음", "")]),
+        bs("2021.03.01", [bi("", "2021.03.01")])
+    ],
+    pinned: [bi("고정", "2021.01.25 10:30"), bi("   ", "2021.01.25")],
+    archive: [bs("2021.01.26", [bi("작년 완료", "2021.01.25 10:30")]), bs("2021.02.26", [bi("최근 완료", "2021.02.25")])]
+)
+let clean = FlickBackup.sanitized(dirty, today: "2026.11.07")
+expect(clean.todos.map(\.date) == ["2021.01.25", "2021.02.01", "2026.11.07"], "sanitize: 날짜 정리, 합치기, 오름차순")
+expect(clean.todos[0].items.map(\.todo) == ["옛 날짜", "같은 날"], "sanitize: 공백 메모 제외, 순서 유지")
+expect(clean.todos[2].items[0].date == "2026.11.07", "sanitize: 날짜 없으면 오늘")
+expect(clean.pinned.map(\.date) == ["2021.01.25"], "sanitize: 고정도 정리")
+expect(clean.archive.map(\.date) == ["2021.02.26", "2021.01.26"], "sanitize: 아카이브 내림차순")
+expect(clean.archive[1].items[0].date == "2021.01.25", "sanitize: 아카이브 항목 날짜 정리")
+expect(FlickBackup.sanitized(BackupContent(todos: [bs("2021.03.01", [bi("", "2021.03.01")])], pinned: [], archive: []), today: "2026.11.07").isEmpty,
+       "sanitize: 공백 메모만 있으면 비어 있음")
+
 defaults.removePersistentDomain(forName: suiteName)
 let legacy = [[LegacyTodoData(date: "2026.07.11", todo: "old item", isImportant: true)]]
 defaults.set(try! PropertyListEncoder().encode(legacy), forKey: TodoStore.Keys.todos)

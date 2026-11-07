@@ -70,7 +70,44 @@ enum FlickBackup {
 
     /// yyyy.MM.dd 모양인지 (달력상 유효한지는 보지 않는다)
     static func isValidDate(_ string: String) -> Bool {
-        string.range(of: #"^\d{4}\.\d{2}\.\d{2}$"#, options: .regularExpression) != nil
+        string.range(of: #"^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\z"#, options: .regularExpression) != nil
+    }
+
+    /// 내보내기 전에 옛 데이터를 정리한다: 날짜는 앞 10자(yyyy.MM.dd)로 맞추고,
+    /// 공백뿐인 메모와 빈 섹션은 버리고, 같은 날짜 섹션은 합친다.
+    static func sanitized(_ content: BackupContent, today: String) -> BackupContent {
+        func day(_ string: String) -> String? {
+            let head = String(string.prefix(10))
+            return isValidDate(head) ? head : nil
+        }
+        func cleanItems(_ items: [BackupItem], fallback: String) -> [BackupItem] {
+            items.compactMap { item in
+                guard !item.todo.isBlank else { return nil }
+                var copy = item
+                copy.date = day(item.date) ?? fallback
+                return copy
+            }
+        }
+        func cleanSections(_ sections: [BackupSection], ascending: Bool) -> [BackupSection] {
+            var result: [BackupSection] = []
+            for section in sections {
+                let date = day(section.date) ?? section.items.first.flatMap { day($0.date) } ?? today
+                let items = cleanItems(section.items, fallback: date)
+                guard !items.isEmpty else { continue }
+                if let index = result.firstIndex(where: { $0.date == date }) {
+                    result[index].items += items
+                } else {
+                    result.append(BackupSection(date: date, items: items))
+                }
+            }
+            // 날짜는 서로 달라 정렬이 곧 안정 정렬이다
+            return result.sorted { ascending ? $0.date < $1.date : $0.date > $1.date }
+        }
+        return BackupContent(
+            todos: cleanSections(content.todos, ascending: true),
+            pinned: cleanItems(content.pinned, fallback: today),
+            archive: cleanSections(content.archive, ascending: false)
+        )
     }
 
     static func exportData(content: BackupContent, appVersion: String, now: Date) throws -> Data {
