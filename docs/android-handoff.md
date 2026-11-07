@@ -12,7 +12,7 @@
 
 - **데드라인 없음, 달력 없음, 알림 없음.** 날짜는 "적은 날"의 기록일 뿐 마감이 아니다.
 - 핵심 루프: 기록하기 → (미루기) → 완료하기(스와이프) → 아카이브에 쌓임.
-- 서버 없음. 100% 로컬 데이터. 로그인/계정 없음. (3.1에서 Flick Pro 유료화 계획이 있으나 안드로이드 1.0 범위 아님 — `docs/3.0-improvement-plan.md` 참고)
+- 서버 없음. 100% 로컬 데이터. 로그인/계정 없음. (Flick Pro 시기는 미정이며 안드로이드 1.0 범위 아님 — `docs/3.0-improvement-plan.md` 참고)
 - 3.0은 앱스토어 리뷰 50개 분석 기반으로 최다 요청 기능 3종(순서 변경·고정·일괄 선택)과 최다 신고 버그(위젯 고착, 스와이프 오삭제)를 반영한 버전이다. 안드로이드는 이 3.0 스펙을 기준으로 만든다.
 
 ## 2. 화면 구성
@@ -94,7 +94,7 @@ data class TodoData(
 | 설정 | theme(Int 0–6), trait(system/light/dark), initiated, pinnedBarCollapsed(Bool) | |
 
 - 날짜 비교는 전부 **"yyyy.MM.dd" 문자열 사전순 비교**로 동작한다 (zero-pad라 사전순 = 시간순). 안드로이드도 동일 포맷을 쓰면 로직을 그대로 옮길 수 있다.
-- iOS는 할 일 데이터를 PropertyList, 설정을 JSON으로 저장하지만 이는 레거시다. **안드로이드는 전부 JSON(kotlinx.serialization) + DataStore(또는 Room)로 통일**하면 된다. iOS와의 데이터 교환은 없으므로 바이너리 호환은 불필요.
+- iOS는 할 일 데이터를 PropertyList, 설정을 JSON으로 저장하지만 이는 레거시다. **안드로이드는 전부 JSON(kotlinx.serialization) + DataStore(또는 Room)로 통일**하면 된다. iOS와는 바이너리 호환이 필요 없다. 파일로 데이터를 교환한다 (형식은 [3.1 데이터 이동 설계](superpowers/specs/2026-11-07-flick-3.1-data-transfer-design.md) 참고).
 - 위젯과 데이터를 공유해야 하므로 저장소는 위젯 프로세스에서도 읽을 수 있는 위치에 둔다 (SharedPreferences/DataStore면 충분 — 안드로이드 위젯은 같은 프로세스라 iOS의 앱 그룹 문제가 없다).
 
 ## 4. 핵심 비즈니스 규칙 (코드에만 있는 암묵적 규칙)
