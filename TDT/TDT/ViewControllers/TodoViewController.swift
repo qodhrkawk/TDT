@@ -918,7 +918,10 @@ extension TodoViewController {
         label.font = UIFont(name: "GmarketSansTTFLight", size: 12)
         label.textColor = UIColor(named: "subText")
 
-        let chevron = UIImageView(image: UIImage(systemName: isPinnedBarCollapsed ? "chevron.down" : "chevron.up"))
+        // chevron 심볼은 위아래 정렬 여백이 음수라 10pt 높이로 묶으면 실제 높이가 0이 된다 — 여백을 없앤다
+        let chevronImage = UIImage(systemName: isPinnedBarCollapsed ? "chevron.down" : "chevron.up")?
+            .withAlignmentRectInsets(.zero)
+        let chevron = UIImageView(image: chevronImage)
         chevron.tintColor = UIColor(named: "subText")
         chevron.contentMode = .scaleAspectFit
 
