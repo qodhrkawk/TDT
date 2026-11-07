@@ -130,6 +130,7 @@
 		ECDFCAA6298BE65A0065D939 /* TraitInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFCAA5298BE65A0065D939 /* TraitInfo.swift */; };
 		ECDFCAA8298BE68D0065D939 /* TraitInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDFCAA7298BE68D0065D939 /* TraitInfoManager.swift */; };
 		ECE2DDBD2989114B000E01EF /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECE2DDBC2989114B000E01EF /* Setting.storyboard */; };
+		FA0301A12F5A00010000000B /* SettingViewController+Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0301A12F5A00010000000C /* SettingViewController+Backup.swift */; };
 		ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDBE2989132F000E01EF /* SettingViewController.swift */; };
 		ECE2DDC12989137B000E01EF /* SettingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDC02989137B000E01EF /* SettingListTableViewCell.swift */; };
 		ECE2DDC3298917ED000E01EF /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE2DDC2298917ED000E01EF /* ThemeTableViewCell.swift */; };
@@ -256,6 +257,7 @@
 		ECDFCAA5298BE65A0065D939 /* TraitInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitInfo.swift; sourceTree = "<group>"; };
 		ECDFCAA7298BE68D0065D939 /* TraitInfoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraitInfoManager.swift; sourceTree = "<group>"; };
 		ECE2DDBC2989114B000E01EF /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
+		FA0301A12F5A00010000000C /* SettingViewController+Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingViewController+Backup.swift"; sourceTree = "<group>"; };
 		ECE2DDBE2989132F000E01EF /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		ECE2DDC02989137B000E01EF /* SettingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingListTableViewCell.swift; sourceTree = "<group>"; };
 		ECE2DDC2298917ED000E01EF /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				ECA1001225BD7C74005BA8D1 /* ControlViewController.swift */,
 				ECA1001525BD7CCA005BA8D1 /* ControlPageViewController.swift */,
 				ECE2DDBE2989132F000E01EF /* SettingViewController.swift */,
+				FA0301A12F5A00010000000C /* SettingViewController+Backup.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -844,6 +847,7 @@
 				ECDFCAA4298BE53D0065D939 /* SettingTraitTableViewCell.swift in Sources */,
 				ECC02F5D29B3290A00F61DF2 /* UserDefaults+Extensions.swift in Sources */,
 				ECE2DDBF2989132F000E01EF /* SettingViewController.swift in Sources */,
+				FA0301A12F5A00010000000B /* SettingViewController+Backup.swift in Sources */,
 				EC9D7B5625BB36B400453FE8 /* AlertViewController.swift in Sources */,
 				ECA1001325BD7C74005BA8D1 /* ControlViewController.swift in Sources */,
 				EC975DFB29B4A37D0088ACE4 /* FlickTodayLargeWidgetView.swift in Sources */,

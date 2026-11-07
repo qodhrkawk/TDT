@@ -83,6 +83,12 @@ class TodoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         showGuideBoxesIfNeeded()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDataDidImport),
+            name: .flickDataDidImport,
+            object: nil
+        )
 
         setupTodoTableView()
         setupUIs()
@@ -849,6 +855,12 @@ extension TodoViewController {
     }
 
     /// 고정 목록으로 바를 다시 그리고, 바 높이만큼 테이블 상단 여백을 잡는다
+    @objc private func handleDataDidImport() {
+        if isSelectionMode { exitSelectionMode() }
+        loadData()
+        refreshPinnedBar()
+    }
+
     private func refreshPinnedBar() {
         pinnedStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
 

@@ -77,6 +77,14 @@ extension SettingViewController: UITableViewDelegate {
             headerView.addGestureRecognizer(gestureRecognizer)
         }
         
+        if section == 3 || section == 4 {
+            let gestureRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: section == 3 ? #selector(exportDataTapped) : #selector(importDataTapped)
+            )
+            headerView.addGestureRecognizer(gestureRecognizer)
+        }
+
         return headerView
     }
     
@@ -102,7 +110,7 @@ extension SettingViewController: UITableViewDelegate {
 
 extension SettingViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        3
+        5
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -242,8 +250,8 @@ extension SettingViewController: MFMailComposeViewControllerDelegate {
 
 extension SettingViewController {
     private enum Constants {
-        static let titleTexts = ["화면 스타일", "테마","1:1 문의하기"]
-        static let subtitleTexts = ["어떤 모드를 따를지 설정합니다.", "하이라이트 색상이 변경됩니다.", "누르면 메일 앱으로 이동합니다."]
+        static let titleTexts = ["화면 스타일", "테마","1:1 문의하기", "데이터 내보내기", "데이터 가져오기"]
+        static let subtitleTexts = ["어떤 모드를 따를지 설정합니다.", "하이라이트 색상이 변경됩니다.", "누르면 메일 앱으로 이동합니다.", "할 일과 아카이브를 파일로 저장합니다.", "파일의 할 일을 지금 데이터에 합칩니다."]
 
         static let supportEmail = "qodhrkawk@gmail.com"
         static let supportMailSubject = "Flick 1:1 문의하기"

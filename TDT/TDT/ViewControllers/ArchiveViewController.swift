@@ -31,6 +31,17 @@ class ArchiveViewController: UIViewController {
         wholeTV.dataSource = self
         setupUIs()
         setData()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDataDidImport),
+            name: .flickDataDidImport,
+            object: nil
+        )
+    }
+
+    @objc private func handleDataDidImport() {
+        setData()
+        wholeTV.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
