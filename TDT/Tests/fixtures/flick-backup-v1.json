@@ -1,0 +1,24 @@
+{
+  "format": "flick-backup",
+  "version": 1,
+  "exportedAt": "2026-11-07T09:30:00Z",
+  "source": { "platform": "ios", "appVersion": "3.1.0" },
+  "todos": [
+    { "date": "2026.11.06", "items": [
+      { "date": "2026.11.06", "todo": "운동", "isImportant": false },
+      { "date": "2026.11.06", "todo": "운동", "isImportant": false }
+    ] },
+    { "date": "2026.11.07", "items": [
+      { "date": "2026.11.07", "todo": "첫 줄\n둘째 줄 \"인용\" \\ 끝", "isImportant": true }
+    ] }
+  ],
+  "pinned": [
+    { "date": "2026.11.01", "todo": "고정 메모", "isImportant": false }
+  ],
+  "archive": [
+    { "date": "2026.11.06", "items": [
+      { "date": "2026.11.02", "todo": "완료한 일", "isImportant": false }
+    ] }
+  ],
+  "unknownField": true
+}

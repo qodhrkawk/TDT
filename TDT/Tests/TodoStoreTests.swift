@@ -172,6 +172,43 @@ expect(reloaded.pinnedDatas.map(\.todo) == ["p"]
     && reloaded.todoDatas[0][0].isImportant,
     "save/load 라운드트립: 고정 목록 유지")
 
+// MARK: 16. 백업 파일
+let fixture = try! Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
+let parsed = try! FlickBackup.parse(fixture)
+expect(parsed.todos.map(\.date) == ["2026.11.06", "2026.11.07"], "backup: 섹션 순서 유지")
+expect(parsed.todos[0].items.count == 2, "backup: 같은 날 같은 메모 보존")
+expect(parsed.todos[1].items[0].todo == "첫 줄\n둘째 줄 \"인용\" \\ 끝", "backup: 특수문자 내용 보존")
+expect(parsed.todos[1].items[0].isImportant, "backup: 중요 표시 보존")
+expect(parsed.pinned.map(\.todo) == ["고정 메모"], "backup: 고정 읽기")
+expect(parsed.archive[0].date == "2026.11.06" && parsed.archive[0].items[0].date == "2026.11.02",
+       "backup: 완료 날짜와 작성 날짜 구분")
+
+let now = Date(timeIntervalSince1970: 1_794_000_000)
+var emojiContent = parsed
+emojiContent.todos[0].items[0].todo = "이모지 \u{1F600} 포함"
+let exported = try! FlickBackup.exportData(content: emojiContent, appVersion: "3.1.0", now: now)
+expect(try! FlickBackup.parse(exported) == emojiContent, "backup: 내보내고 다시 읽으면 같다")
+let header = try! JSONSerialization.jsonObject(with: exported) as! [String: Any]
+expect(header["format"] as? String == "flick-backup" && header["version"] as? Int == 1, "backup: 헤더 값")
+expect((header["source"] as? [String: String])?["platform"] == "ios", "backup: 플랫폼 표시")
+
+func parseError(_ json: String) -> BackupError? {
+    do { _ = try FlickBackup.parse(Data(json.utf8)); return nil }
+    catch { return error as? BackupError }
+}
+let goodTail = "\"exportedAt\":\"x\",\"source\":{\"platform\":\"ios\",\"appVersion\":\"3.1.0\"}"
+func file(todos: String) -> String {
+    "{\"format\":\"flick-backup\",\"version\":1,\(goodTail),\"todos\":\(todos),\"pinned\":[],\"archive\":[]}"
+}
+expect(parseError("not json") == .invalidFile, "backup: JSON 아님 거절")
+expect(parseError("{\"format\":\"other\",\"version\":1}") == .invalidFile, "backup: 다른 format 거절")
+expect(parseError("{\"format\":\"flick-backup\",\"version\":2}") == .newerVersion, "backup: 새 버전 거절")
+expect(parseError(file(todos: "[{\"date\":\"2026-11-07\",\"items\":[]}]")) == .invalidFile, "backup: 날짜 형식 거절")
+expect(parseError(file(todos: "[{\"date\":\"2026.11.07\",\"items\":[{\"date\":\"2026.11.07\",\"todo\":\" \\n\",\"isImportant\":false}]}]")) == .invalidFile,
+       "backup: 공백뿐인 메모 거절")
+expect(FlickBackup.fileName(now: now).hasPrefix("flick-backup-") && FlickBackup.fileName(now: now).hasSuffix(".json"), "backup: 파일 이름")
+expect(" \n\t".isBlank && !" a ".isBlank, "String.isBlank")
+
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
 exit(failures == 0 ? 0 : 1)

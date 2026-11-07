@@ -23,6 +23,11 @@ extension String {
             }
     }
 
+    /// 공백과 줄바꿈뿐인 문자열인지
+    var isBlank: Bool {
+        trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     var firstContainedURL: URL? {
         containedLinks.first?.url
     }
