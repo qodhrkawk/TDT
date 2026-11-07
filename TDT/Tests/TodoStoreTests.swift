@@ -389,6 +389,26 @@ expect(m.merged.todos.count == 1 && m.merged.todos[0].items.map(\.todo) == ["진
 m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: empty, today: d)
 expect(m.added == 0 && m.merged.todos == [bs(d, guides)], "merge: 추가가 없으면 기기 데이터 그대로")
 
+// MARK: 19. 스토어 백업 연결
+store = freshStore([[td("a", "2026.11.06", important: true)]], pinned: [td("p", "2026.11.01", pinned: true)])
+store.appendToArchive([td("done", "2026.11.02")], dateString: "2026.11.05")
+let snapshot = store.backupContent()
+expect(snapshot.todos == [bs("2026.11.06", [bi("a", "2026.11.06", important: true)])], "store: 할 일 내보내기")
+expect(snapshot.pinned == [bi("p", "2026.11.01")], "store: 고정 내보내기")
+expect(snapshot.archive == [bs("2026.11.05", [bi("done", "2026.11.02")])], "store: 아카이브 내보내기")
+
+let replacement = BackupContent(
+    todos: [bs("2026.11.07", [bi("new", "2026.11.07")])],
+    pinned: [bi("np", "2026.11.03")],
+    archive: [bs("2026.11.04", [bi("nd", "2026.11.03")])]
+)
+store.replaceAll(with: replacement)
+let other = TodoStore(userDefaults: defaults)
+other.load()
+expect(other.backupContent() == replacement, "store: 다른 인스턴스가 다시 읽으면 합친 결과가 보인다")
+expect(other.pinnedDatas[0].isPinned, "store: 고정 표시 복원")
+expect(other.dateInfo == ["2026.11.07"], "store: dateInfo 동기화")
+
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
 exit(failures == 0 ? 0 : 1)

@@ -283,6 +283,36 @@ final class TodoStore {
         userDefaults.setValue(archiveDates, forKey: Keys.archiveDates)
     }
 
+    // MARK: - 백업 연결
+
+    /// 저장된 값을 정리 없이 그대로 백업 값으로 돌려준다.
+    func backupContent() -> BackupContent {
+        func backupItem(_ item: TodoData) -> BackupItem {
+            BackupItem(date: item.date, todo: item.todo, isImportant: item.isImportant)
+        }
+        let archive = loadArchive()
+        return BackupContent(
+            todos: zip(dateInfo, todoDatas).map { BackupSection(date: $0, items: $1.map(backupItem)) },
+            pinned: pinnedDatas.map(backupItem),
+            archive: zip(archive.dates, archive.datas).map { BackupSection(date: $0, items: $1.map(backupItem)) }
+        )
+    }
+
+    /// 할 일, 고정, 아카이브(항목·날짜) 네 덩어리를 한 번에 저장한다.
+    func replaceAll(with content: BackupContent) {
+        func todoData(_ item: BackupItem, pinned: Bool) -> TodoData {
+            TodoData(date: item.date, todo: item.todo, isImportant: item.isImportant, isPinned: pinned)
+        }
+        todoDatas = content.todos.map { $0.items.map { todoData($0, pinned: false) } }
+        dateInfo = content.todos.map(\.date)
+        pinnedDatas = content.pinned.map { todoData($0, pinned: true) }
+        save()
+
+        let archiveDatas = content.archive.map { $0.items.map { todoData($0, pinned: false) } }
+        userDefaults.set(try? PropertyListEncoder().encode(archiveDatas), forKey: Keys.archiveTodos)
+        userDefaults.setValue(content.archive.map(\.date), forKey: Keys.archiveDates)
+    }
+
     // MARK: - 일괄 처리 (날짜 섹션)
 
     /// 선택 항목들을 아카이브로 이동한다.
