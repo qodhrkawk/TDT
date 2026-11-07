@@ -73,13 +73,19 @@ enum FlickBackup {
         string.range(of: #"^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\z"#, options: .regularExpression) != nil
     }
 
+    /// 앞 10자를 ASCII 숫자로 바꿔 yyyy.MM.dd면 돌려준다.
+    /// (아랍어·페르시아어 로케일의 DateFormatter는 ٢٠٢٦.١١.٠٧처럼 저장한다)
+    static func asciiDay(_ string: String) -> String? {
+        let head = String(string.prefix(10).map { c in
+            c.wholeNumberValue.flatMap { (0...9).contains($0) ? Character(String($0)) : nil } ?? c
+        })
+        return isValidDate(head) ? head : nil
+    }
+
     /// 내보내기 전에 옛 데이터를 정리한다: 날짜는 앞 10자(yyyy.MM.dd)로 맞추고,
     /// 공백뿐인 메모와 빈 섹션은 버리고, 같은 날짜 섹션은 합친다.
     static func sanitized(_ content: BackupContent, today: String) -> BackupContent {
-        func day(_ string: String) -> String? {
-            let head = String(string.prefix(10))
-            return isValidDate(head) ? head : nil
-        }
+        func day(_ string: String) -> String? { asciiDay(string) }
         func cleanItems(_ items: [BackupItem], fallback: String) -> [BackupItem] {
             items.compactMap { item in
                 guard !item.todo.isBlank else { return nil }

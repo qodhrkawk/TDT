@@ -153,8 +153,7 @@ enum BackupMerger {
             self.sections = sections
             self.ascending = ascending
             for (i, section) in sections.enumerated() {
-                let day = String(section.date.prefix(10))
-                if FlickBackup.isValidDate(day), existing[day] == nil { existing[day] = i }
+                if let day = FlickBackup.asciiDay(section.date), existing[day] == nil { existing[day] = i }
             }
         }
 
@@ -171,7 +170,7 @@ enum BackupMerger {
 
         func result() -> [BackupSection] {
             guard !pending.isEmpty else { return sections }
-            let days = sections.map { String($0.date.prefix(10)) }
+            let days = sections.map { FlickBackup.asciiDay($0.date) ?? String($0.date.prefix(10)) }
             // 새 날짜가 들어갈 위치: 첫 더 큰(작은) 날짜 앞. 기존 섹션은 정렬되어 있다고 보고 이분 탐색한다.
             func position(_ date: String) -> Int {
                 var low = 0, high = days.count

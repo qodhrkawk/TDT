@@ -409,6 +409,36 @@ expect(other.backupContent() == replacement, "store: 다른 인스턴스가 다�
 expect(other.pinnedDatas[0].isPinned, "store: 고정 표시 복원")
 expect(other.dateInfo == ["2026.11.07"], "store: dateInfo 동기화")
 
+// MARK: 20. 아라비아-인도 숫자 날짜 (ar_EG 등 로케일의 DateFormatter 결과)
+func arabic(_ ascii: String) -> String {
+    String(ascii.map { c in
+        guard let v = c.wholeNumberValue, c.isASCII else { return c }
+        return Character(UnicodeScalar(0x0660 + v)!)
+    })
+}
+let d1 = "2026.11.05"
+let d2 = "2026.11.07"
+let arabicDevice = BackupContent(
+    todos: [bs(arabic("2026.11.01"), [bi("a", arabic("2026.11.01"))]),
+            bs(arabic(d1), [bi("b", arabic("2026.10.30")), bi("c", arabic(d1))])],
+    pinned: [bi("p", arabic("2026.10.20"))],
+    archive: [bs(arabic("2026.11.04"), [bi("done", arabic("2026.11.02"))])]
+)
+let arabicClean = FlickBackup.sanitized(arabicDevice, today: d1)
+expect(arabicClean.todos == [bs("2026.11.01", [bi("a", "2026.11.01")]),
+                             bs(d1, [bi("b", "2026.10.30"), bi("c", d1)])], "arabic: 할 일 날짜를 ASCII로, 항목 날짜 유지")
+expect(arabicClean.pinned == [bi("p", "2026.10.20")], "arabic: 고정 날짜를 ASCII로")
+expect(arabicClean.archive == [bs("2026.11.04", [bi("done", "2026.11.02")])], "arabic: 아카이브 날짜를 ASCII로")
+m = BackupMerger.merge(current: arabicDevice, incoming: arabicClean, today: d2)
+expect(m.added == 0 && m.skipped == 5, "arabic: 다른 날 내 파일을 다시 가져와도 0개")
+m = BackupMerger.merge(current: arabicDevice,
+                       incoming: BackupContent(todos: [bs(d1, [bi("new", d1)])], pinned: [], archive: [bs("2026.11.04", [bi("new2", "2026.11.03")])]),
+                       today: d2)
+expect(m.added == 2 && m.merged.todos.count == 2 && m.merged.todos[1].items.map(\.todo) == ["b", "c", "new"],
+       "arabic: 같은 날짜 할 일 섹션에 붙음")
+expect(m.merged.archive.count == 1 && m.merged.archive[0].items.map(\.todo) == ["done", "new2"],
+       "arabic: 같은 날짜 아카이브 섹션에 붙음")
+
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
 exit(failures == 0 ? 0 : 1)
