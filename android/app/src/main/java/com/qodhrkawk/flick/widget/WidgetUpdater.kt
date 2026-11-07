@@ -12,6 +12,8 @@ import com.qodhrkawk.flick.data.computeWidgetItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -23,6 +25,13 @@ import kotlinx.serialization.json.Json
 object WidgetUpdater {
     private val json = Json { ignoreUnknownKeys = true }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val _dataVersion = MutableStateFlow(0L)
+
+    /**
+     * 위젯 세션이 살아 있는 동안에는 updateAll만으로 SharedPreferences를 다시 읽지 않는다.
+     * 이 값이 바뀌면 열린 세션도 다시 그려서 연속 변경 시 위젯이 멈추지 않는다.
+     */
+    val dataVersion: StateFlow<Long> = _dataVersion
 
     fun sync(context: Context) {
         val kv: KeyValueStore = SharedPrefsKeyValueStore(context)
@@ -45,6 +54,7 @@ object WidgetUpdater {
         }
         kv.putString(WidgetSync.KEY_WIDGET_THEME, settings.theme.toString())
         kv.putString(WidgetSync.KEY_WIDGET_TRAIT, settings.trait)
+        _dataVersion.value += 1
 
         scope.launch {
             runCatching {

@@ -10,7 +10,24 @@ cd android
 ./gradlew :app:testDebugUnitTest # 유닛 테스트 37개 (TodoStore 23 + 위젯 규칙 6 + 링크 감지 8)
 ```
 
-요구사항: JDK 17, Android SDK 35. `local.properties`에 `sdk.dir` 지정.
+요구사항: JDK 17, Android SDK 36. `local.properties`에 `sdk.dir` 지정.
+
+## 출시 빌드
+
+업로드 키를 한 번 만들고(비밀번호를 직접 입력), 저장소 밖에 보관한다. 잃어버리면 Play Console에서 재설정 요청이 필요하다.
+
+```bash
+keytool -genkeypair -v -keystore ~/flick-upload.jks -alias flick-upload -keyalg RSA -keysize 2048 -validity 10000
+```
+
+`keystore.properties.example`을 `keystore.properties`로 복사해 값을 채운 뒤 AAB를 만든다.
+
+```bash
+./gradlew bundleRelease # app/build/outputs/bundle/release/app-release.aab
+```
+
+`keystore.properties`와 키 파일은 커밋하지 않는다. 파일이 없으면 서명되지 않은 AAB가 나오며 Play Console에 올릴 수 없다.
+출시할 때마다 `versionCode`를 올린다. 스토어용 512px 아이콘은 `store/icon-512.png`에 있다.
 
 ## 구조 (단일 모듈)
 

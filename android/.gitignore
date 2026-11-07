@@ -2,3 +2,8 @@
 build/
 local.properties
 .kotlin/
+
+# 출시 서명 키
+keystore.properties
+*.jks
+*.keystore

@@ -3,6 +3,9 @@ package com.qodhrkawk.flick.widget
 import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,6 +82,12 @@ private enum class WidgetKind { HOME, TODAY, SMALL }
 
 @Composable
 private fun WidgetBody(kind: WidgetKind) {
+    val dataVersion by WidgetUpdater.dataVersion.collectAsState()
+    key(dataVersion) { WidgetContent(kind) }
+}
+
+@Composable
+private fun WidgetContent(kind: WidgetKind) {
     val context = LocalContext.current
     val (themeIndex, trait) = WidgetUpdater.readThemeTrait(context)
     // 시스템 다크모드가 아니라 앱 설정값 기준으로 색을 정한다 (iOS P0 수정과 동일 원칙)

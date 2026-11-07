@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FlickSpike"
+rootProject.name = "Flick"
 include(":app")
