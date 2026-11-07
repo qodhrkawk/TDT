@@ -439,6 +439,27 @@ expect(m.added == 2 && m.merged.todos.count == 2 && m.merged.todos[1].items.map(
 expect(m.merged.archive.count == 1 && m.merged.archive[0].items.map(\.todo) == ["done", "new2"],
        "arabic: 같은 날짜 아카이브 섹션에 붙음")
 
+// MARK: 21. 링크 인식 — ASCII까지만, 뒤에 붙은 한글 조사와 문장 부호는 제외 (Android LinkDetector와 같은 규칙)
+func linkTexts(_ text: String) -> [String] {
+    text.containedLinks.map { (text as NSString).substring(with: $0.range) }
+}
+func linkURLs(_ text: String) -> [String] {
+    text.containedLinks.map(\.url.absoluteString)
+}
+expect(linkTexts("자세한 건 https://example.com에서 확인") == ["https://example.com"]
+    && linkURLs("자세한 건 https://example.com에서 확인") == ["https://example.com"],
+    "link: 도메인 뒤 조사 제외")
+expect(linkTexts("naver.com에서 봐") == ["naver.com"] && linkURLs("naver.com에서 봐") == ["http://naver.com"],
+       "link: scheme 없는 주소도 조사 제외")
+expect(linkTexts("https://a.com/b에서") == ["https://a.com/b"] && linkURLs("https://a.com/b에서") == ["https://a.com/b"],
+       "link: 경로 뒤 조사 제외")
+expect(linkTexts("(https://a.com)에서") == ["https://a.com"], "link: 짝 없는 닫는 괄호 제외")
+expect(linkTexts("https://a.com/x(1)") == ["https://a.com/x(1)"], "link: 짝 있는 괄호는 유지")
+expect(linkTexts("https://a.com, 그리고") == ["https://a.com"], "link: 끝 문장 부호 제외")
+expect(linkTexts("링크 https://a.com/path?x=1 참고") == ["https://a.com/path?x=1"], "link: 공백으로 끝나는 주소 그대로")
+expect(linkURLs("HTTPS://A.com") == ["https://A.com"], "link: scheme 소문자")
+expect(linkTexts("메일 a@b.com 으로").isEmpty, "link: 이메일은 링크 아님")
+
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
 exit(failures == 0 ? 0 : 1)
