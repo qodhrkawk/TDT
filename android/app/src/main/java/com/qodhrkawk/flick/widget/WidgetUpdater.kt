@@ -50,6 +50,7 @@ object WidgetUpdater {
             runCatching {
                 FlickHomeWidget().updateAll(context)
                 FlickTodayWidget().updateAll(context)
+                FlickSmallWidget().updateAll(context)
             }
         }
     }

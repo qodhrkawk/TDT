@@ -34,11 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qodhrkawk.flick.R
+import com.qodhrkawk.flick.data.firstContainedUrl
 import com.qodhrkawk.flick.ui.theme.Flick
 import com.qodhrkawk.flick.ui.theme.GmarketSans
 import kotlinx.coroutines.delay
@@ -55,6 +57,8 @@ data class MenuTarget(
 
 private enum class MenuMode { MENU, DELETE_CONFIRM, EDIT }
 
+const val LinkOpenFailedMessage = "링크를 열 수 없어요"
+
 /**
  * iOS AlertViewController 이식: 하단에서 올라오는 버튼 스택 + 취소.
  * 삭제 → 확인 뷰로 교체, 수정 → 텍스트 편집 뷰.
@@ -67,8 +71,10 @@ fun FlickActionMenu(
     onSelect: (String) -> Unit,
     onEdit: (String, String) -> Unit,
     onDelete: (String) -> Unit,
+    onLinkOpenFailed: () -> Unit,
 ) {
     val colors = Flick.colors
+    val uriHandler = LocalUriHandler.current
     var mode by remember(target?.id) { mutableStateOf(MenuMode.MENU) }
     var editText by remember(target?.id) { mutableStateOf(target?.text ?: "") }
 
@@ -101,6 +107,16 @@ fun FlickActionMenu(
                             .fillMaxWidth()
                             .background(colors.box, BubbleShape),
                     ) {
+                        // 링크가 있으면 맨 위 (여러 개면 첫 링크 — iOS와 동일)
+                        val linkUrl = remember(target.text) { target.text.firstContainedUrl }
+                        if (linkUrl != null) {
+                            MenuRow("링크 열기", colors.mainText) {
+                                onDismiss()
+                                runCatching { uriHandler.openUri(linkUrl) }
+                                    .onFailure { onLinkOpenFailed() }
+                            }
+                            MenuSeparator()
+                        }
                         if (target.showPin && !target.fromArchive) {
                             MenuRow(if (target.isPinned) "고정 해제" else "고정", colors.mainText) {
                                 onDismiss(); onPinToggle(target.id)

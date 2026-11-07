@@ -40,4 +40,24 @@ class WidgetDataTest {
         assertEquals(10, result.size)
         assertEquals("p9", result.last().todo)
     }
+
+    @Test
+    fun `소형 위젯은 위젯 목록의 마지막 3개를 순서대로 보여준다`() {
+        val items = listOf(td("p", pinned = true), td("a"), td("b"), td("c"))
+        assertEquals(listOf("a", "b", "c"), smallWidgetItems(items).map { it.todo })
+    }
+
+    @Test
+    fun `소형 위젯은 3개 이하면 전부 보여준다`() {
+        val items = listOf(td("p", pinned = true), td("a"))
+        assertEquals(listOf("p", "a"), smallWidgetItems(items).map { it.todo })
+        assertEquals(emptyList<TodoData>(), smallWidgetItems(emptyList()))
+    }
+
+    @Test
+    fun `위젯 행은 줄바꿈을 공백으로 이어 한 줄로 만든다`() {
+        assertEquals("send1 send2", widgetLine("send1\nsend2"))
+        assertEquals("a b c", widgetLine("a \r\n b\n\nc\n"))
+        assertEquals("한 줄", widgetLine("한 줄"))
+    }
 }

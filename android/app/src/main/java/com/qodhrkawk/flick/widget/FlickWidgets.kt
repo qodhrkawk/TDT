@@ -31,6 +31,8 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.qodhrkawk.flick.data.SettingsStore
 import com.qodhrkawk.flick.data.TodoData
+import com.qodhrkawk.flick.data.smallWidgetItems
+import com.qodhrkawk.flick.data.widgetLine
 import com.qodhrkawk.flick.ui.theme.ThemeColors
 import com.qodhrkawk.flick.ui.todayString
 
@@ -39,7 +41,7 @@ class FlickHomeWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent { WidgetBody(todayOnly = false) }
+        provideContent { WidgetBody(WidgetKind.HOME) }
     }
 }
 
@@ -52,7 +54,7 @@ class FlickTodayWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent { WidgetBody(todayOnly = true) }
+        provideContent { WidgetBody(WidgetKind.TODAY) }
     }
 }
 
@@ -60,8 +62,23 @@ class FlickTodayWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = FlickTodayWidget()
 }
 
+/** 소형(1:1) 위젯: 머리글 없이 최근 3개 (iOS 3.0.1 `.systemSmall`). 안드로이드는 크기별 위젯을 따로 고른다 */
+class FlickSmallWidget : GlanceAppWidget() {
+    override val sizeMode: SizeMode = SizeMode.Exact
+
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent { WidgetBody(WidgetKind.SMALL) }
+    }
+}
+
+class FlickSmallWidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = FlickSmallWidget()
+}
+
+private enum class WidgetKind { HOME, TODAY, SMALL }
+
 @Composable
-private fun WidgetBody(todayOnly: Boolean) {
+private fun WidgetBody(kind: WidgetKind) {
     val context = LocalContext.current
     val (themeIndex, trait) = WidgetUpdater.readThemeTrait(context)
     // 시스템 다크모드가 아니라 앱 설정값 기준으로 색을 정한다 (iOS P0 수정과 동일 원칙)
@@ -77,12 +94,16 @@ private fun WidgetBody(todayOnly: Boolean) {
     val textColor = if (dark) Color(0xFFD1D1D1) else Color(0xFF3E3E3E)
     val subColor = if (dark) Color(0xFF585858) else Color(0xFF9C9C9C)
 
-    val items = if (todayOnly) {
-        WidgetUpdater.readTodayItems(context, todayString()).take(10)
-    } else {
-        WidgetUpdater.readWidgetItems(context)
+    val items = when (kind) {
+        WidgetKind.HOME -> WidgetUpdater.readWidgetItems(context)
+        WidgetKind.TODAY -> WidgetUpdater.readTodayItems(context, todayString()).take(10)
+        WidgetKind.SMALL -> smallWidgetItems(WidgetUpdater.readWidgetItems(context))
     }
-    val maxRows = if (LocalSize.current.height >= 220.dp) 10 else 5
+    val maxRows = when {
+        kind == WidgetKind.SMALL -> items.size
+        LocalSize.current.height >= 220.dp -> 10
+        else -> 5
+    }
 
     Box(
         modifier = GlanceModifier
@@ -92,17 +113,19 @@ private fun WidgetBody(todayOnly: Boolean) {
             .padding(14.dp),
     ) {
         Column(modifier = GlanceModifier.fillMaxSize()) {
-            Row(modifier = GlanceModifier.fillMaxWidth()) {
-                Text(
-                    if (todayOnly) "오늘" else "Flick",
-                    style = TextStyle(
-                        color = ColorProvider(themeColor),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                )
+            if (kind != WidgetKind.SMALL) {
+                Row(modifier = GlanceModifier.fillMaxWidth()) {
+                    Text(
+                        if (kind == WidgetKind.TODAY) "오늘" else "Flick",
+                        style = TextStyle(
+                            color = ColorProvider(themeColor),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    )
+                }
+                Spacer(GlanceModifier.height(6.dp))
             }
-            Spacer(GlanceModifier.height(6.dp))
 
             if (items.isEmpty()) {
                 Text(
@@ -132,7 +155,7 @@ private fun WidgetRow(todo: TodoData, themeColor: Color, textColor: Color) {
             Spacer(GlanceModifier.width(6.dp))
         }
         Text(
-            todo.todo,
+            widgetLine(todo.todo),
             style = TextStyle(
                 color = ColorProvider(if (todo.isImportant) themeColor else textColor),
                 fontSize = 13.sp,

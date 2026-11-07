@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -315,6 +316,7 @@ fun TodoScreen(
             state.delete(id)
             state.showToast("삭제되었어요.")
         },
+        onLinkOpenFailed = { state.showToast(LinkOpenFailedMessage) },
     )
 
     // 일괄 삭제 확인
@@ -442,13 +444,7 @@ private fun PinnedBar(
                                 PinIcon(colors.theme, modifier = Modifier.size(12.dp))
                             }
                             Spacer(Modifier.width(7.dp))
-                            Text(
-                                todo.todo,
-                                fontSize = 14.sp,
-                                fontFamily = GmarketSans,
-                                color = colors.mainText,
-                                maxLines = 1,
-                            )
+                            LinkedText(todo.todo, 14.sp, GmarketSans, colors.mainText)
                         }
                     }
                 }
@@ -531,7 +527,7 @@ private fun TodoCell(
                     )
                     .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
             ) {
-                Text(todo.todo, fontSize = 15.sp, fontFamily = GmarketSans, color = colors.mainText)
+                LinkedText(todo.todo, 15.sp, GmarketSans, colors.mainText)
             }
         }
         if (selectionMode) {
@@ -548,6 +544,9 @@ private fun TodoCell(
     }
 }
 
+private val InputMaxTextHeight = 94.dp
+
+/** 리턴은 줄바꿈, 전송은 전송 버튼으로만 (iOS 3.0.1) */
 @Composable
 private fun InputBar(text: String, onTextChange: (String) -> Unit, onSend: () -> Unit) {
     val colors = Flick.colors
@@ -583,7 +582,8 @@ private fun InputBar(text: String, onTextChange: (String) -> Unit, onSend: () ->
                     color = colors.typingText,
                 ),
                 cursorBrush = SolidColor(colors.theme),
-                modifier = Modifier.fillMaxWidth(),
+                // 내용에 따라 늘어나고, 최대 높이를 넘으면 내부 스크롤 (iOS 최대 120 = 글자 영역 + 상하 패딩 26)
+                modifier = Modifier.fillMaxWidth().heightIn(max = InputMaxTextHeight),
             )
         }
         Spacer(Modifier.width(10.dp))

@@ -49,6 +49,7 @@ data class FlickColors(
     val archiveText: Color,
     val doneText: Color,
     val alert: Color,
+    val link: Color,
     val isDark: Boolean,
 )
 
@@ -66,6 +67,7 @@ private fun lightColors(theme: Color) = FlickColors(
     archiveText = Color(0xFFAAAAAA),
     doneText = Color(0xFF7E7E7E),
     alert = Color(0xFFFB629D),
+    link = Color(0xFF007AFF),
     isDark = false,
 )
 
@@ -83,6 +85,7 @@ private fun darkColors(theme: Color) = FlickColors(
     archiveText = Color(0xFF8E8E8E),
     doneText = Color(0xFF656565),
     alert = Color(0xFFB23E6A),
+    link = Color(0xFF0A84FF),
     isDark = true,
 )
 

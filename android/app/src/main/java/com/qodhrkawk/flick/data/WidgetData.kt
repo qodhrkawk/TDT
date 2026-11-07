@@ -13,3 +13,9 @@ fun computeWidgetItems(
     val recent = sections.flatten().takeLast(capacity)
     return (pinned + recent).take(10)
 }
+
+/** 소형(1:1) 위젯: iOS `.systemSmall`과 동일하게 위젯 목록의 마지막 3개 */
+fun smallWidgetItems(items: List<TodoData>): List<TodoData> = items.takeLast(3)
+
+/** 위젯 행은 한 줄이다. 줄바꿈을 그대로 두면 첫 줄이 말줄임되므로 공백으로 잇는다 */
+fun widgetLine(text: String): String = text.trim().replace(Regex("\\s*\\R\\s*"), " ")

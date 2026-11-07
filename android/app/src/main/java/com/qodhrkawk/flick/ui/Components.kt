@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,8 +29,17 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.qodhrkawk.flick.data.containedLinks
+import com.qodhrkawk.flick.ui.theme.Flick
 import kotlinx.coroutines.launch
 
 // 시스템 이모지 금지 — 아이콘은 전부 Canvas로 그린다
@@ -159,6 +170,51 @@ fun SwipeToActionCell(
                 )
         )
     }
+}
+
+private const val MemoLineSpacing = 5f
+
+/**
+ * 링크 부분만 파란 밑줄로 표시하는 메모 텍스트 (iOS highlightContainedLinks).
+ * 표시 전용 — 더블탭·스와이프와 충돌하지 않도록 탭 핸들러를 달지 않고,
+ * 링크는 메뉴의 "링크 열기"로만 연다.
+ */
+@Composable
+fun LinkedText(
+    text: String,
+    fontSize: TextUnit,
+    fontFamily: FontFamily,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    val linkColor = Flick.colors.link
+    val annotated = remember(text, linkColor) {
+        buildAnnotatedString {
+            append(text)
+            text.containedLinks().forEach { link ->
+                addStyle(
+                    SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
+                    link.range.first,
+                    link.range.last + 1,
+                )
+            }
+        }
+    }
+    Text(
+        annotated,
+        fontSize = fontSize,
+        fontFamily = fontFamily,
+        color = color,
+        // iOS setSpacing(spacing: 5): 줄 사이만 벌리고 한 줄 메모의 말풍선 높이는 그대로 둔다
+        lineHeight = (fontSize.value + MemoLineSpacing).sp,
+        style = LocalTextStyle.current.copy(
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.Both,
+            ),
+        ),
+        modifier = modifier,
+    )
 }
 
 /** 말풍선 공통 모양 */

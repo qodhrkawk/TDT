@@ -139,6 +139,7 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
             state.archiveDelete(id)
             state.showToast("삭제되었어요.")
         },
+        onLinkOpenFailed = { state.showToast(LinkOpenFailedMessage) },
     )
     }
 }
@@ -176,12 +177,7 @@ private fun ArchiveCell(
                 )
                 .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
         ) {
-            Text(
-                todo.todo,
-                fontSize = 15.sp,
-                fontFamily = GmarketSans,
-                color = if (isToday) colors.mainText else colors.doneText,
-            )
+            LinkedText(todo.todo, 15.sp, GmarketSans, if (isToday) colors.mainText else colors.doneText)
         }
     }
 }
