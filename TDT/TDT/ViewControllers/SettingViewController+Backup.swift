@@ -49,9 +49,12 @@ extension SettingViewController {
             let data = try FlickBackup.exportData(content: content, appVersion: appVersion, now: now)
             let url = FileManager.default.temporaryDirectory
                 .appendingPathComponent(FlickBackup.fileName(now: now))
-            try data.write(to: url, options: .atomic)
+            try data.write(to: url, options: [.atomic, .completeFileProtection])
 
             let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            activity.completionWithItemsHandler = { _, _, _, _ in
+                try? FileManager.default.removeItem(at: url)
+            }
             activity.popoverPresentationController?.sourceView = view
             activity.popoverPresentationController?.sourceRect = CGRect(
                 x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0
@@ -77,9 +80,18 @@ extension SettingViewController {
     }
 
     fileprivate func handlePicked(url: URL) {
+        let data: Data
+        do {
+            // asCopy로 받은 사본은 앱 것이라 읽은 뒤 지운다
+            defer { try? FileManager.default.removeItem(at: url) }
+            data = try Data(contentsOf: url)
+        } catch {
+            showSimpleAlert("파일을 읽지 못했어요")
+            return
+        }
+
         let incoming: BackupContent
         do {
-            let data = try Data(contentsOf: url)
             incoming = try FlickBackup.parse(data)
         } catch BackupError.newerVersion {
             showSimpleAlert("앱을 업데이트한 뒤 다시 가져와 주세요")
@@ -100,8 +112,11 @@ extension SettingViewController {
             return
         }
 
+        let title = result.skipped == 0
+            ? "새 항목 \(result.added)개를 추가할게요."
+            : "새 항목 \(result.added)개를 추가할게요. 이미 있는 \(result.skipped)개는 건너뛰어요."
         let alert = UIAlertController(
-            title: "새 항목 \(result.added)개를 추가할게요. 이미 있는 \(result.skipped)개는 건너뛰어요.",
+            title: title,
             message: nil,
             preferredStyle: .alert
         )
