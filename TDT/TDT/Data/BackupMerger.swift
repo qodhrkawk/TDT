@@ -3,7 +3,7 @@
 //  TDT
 //
 //  가져온 백업 내용을 기기 데이터에 합친다. 기기 데이터는 지우거나 바꾸지 않고 새 항목만 더한다.
-//  (안내 세트 정리만 예외: 새 항목이 실제로 추가될 때 기기의 안내 할 일 3개를 지운다.)
+//  (안내 세트 정리만 예외: 새 항목이 실제로 추가될 때 기기의 안내 할 일 세트를 지운다.)
 //
 
 import Foundation
@@ -28,34 +28,37 @@ enum BackupMerger {
         var todo: String
     }
 
-    static func merge(current: BackupContent, incoming: BackupContent) -> BackupMergeResult {
-        var merged = current
-        let incomingTodos = removingGuideSet(from: incoming.todos, all: true)
+    /// `today`는 기기 데이터를 내보낼 때와 같은 규칙으로 정리해 비교하는 데 쓴다. 저장된 기기 데이터는 고치지 않는다.
+    static func merge(current: BackupContent, incoming: BackupContent, today: String) -> BackupMergeResult {
+        let fileTodos = removingGuideSets(from: incoming.todos)
 
-        // 기기의 일반+고정, 아카이브 항목 개수
+        // 기기 안내 세트를 뺀 사본에서 비교하고 삽입한다
+        var merged = current
+        merged.todos = removingGuideSets(from: current.todos)
+        let comparable = FlickBackup.sanitized(merged, today: today)
+
         var todoCounts: [Key: Int] = [:]
-        for section in current.todos {
+        for section in comparable.todos {
             for item in section.items { todoCounts[todoKey(item), default: 0] += 1 }
         }
-        for item in current.pinned { todoCounts[todoKey(item), default: 0] += 1 }
+        for item in comparable.pinned { todoCounts[todoKey(item), default: 0] += 1 }
         var archiveCounts: [Key: Int] = [:]
-        for section in current.archive {
+        for section in comparable.archive {
             for item in section.items { archiveCounts[archiveKey(section, item), default: 0] += 1 }
         }
 
         var added = 0
         var skipped = 0
+        var todoInserter = SectionInserter(sections: merged.todos, ascending: true)
+        var archiveInserter = SectionInserter(sections: merged.archive, ascending: false)
+        var newPinned: [BackupItem] = []
 
-        // 날짜(앞 10자) -> 섹션 위치
-        var todoIndex = sectionIndex(merged.todos)
-        var archiveIndex = sectionIndex(merged.archive)
-
-        for section in incomingTodos {
+        for section in fileTodos {
             for item in section.items {
                 if consume(&todoCounts, todoKey(item)) {
                     skipped += 1
                 } else {
-                    insert(item, intoSectionDated: section.date, of: &merged.todos, index: &todoIndex, ascending: true)
+                    todoInserter.add(item, sectionDate: section.date)
                     added += 1
                 }
             }
@@ -64,7 +67,7 @@ enum BackupMerger {
             if consume(&todoCounts, todoKey(item)) {
                 skipped += 1
             } else {
-                merged.pinned.append(item)
+                newPinned.append(item)
                 added += 1
             }
         }
@@ -73,53 +76,59 @@ enum BackupMerger {
                 if consume(&archiveCounts, archiveKey(section, item)) {
                     skipped += 1
                 } else {
-                    insert(item, intoSectionDated: section.date, of: &merged.archive, index: &archiveIndex, ascending: false)
+                    archiveInserter.add(item, sectionDate: section.date)
                     added += 1
                 }
             }
         }
 
-        if added > 0 {
-            merged.todos = removingGuideSet(from: merged.todos, all: false)
+        guard added > 0 else {
+            return BackupMergeResult(merged: current, added: 0, skipped: skipped)
         }
+        merged.todos = todoInserter.result()
+        merged.pinned += newPinned
+        merged.archive = archiveInserter.result()
         return BackupMergeResult(merged: merged, added: added, skipped: skipped)
     }
 
     // MARK: - 안내 세트
 
-    /// 세 문구가 모두 있는 섹션에서 각 문구를 하나씩 뺀다. 빈 섹션은 버린다.
-    /// `all`이 false면 처음 발견한 세트 하나만 지운다.
-    private static func removingGuideSet(from sections: [BackupSection], all: Bool) -> [BackupSection] {
-        var result: [BackupSection] = []
-        var done = false
-        for section in sections {
-            let texts = Set(section.items.map(\.todo))
-            guard !done, guideTexts.allSatisfy(texts.contains) else {
-                result.append(section)
-                continue
+    /// 안내 세트: 한 섹션 안에서 세 문구가 같은 `date`로, 중요 표시 없이 모두 있는 경우.
+    /// 중요 표시를 한 항목은 사용자가 손댄 것으로 본다.
+    private static func guideSetDate(in items: [BackupItem]) -> String? {
+        for item in items where item.todo == guideTexts[0] && !item.isImportant {
+            let date = item.date
+            let complete = guideTexts.allSatisfy { text in
+                items.contains { $0.todo == text && $0.date == date && !$0.isImportant }
             }
-            var copy = section
-            for guide in guideTexts {
-                if let index = copy.items.firstIndex(where: { $0.todo == guide }) {
-                    copy.items.remove(at: index)
-                }
-            }
-            if !copy.items.isEmpty { result.append(copy) }
-            if !all { done = true }
+            if complete { return date }
         }
-        return result
+        return nil
     }
 
-    // MARK: - 비교와 삽입
+    /// 모든 섹션에서 안내 세트를 (여러 개여도 모두) 하나씩 빼고, 빈 섹션은 버린다.
+    private static func removingGuideSets(from sections: [BackupSection]) -> [BackupSection] {
+        sections.compactMap { section in
+            var copy = section
+            while let date = guideSetDate(in: copy.items) {
+                for text in guideTexts {
+                    if let index = copy.items.firstIndex(where: { $0.todo == text && $0.date == date && !$0.isImportant }) {
+                        copy.items.remove(at: index)
+                    }
+                }
+            }
+            return copy.items.isEmpty && !section.items.isEmpty ? nil : copy
+        }
+    }
 
-    private static func day(_ string: String) -> String { String(string.prefix(10)) }
+    // MARK: - 비교
 
     private static func todoKey(_ item: BackupItem) -> Key {
-        Key(completed: "", date: day(item.date), todo: item.todo)
+        Key(completed: "", date: item.date, todo: item.todo)
     }
 
     private static func archiveKey(_ section: BackupSection, _ item: BackupItem) -> Key {
-        Key(completed: day(section.date), date: day(item.date), todo: item.todo)
+        Key(completed: section.date, date: item.date, todo: item.todo)
     }
 
     /// 사전에 남은 개수가 있으면 하나 줄이고 true (같은 항목이 이미 있다)
@@ -129,25 +138,63 @@ enum BackupMerger {
         return true
     }
 
-    private static func sectionIndex(_ sections: [BackupSection]) -> [String: Int] {
-        var index: [String: Int] = [:]
-        for (i, section) in sections.enumerated() where index[day(section.date)] == nil {
-            index[day(section.date)] = i
-        }
-        return index
-    }
+    // MARK: - 삽입
 
-    /// 같은 날짜 섹션 끝에 붙인다. 없으면 정렬 순서를 지키는 위치에 새 섹션을 만든다.
-    /// (할 일: 오름차순, 아카이브: 내림차순)
-    private static func insert(_ item: BackupItem, intoSectionDated date: String,
-                               of sections: inout [BackupSection], index: inout [String: Int], ascending: Bool) {
-        let key = day(date)
-        if let i = index[key] {
-            sections[i].items.append(item)
-            return
+    /// 같은 날짜 섹션 끝에 붙이고, 없는 날짜는 모아 두었다가 정렬 순서를 지키는 위치에 한 번에 끼운다.
+    /// (할 일: 첫 더 큰 날짜 앞, 아카이브: 첫 더 작은 날짜 앞)
+    private struct SectionInserter {
+        var sections: [BackupSection]
+        let ascending: Bool
+        private var existing: [String: Int] = [:]
+        private var pending: [String: [BackupItem]] = [:]
+        private var pendingOrder: [String] = []
+
+        init(sections: [BackupSection], ascending: Bool) {
+            self.sections = sections
+            self.ascending = ascending
+            for (i, section) in sections.enumerated() {
+                let day = String(section.date.prefix(10))
+                if FlickBackup.isValidDate(day), existing[day] == nil { existing[day] = i }
+            }
         }
-        let position = sections.firstIndex { ascending ? day($0.date) > key : day($0.date) < key } ?? sections.count
-        sections.insert(BackupSection(date: date, items: [item]), at: position)
-        index = sectionIndex(sections)
+
+        mutating func add(_ item: BackupItem, sectionDate: String) {
+            if let i = existing[sectionDate] {
+                sections[i].items.append(item)
+            } else if pending[sectionDate] != nil {
+                pending[sectionDate]!.append(item)
+            } else {
+                pending[sectionDate] = [item]
+                pendingOrder.append(sectionDate)
+            }
+        }
+
+        func result() -> [BackupSection] {
+            guard !pending.isEmpty else { return sections }
+            let days = sections.map { String($0.date.prefix(10)) }
+            // 새 날짜가 들어갈 위치: 첫 더 큰(작은) 날짜 앞. 기존 섹션은 정렬되어 있다고 보고 이분 탐색한다.
+            func position(_ date: String) -> Int {
+                var low = 0, high = days.count
+                while low < high {
+                    let mid = (low + high) / 2
+                    if ascending ? days[mid] > date : days[mid] < date { high = mid } else { low = mid + 1 }
+                }
+                return low
+            }
+            var byPosition: [Int: [String]] = [:]
+            for date in pendingOrder { byPosition[position(date), default: []].append(date) }
+
+            var out: [BackupSection] = []
+            out.reserveCapacity(sections.count + pendingOrder.count)
+            for i in 0...sections.count {
+                if let dates = byPosition[i] {
+                    for date in dates.sorted(by: { ascending ? $0 < $1 : $0 > $1 }) {
+                        out.append(BackupSection(date: date, items: pending[date]!))
+                    }
+                }
+                if i < sections.count { out.append(sections[i]) }
+            }
+            return out
+        }
     }
 }

@@ -247,7 +247,8 @@ let empty = BackupContent(todos: [], pinned: [], archive: [])
 
 var m = BackupMerger.merge(
     current: BackupContent(todos: [bs("2026.11.05", [bi("a", "2026.11.05")]), bs(d, [bi("b", d)])], pinned: [], archive: []),
-    incoming: BackupContent(todos: [bs("2026.11.06", [bi("c", "2026.11.06")]), bs(d, [bi("b", d), bi("d", d)])], pinned: [], archive: [])
+    incoming: BackupContent(todos: [bs("2026.11.06", [bi("c", "2026.11.06")]), bs(d, [bi("b", d), bi("d", d)])], pinned: [], archive: []),
+    today: d
 )
 expect(m.added == 2 && m.skipped == 1, "merge: 추가와 건너뜀 개수")
 expect(m.merged.todos.map(\.date) == ["2026.11.05", "2026.11.06", d], "merge: 날짜 오름차순 삽입")
@@ -255,15 +256,17 @@ expect(m.merged.todos[2].items.map(\.todo) == ["b", "d"], "merge: 기존 항목 
 
 m = BackupMerger.merge(
     current: BackupContent(todos: [bs(d, [bi("운동", d)])], pinned: [], archive: []),
-    incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: [])
+    incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: []),
+    today: d
 )
 expect(m.added == 1 && m.skipped == 1, "merge: a-b개만 추가")
-let again = BackupMerger.merge(current: m.merged, incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: []))
+let again = BackupMerger.merge(current: m.merged, incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: []), today: d)
 expect(again.added == 0 && again.skipped == 2, "merge: 다시 가져와도 늘지 않음")
 
 m = BackupMerger.merge(
     current: BackupContent(todos: [bs(d, [bi("x", d, important: false)])], pinned: [bi("p", "2026.11.01")], archive: []),
-    incoming: BackupContent(todos: [bs("2026.11.01", [bi("p", "2026.11.01")])], pinned: [bi("x", d), bi("q", d, important: true), bi("r", d)], archive: [])
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("p", "2026.11.01")])], pinned: [bi("x", d), bi("q", d, important: true), bi("r", d)], archive: []),
+    today: d
 )
 expect(m.added == 2 && m.skipped == 2, "merge: 일반과 고정은 한 묶음으로 비교")
 expect(m.merged.pinned.map(\.todo) == ["p", "q", "r"], "merge: 새 고정은 기존 뒤에 파일 순서로")
@@ -275,7 +278,8 @@ m = BackupMerger.merge(
         bs("2026.11.06", [bi("t", d)]),
         bs("2026.11.05", [bi("old", "2026.11.01"), bi("old", "2026.10.01")]),
         bs("2026.11.04", [bi("older", "2026.11.01")])
-    ])
+    ]),
+    today: d
 )
 expect(m.merged.archive.map(\.date) == ["2026.11.06", "2026.11.05", "2026.11.04"], "merge: 아카이브 내림차순 삽입")
 expect(m.merged.archive[1].items.map(\.date) == ["2026.11.01", "2026.10.01"], "merge: 아카이브는 완료+작성 날짜로 비교")
@@ -283,33 +287,107 @@ expect(m.added == 3 && m.skipped == 1, "merge: 일반과 아카이브는 따로 
 
 m = BackupMerger.merge(
     current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []),
-    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: []),
+    today: d
 )
 expect(m.merged.todos.map(\.date) == ["2026.11.01"] && m.added == 1, "merge: 기기 안내 세트 제거")
 
 let onlyGuides = BackupContent(todos: [bs("2026.11.01", BackupMerger.guideTexts.map { bi($0, "2026.11.01") })], pinned: [], archive: [])
-m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: onlyGuides)
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: onlyGuides, today: d)
 expect(m.added == 0 && m.skipped == 0 && m.merged.todos.map(\.date) == [d], "merge: 안내 세트만 있으면 변화 없음")
 
 m = BackupMerger.merge(
     current: BackupContent(todos: [bs(d, Array(guides.prefix(2)))], pinned: [], archive: []),
-    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: []),
+    today: d
 )
 expect(m.merged.todos.count == 2, "merge: 손댄 안내 항목은 유지")
 
 let withGuide = BackupContent(todos: [bs("2026.11.01", BackupMerger.guideTexts.map { bi($0, "2026.11.01") } + [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
-m = BackupMerger.merge(current: empty, incoming: withGuide)
+m = BackupMerger.merge(current: empty, incoming: withGuide, today: d)
 expect(m.merged.todos[0].items.map(\.todo) == ["진짜"] && m.added == 1, "merge: 파일 안내 세트는 가져오지 않음")
 
 let legacyDates = BackupContent(todos: [bs("2021.01.25 10:30", [bi("옛 메모", "2021.01.25 10:30")])], pinned: [], archive: [])
-m = BackupMerger.merge(current: legacyDates, incoming: FlickBackup.sanitized(legacyDates, today: d))
+m = BackupMerger.merge(current: legacyDates, incoming: FlickBackup.sanitized(legacyDates, today: d), today: d)
 expect(m.added == 0 && m.skipped == 1, "merge: 옛 날짜가 남은 기기에서 자기 파일 재가져오기")
 
 let bigItems = (0..<5000).map { bi("메모 \($0)", d) }
 let started = Date()
 m = BackupMerger.merge(current: BackupContent(todos: [bs(d, bigItems)], pinned: [], archive: []),
-                       incoming: BackupContent(todos: [bs(d, bigItems)], pinned: [], archive: []))
+                       incoming: BackupContent(todos: [bs(d, bigItems)], pinned: [], archive: []), today: d)
 expect(m.added == 0 && Date().timeIntervalSince(started) < 1, "merge: 5000개를 1초 안에")
+
+// 5000개 섹션을 빈 기기로 (새 날짜가 많아도 느려지지 않아야 한다)
+let manyDates = (0..<5000).map { i -> String in
+    let month = i / 28 % 12 + 1, day = i % 28 + 1, year = 2000 + i / 336
+    return String(format: "%04d.%02d.%02d", year, month, day)
+}
+let manyTodos = manyDates.reversed().map { bs($0, [bi("메모 \($0)", $0)]) }
+let startedSections = Date()
+m = BackupMerger.merge(current: empty, incoming: BackupContent(todos: manyTodos, pinned: [], archive: []), today: d)
+expect(m.added == 5000 && Date().timeIntervalSince(startedSections) < 1, "merge: 섹션 5000개 할 일을 1초 안에")
+expect(m.merged.todos.map(\.date) == manyDates.sorted(), "merge: 섹션 5000개 오름차순")
+let startedArchive = Date()
+m = BackupMerger.merge(current: empty, incoming: BackupContent(todos: [], pinned: [], archive: manyTodos), today: d)
+expect(m.added == 5000 && Date().timeIntervalSince(startedArchive) < 1, "merge: 섹션 5000개 아카이브를 1초 안에")
+expect(m.merged.archive.map(\.date) == manyDates.sorted(by: >), "merge: 섹션 5000개 내림차순")
+
+// 기기에 옛 값이 남은 채 자기 파일을 다시 가져와도 늘지 않는다
+m = BackupMerger.merge(current: dirty, incoming: FlickBackup.sanitized(dirty, today: d), today: d)
+expect(m.added == 0 && m.merged == dirty, "merge: 정리 전 기기 데이터의 자기 파일 재가져오기")
+let odd = BackupContent(
+    todos: [bs("2021.03.01", [bi("빈 날짜", ""), bi("슬래시", "2021/03/02")])],
+    pinned: [bi("고정 빈 날짜", "")],
+    archive: [bs("2021.04.01", [bi("완료 빈 날짜", "")]), bs("x", [bi("섹션 날짜 불가", "2021.01.01")])]
+)
+m = BackupMerger.merge(current: odd, incoming: FlickBackup.sanitized(odd, today: d), today: d)
+expect(m.added == 0 && m.skipped == 5 && m.merged == odd, "merge: 날짜가 비었거나 읽을 수 없는 항목도 늘지 않음")
+
+// 안내 세트 판정
+let g1 = BackupMerger.guideTexts[0], g2 = BackupMerger.guideTexts[1], g3 = BackupMerger.guideTexts[2]
+let real = bi("진짜", "2026.11.01")
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, [bi(g1, d), bi(g2, d, important: true), bi(g3, d)])], pinned: [], archive: []),
+                       incoming: BackupContent(todos: [bs("2026.11.01", [real])], pinned: [], archive: []), today: d)
+expect(m.merged.todos.count == 2 && m.merged.todos[1].items.count == 3, "merge: 중요 표시한 안내 항목은 손댄 것으로 봄")
+let importantFile = BackupContent(todos: [bs("2026.11.01", [bi(g1, "2026.11.01"), bi(g2, "2026.11.01", important: true), bi(g3, "2026.11.01")])], pinned: [], archive: [])
+m = BackupMerger.merge(current: empty, incoming: importantFile, today: d)
+expect(m.added == 3, "merge: 파일의 중요 표시한 안내 항목은 가져옴")
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, [bi(g1, d), bi(g2, d), bi(g3, "2026.11.01")])], pinned: [], archive: []),
+                       incoming: BackupContent(todos: [bs("2026.11.01", [real])], pinned: [], archive: []), today: d)
+expect(m.merged.todos.count == 2, "merge: 날짜가 다른 안내 항목은 세트가 아님")
+
+// 기기에 g1만, 파일에 g2 g3
+let partialDevice = BackupContent(todos: [bs(d, [bi(g1, d)])], pinned: [], archive: [])
+let partialFile = BackupContent(todos: [bs(d, [bi(g2, d), bi(g3, d)])], pinned: [], archive: [])
+m = BackupMerger.merge(current: partialDevice, incoming: partialFile, today: d)
+expect(m.added == 2 && m.merged.todos[0].items.map(\.todo) == [g1, g2, g3], "merge: 흩어진 안내 문구는 세트가 아님")
+
+// 빈 기기에 안내 세트 두 벌
+let doubleSet = BackupContent(todos: [bs("2026.11.01", BackupMerger.guideTexts.map { bi($0, "2026.11.01") } + BackupMerger.guideTexts.map { bi($0, "2026.11.01") })], pinned: [], archive: [])
+m = BackupMerger.merge(current: empty, incoming: doubleSet, today: d)
+expect(m.added == 0 && m.skipped == 0 && m.merged.isEmpty, "merge: 안내 세트 두 벌은 모두 가져오지 않음")
+
+// 기기 안내 세트가 다른 날짜에 있고 파일에 두 벌: 아무것도 바뀌지 않는다
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: doubleSet, today: d)
+expect(m.added == 0 && m.merged.todos == [bs(d, guides)], "merge: 파일에 안내 세트만 두 벌이면 기기 그대로")
+// 두 벌에 진짜 항목이 섞인 경우
+let doubleSetReal = BackupContent(todos: [bs("2026.11.01", doubleSet.todos[0].items + [real])], pinned: [], archive: [])
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: doubleSetReal, today: d)
+expect(m.merged.todos.map(\.date) == ["2026.11.01"] && m.added == 1, "merge: 기기 세트는 지우고 새로 들어온 항목은 남김")
+let afterLater = BackupMerger.merge(current: m.merged, incoming: doubleSetReal, today: d)
+expect(afterLater.added == 0, "merge: 다른 날짜 기기 세트 뒤 다시 가져와도 늘지 않음")
+
+// 기기 안내 세트와 같은 날짜의 파일 항목
+let guideAndReal = BackupContent(todos: [bs(d, [bi(g1, d), bi(g2, d), bi("진짜", d)])], pinned: [], archive: [])
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: guideAndReal, today: d)
+expect(m.added == 3 && m.skipped == 0 && m.merged.todos[0].items.map(\.todo) == [g1, g2, "진짜"], "merge: 기기 안내 항목이 파일 항목을 흡수하지 않음")
+let afterGuideAndReal = BackupMerger.merge(current: m.merged, incoming: guideAndReal, today: d)
+expect(afterGuideAndReal.added == 0 && afterGuideAndReal.skipped == 3, "merge: 같은 파일 다시 가져오면 0개")
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []),
+                       incoming: BackupContent(todos: [bs(d, [bi("진짜", d)])], pinned: [], archive: []), today: d)
+expect(m.merged.todos.count == 1 && m.merged.todos[0].items.map(\.todo) == ["진짜"], "merge: 기기 안내 섹션에 들어온 새 항목은 남음")
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: empty, today: d)
+expect(m.added == 0 && m.merged.todos == [bs(d, guides)], "merge: 추가가 없으면 기기 데이터 그대로")
 
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
