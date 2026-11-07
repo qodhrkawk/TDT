@@ -50,37 +50,6 @@ struct LegacyTodoData: Codable {
     var todo: String
     var isImportant: Bool
 }
-expect(FlickBackup.isValidDate("2026.11.07"), "isValidDate: 정상")
-expect(!FlickBackup.isValidDate("2026.11.07\n"), "isValidDate: 끝 줄바꿈 거절")
-expect(!FlickBackup.isValidDate("٢٠٢٦.١١.٠٧"), "isValidDate: 아라비아 숫자 거절")
-
-// MARK: 17. 내보내기 정리
-func bi(_ text: String, _ date: String, important: Bool = false) -> BackupItem {
-    BackupItem(date: date, todo: text, isImportant: important)
-}
-func bs(_ date: String, _ items: [BackupItem]) -> BackupSection { BackupSection(date: date, items: items) }
-
-let dirty = BackupContent(
-    todos: [
-        bs("2021.01.25 10:30", [bi("옛 날짜", "2021.01.25 10:30"), bi(" \n", "2021.01.25 10:30")]),
-        bs("2021.01.25", [bi("같은 날", "2021.01.25")]),
-        bs("", [bi("섹션 날짜 없음", "2021.02.01")]),
-        bs("", [bi("날짜 모두 없음", "")]),
-        bs("2021.03.01", [bi("", "2021.03.01")])
-    ],
-    pinned: [bi("고정", "2021.01.25 10:30"), bi("   ", "2021.01.25")],
-    archive: [bs("2021.01.26", [bi("작년 완료", "2021.01.25 10:30")]), bs("2021.02.26", [bi("최근 완료", "2021.02.25")])]
-)
-let clean = FlickBackup.sanitized(dirty, today: "2026.11.07")
-expect(clean.todos.map(\.date) == ["2021.01.25", "2021.02.01", "2026.11.07"], "sanitize: 날짜 정리, 합치기, 오름차순")
-expect(clean.todos[0].items.map(\.todo) == ["옛 날짜", "같은 날"], "sanitize: 공백 메모 제외, 순서 유지")
-expect(clean.todos[2].items[0].date == "2026.11.07", "sanitize: 날짜 없으면 오늘")
-expect(clean.pinned.map(\.date) == ["2021.01.25"], "sanitize: 고정도 정리")
-expect(clean.archive.map(\.date) == ["2021.02.26", "2021.01.26"], "sanitize: 아카이브 내림차순")
-expect(clean.archive[1].items[0].date == "2021.01.25", "sanitize: 아카이브 항목 날짜 정리")
-expect(FlickBackup.sanitized(BackupContent(todos: [bs("2021.03.01", [bi("", "2021.03.01")])], pinned: [], archive: []), today: "2026.11.07").isEmpty,
-       "sanitize: 공백 메모만 있으면 비어 있음")
-
 defaults.removePersistentDomain(forName: suiteName)
 let legacy = [[LegacyTodoData(date: "2026.07.11", todo: "old item", isImportant: true)]]
 defaults.set(try! PropertyListEncoder().encode(legacy), forKey: TodoStore.Keys.todos)
@@ -203,6 +172,37 @@ expect(reloaded.pinnedDatas.map(\.todo) == ["p"]
     && reloaded.todoDatas[0][0].isImportant,
     "save/load 라운드트립: 고정 목록 유지")
 
+expect(FlickBackup.isValidDate("2026.11.07"), "isValidDate: 정상")
+expect(!FlickBackup.isValidDate("2026.11.07\n"), "isValidDate: 끝 줄바꿈 거절")
+expect(!FlickBackup.isValidDate("٢٠٢٦.١١.٠٧"), "isValidDate: 아라비아 숫자 거절")
+
+// MARK: 17. 내보내기 정리
+func bi(_ text: String, _ date: String, important: Bool = false) -> BackupItem {
+    BackupItem(date: date, todo: text, isImportant: important)
+}
+func bs(_ date: String, _ items: [BackupItem]) -> BackupSection { BackupSection(date: date, items: items) }
+
+let dirty = BackupContent(
+    todos: [
+        bs("2021.01.25 10:30", [bi("옛 날짜", "2021.01.25 10:30"), bi(" \n", "2021.01.25 10:30")]),
+        bs("2021.01.25", [bi("같은 날", "2021.01.25")]),
+        bs("", [bi("섹션 날짜 없음", "2021.02.01")]),
+        bs("", [bi("날짜 모두 없음", "")]),
+        bs("2021.03.01", [bi("", "2021.03.01")])
+    ],
+    pinned: [bi("고정", "2021.01.25 10:30"), bi("   ", "2021.01.25")],
+    archive: [bs("2021.01.26", [bi("작년 완료", "2021.01.25 10:30")]), bs("2021.02.26", [bi("최근 완료", "2021.02.25")])]
+)
+let clean = FlickBackup.sanitized(dirty, today: "2026.11.07")
+expect(clean.todos.map(\.date) == ["2021.01.25", "2021.02.01", "2026.11.07"], "sanitize: 날짜 정리, 합치기, 오름차순")
+expect(clean.todos[0].items.map(\.todo) == ["옛 날짜", "같은 날"], "sanitize: 공백 메모 제외, 순서 유지")
+expect(clean.todos[2].items[0].date == "2026.11.07", "sanitize: 날짜 없으면 오늘")
+expect(clean.pinned.map(\.date) == ["2021.01.25"], "sanitize: 고정도 정리")
+expect(clean.archive.map(\.date) == ["2021.02.26", "2021.01.26"], "sanitize: 아카이브 내림차순")
+expect(clean.archive[1].items[0].date == "2021.01.25", "sanitize: 아카이브 항목 날짜 정리")
+expect(FlickBackup.sanitized(BackupContent(todos: [bs("2021.03.01", [bi("", "2021.03.01")])], pinned: [], archive: []), today: "2026.11.07").isEmpty,
+       "sanitize: 공백 메모만 있으면 비어 있음")
+
 // MARK: 16. 백업 파일
 let fixture = try! Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
 let parsed = try! FlickBackup.parse(fixture)
@@ -239,6 +239,77 @@ expect(parseError(file(todos: "[{\"date\":\"2026.11.07\",\"items\":[{\"date\":\"
        "backup: 공백뿐인 메모 거절")
 expect(FlickBackup.fileName(now: now).hasPrefix("flick-backup-") && FlickBackup.fileName(now: now).hasSuffix(".json"), "backup: 파일 이름")
 expect(" \n\t".isBlank && !" a ".isBlank, "String.isBlank")
+
+// MARK: 18. 합치기
+let d = "2026.11.07"
+let guides = BackupMerger.guideTexts.map { bi($0, d) }
+let empty = BackupContent(todos: [], pinned: [], archive: [])
+
+var m = BackupMerger.merge(
+    current: BackupContent(todos: [bs("2026.11.05", [bi("a", "2026.11.05")]), bs(d, [bi("b", d)])], pinned: [], archive: []),
+    incoming: BackupContent(todos: [bs("2026.11.06", [bi("c", "2026.11.06")]), bs(d, [bi("b", d), bi("d", d)])], pinned: [], archive: [])
+)
+expect(m.added == 2 && m.skipped == 1, "merge: 추가와 건너뜀 개수")
+expect(m.merged.todos.map(\.date) == ["2026.11.05", "2026.11.06", d], "merge: 날짜 오름차순 삽입")
+expect(m.merged.todos[2].items.map(\.todo) == ["b", "d"], "merge: 기존 항목 뒤에 추가")
+
+m = BackupMerger.merge(
+    current: BackupContent(todos: [bs(d, [bi("운동", d)])], pinned: [], archive: []),
+    incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: [])
+)
+expect(m.added == 1 && m.skipped == 1, "merge: a-b개만 추가")
+let again = BackupMerger.merge(current: m.merged, incoming: BackupContent(todos: [bs(d, [bi("운동", d), bi("운동", d)])], pinned: [], archive: []))
+expect(again.added == 0 && again.skipped == 2, "merge: 다시 가져와도 늘지 않음")
+
+m = BackupMerger.merge(
+    current: BackupContent(todos: [bs(d, [bi("x", d, important: false)])], pinned: [bi("p", "2026.11.01")], archive: []),
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("p", "2026.11.01")])], pinned: [bi("x", d), bi("q", d, important: true), bi("r", d)], archive: [])
+)
+expect(m.added == 2 && m.skipped == 2, "merge: 일반과 고정은 한 묶음으로 비교")
+expect(m.merged.pinned.map(\.todo) == ["p", "q", "r"], "merge: 새 고정은 기존 뒤에 파일 순서로")
+expect(m.merged.todos[0].items[0].isImportant == false, "merge: 기존 상태 유지")
+
+m = BackupMerger.merge(
+    current: BackupContent(todos: [bs(d, [bi("t", d)])], pinned: [], archive: [bs("2026.11.05", [bi("old", "2026.11.01")])]),
+    incoming: BackupContent(todos: [], pinned: [], archive: [
+        bs("2026.11.06", [bi("t", d)]),
+        bs("2026.11.05", [bi("old", "2026.11.01"), bi("old", "2026.10.01")]),
+        bs("2026.11.04", [bi("older", "2026.11.01")])
+    ])
+)
+expect(m.merged.archive.map(\.date) == ["2026.11.06", "2026.11.05", "2026.11.04"], "merge: 아카이브 내림차순 삽입")
+expect(m.merged.archive[1].items.map(\.date) == ["2026.11.01", "2026.10.01"], "merge: 아카이브는 완료+작성 날짜로 비교")
+expect(m.added == 3 && m.skipped == 1, "merge: 일반과 아카이브는 따로 비교")
+
+m = BackupMerger.merge(
+    current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []),
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
+)
+expect(m.merged.todos.map(\.date) == ["2026.11.01"] && m.added == 1, "merge: 기기 안내 세트 제거")
+
+let onlyGuides = BackupContent(todos: [bs("2026.11.01", BackupMerger.guideTexts.map { bi($0, "2026.11.01") })], pinned: [], archive: [])
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, guides)], pinned: [], archive: []), incoming: onlyGuides)
+expect(m.added == 0 && m.skipped == 0 && m.merged.todos.map(\.date) == [d], "merge: 안내 세트만 있으면 변화 없음")
+
+m = BackupMerger.merge(
+    current: BackupContent(todos: [bs(d, Array(guides.prefix(2)))], pinned: [], archive: []),
+    incoming: BackupContent(todos: [bs("2026.11.01", [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
+)
+expect(m.merged.todos.count == 2, "merge: 손댄 안내 항목은 유지")
+
+let withGuide = BackupContent(todos: [bs("2026.11.01", BackupMerger.guideTexts.map { bi($0, "2026.11.01") } + [bi("진짜", "2026.11.01")])], pinned: [], archive: [])
+m = BackupMerger.merge(current: empty, incoming: withGuide)
+expect(m.merged.todos[0].items.map(\.todo) == ["진짜"] && m.added == 1, "merge: 파일 안내 세트는 가져오지 않음")
+
+let legacyDates = BackupContent(todos: [bs("2021.01.25 10:30", [bi("옛 메모", "2021.01.25 10:30")])], pinned: [], archive: [])
+m = BackupMerger.merge(current: legacyDates, incoming: FlickBackup.sanitized(legacyDates, today: d))
+expect(m.added == 0 && m.skipped == 1, "merge: 옛 날짜가 남은 기기에서 자기 파일 재가져오기")
+
+let bigItems = (0..<5000).map { bi("메모 \($0)", d) }
+let started = Date()
+m = BackupMerger.merge(current: BackupContent(todos: [bs(d, bigItems)], pinned: [], archive: []),
+                       incoming: BackupContent(todos: [bs(d, bigItems)], pinned: [], archive: []))
+expect(m.added == 0 && Date().timeIntervalSince(started) < 1, "merge: 5000개를 1초 안에")
 
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")

@@ -9,6 +9,7 @@ swiftc -o "$TMP/todostore_tests" \
   "$DIR/../TDT/Data/TodoData.swift" \
   "$DIR/../TDT/Data/TodoStore.swift" \
   "$DIR/../TDT/Data/FlickBackup.swift" \
+  "$DIR/../TDT/Data/BackupMerger.swift" \
   "$DIR/../TDT/Extensions/String+Extensions.swift" \
   "$TMP/main.swift"
 "$TMP/todostore_tests" "$DIR/fixtures/flick-backup-v1.json"
