@@ -357,6 +357,7 @@ class AlertViewController: UIViewController {
     
     @IBAction func editOkayButtonAction(_ sender: Any) {
         guard let indexPath else { return }
+        if editTextView.text.isBlank { return }
         
         todoDelegate?.modify(indexPath: indexPath, str: editTextView.text)
        

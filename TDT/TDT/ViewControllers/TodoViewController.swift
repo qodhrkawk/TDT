@@ -137,12 +137,11 @@ class TodoViewController: UIViewController {
     }
 
     @IBAction private func sendButtonAction(_ sender: Any) {
-        if typingTextView.text != ""{
-            addData(todo: typingTextView.text!)
-            typingTextView.text = ""
-            textViewDidChange(typingTextView)
-            animationStatus = .sendAnimation
-        }
+        if typingTextView.text.isBlank { return }
+        addData(todo: typingTextView.text!)
+        typingTextView.text = ""
+        textViewDidChange(typingTextView)
+        animationStatus = .sendAnimation
     }
     
     @IBAction private func settingButtonAction(_ sender: Any) {
@@ -232,7 +231,7 @@ extension TodoViewController {
         
         flickImageView.tintColor = theme.mainColor
         
-        if let text = typingTextView.text, text.count > 0 {
+        if let text = typingTextView.text, !text.isBlank {
             sendButton.tintColor = theme.mainColor
         }
     }
@@ -690,10 +689,9 @@ extension TodoViewController: TextBoxDelegate {
 
 extension TodoViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        let isEmpty = textView.text.isEmpty
-        typingPlaceholderLabel.isHidden = !isEmpty
+        typingPlaceholderLabel.isHidden = !textView.text.isEmpty
 
-        if isEmpty {
+        if textView.text.isBlank {
             sendButton.setImage(Design.Button.sendButtonImage, for: .normal)
             sendButton.tintColor = Design.Button.inactiveColor
         }
@@ -705,7 +703,7 @@ extension TodoViewController: UITextViewDelegate {
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.count >= 1 {
+        if !textView.text.isBlank {
             sendButton.tintColor = mainColor
         }
         else{
@@ -854,13 +852,13 @@ extension TodoViewController {
         pinnedBar.isHidden = true
     }
 
-    /// 고정 목록으로 바를 다시 그리고, 바 높이만큼 테이블 상단 여백을 잡는다
     @objc private func handleDataDidImport() {
         if isSelectionMode { exitSelectionMode() }
         loadData()
         refreshPinnedBar()
     }
 
+    /// 고정 목록으로 바를 다시 그리고, 바 높이만큼 테이블 상단 여백을 잡는다
     private func refreshPinnedBar() {
         pinnedStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
