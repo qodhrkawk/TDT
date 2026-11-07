@@ -460,6 +460,39 @@ expect(linkTexts("링크 https://a.com/path?x=1 참고") == ["https://a.com/path
 expect(linkURLs("HTTPS://A.com") == ["https://A.com"], "link: scheme 소문자")
 expect(linkTexts("메일 a@b.com 으로").isEmpty, "link: 이메일은 링크 아님")
 
+// MARK: 22. Android 앱이 내보낸 파일 가져오기
+// fixtures/flick-backup-android-v1.json: Android TodoStore + FlickBackup.sanitized/exportJson으로 만든 실제 출력
+let androidFile = try! Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[2]))
+let androidContent = try! FlickBackup.parse(androidFile)
+expect(androidContent.todos.map(\.date) == ["2026.11.05", "2026.11.06", "2026.11.07"], "android: 섹션 날짜와 순서")
+expect(androidContent.todos[0].items.map(\.todo) == ["안드로이드 운동", "안드로이드 운동"], "android: 같은 날 중복 메모")
+expect(androidContent.todos[1].items[0].todo == "첫 줄\n둘째 줄 \"따옴표\" \\ 역슬래시 / 슬래시", "android: 특수문자 내용")
+expect(androidContent.todos[1].items[1].todo == "이모지 \u{1F600} 와 링크 https://example.com에서 확인", "android: 이모지")
+expect(androidContent.todos[2].items.last?.isImportant == true, "android: 중요 표시")
+expect(androidContent.pinned == [bi("고정할 안드로이드 메모", "2026.11.04")], "android: 고정과 원래 날짜")
+expect(androidContent.archive == [bs("2026.11.03", [bi("안드로이드에서 완료한 일", "2026.11.01", important: true)])],
+       "android: 아카이브 완료·작성 날짜")
+
+let androidToday = "2026.11.07"
+defaults.removePersistentDomain(forName: suiteName)
+let freshIPhone = TodoStore(userDefaults: defaults)
+freshIPhone.load()
+BackupMerger.guideTexts.forEach { freshIPhone.add(todo: $0, dateString: androidToday) }
+let androidMerge = BackupMerger.merge(current: freshIPhone.backupContent(), incoming: androidContent, today: androidToday)
+expect(androidMerge.added == 7 && androidMerge.skipped == 0, "android: 새 iPhone에 7개 추가")
+expect(!androidMerge.merged.todos.flatMap(\.items).contains { BackupMerger.guideTexts.contains($0.todo) },
+       "android: 기기·파일 안내 세트 모두 제외")
+expect(androidMerge.merged.todos.last?.items.map(\.todo) == ["중요한 안드로이드 메모"], "android: 오늘 섹션에 실제 메모만")
+
+freshIPhone.replaceAll(with: androidMerge.merged)
+let androidReloaded = TodoStore(userDefaults: defaults)
+androidReloaded.load()
+expect(androidReloaded.backupContent() == androidMerge.merged, "android: 저장 후 다시 읽어도 같음")
+expect(BackupMerger.merge(current: androidReloaded.backupContent(), incoming: androidContent, today: androidToday).added == 0,
+       "android: 같은 파일 다시 가져와도 늘지 않음")
+expect(androidContent.todos[1].items[1].todo.firstContainedURL?.absoluteString == "https://example.com",
+       "android: 가져온 메모의 링크")
+
 defaults.removePersistentDomain(forName: suiteName)
 print(failures == 0 ? "\nALL TESTS PASSED" : "\n\(failures) TEST(S) FAILED")
 exit(failures == 0 ? 0 : 1)

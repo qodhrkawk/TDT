@@ -1,0 +1,85 @@
+{
+    "format": "flick-backup",
+    "version": 1,
+    "exportedAt": "2026-11-07T10:00:00Z",
+    "source": {
+        "platform": "android",
+        "appVersion": "1.0.0"
+    },
+    "todos": [
+        {
+            "date": "2026.11.05",
+            "items": [
+                {
+                    "date": "2026.11.05",
+                    "todo": "안드로이드 운동",
+                    "isImportant": false
+                },
+                {
+                    "date": "2026.11.05",
+                    "todo": "안드로이드 운동",
+                    "isImportant": false
+                }
+            ]
+        },
+        {
+            "date": "2026.11.06",
+            "items": [
+                {
+                    "date": "2026.11.06",
+                    "todo": "첫 줄\n둘째 줄 \"따옴표\" \\ 역슬래시 / 슬래시",
+                    "isImportant": false
+                },
+                {
+                    "date": "2026.11.06",
+                    "todo": "이모지 😀 와 링크 https://example.com에서 확인",
+                    "isImportant": false
+                }
+            ]
+        },
+        {
+            "date": "2026.11.07",
+            "items": [
+                {
+                    "date": "2026.11.07",
+                    "todo": "왼쪽으로 밀어서 완료 상태로 만들어 보세요.",
+                    "isImportant": false
+                },
+                {
+                    "date": "2026.11.07",
+                    "todo": "두 번 탭해서 중요 표시를 해 보세요.",
+                    "isImportant": false
+                },
+                {
+                    "date": "2026.11.07",
+                    "todo": "한 번 클릭해서 메모를 삭제하거나 수정할 수 있어요.",
+                    "isImportant": false
+                },
+                {
+                    "date": "2026.11.07",
+                    "todo": "중요한 안드로이드 메모",
+                    "isImportant": true
+                }
+            ]
+        }
+    ],
+    "pinned": [
+        {
+            "date": "2026.11.04",
+            "todo": "고정할 안드로이드 메모",
+            "isImportant": false
+        }
+    ],
+    "archive": [
+        {
+            "date": "2026.11.03",
+            "items": [
+                {
+                    "date": "2026.11.01",
+                    "todo": "안드로이드에서 완료한 일",
+                    "isImportant": true
+                }
+            ]
+        }
+    ]
+}
