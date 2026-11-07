@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,11 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qodhrkawk.flick.BuildConfig
 import com.qodhrkawk.flick.R
+import com.qodhrkawk.flick.data.BackupException
 import com.qodhrkawk.flick.data.SettingsStore
 import com.qodhrkawk.flick.ui.theme.Flick
 import com.qodhrkawk.flick.ui.theme.GmarketSans
 import com.qodhrkawk.flick.ui.theme.ThemeColors
 import com.qodhrkawk.flick.ui.theme.ThemeNames
+import kotlinx.coroutines.launch
 
 /** img_check는 여백 포함 40 — iOS와 같은 크기로 보이는 값 */
 private val SelectedCheckSize = 40.dp
@@ -59,6 +64,29 @@ fun SettingsScreen(state: FlickAppState, onClose: () -> Unit) {
     val colors = Flick.colors
     val context = LocalContext.current
     var showMailFallback by remember { mutableStateOf(false) }
+    var backupDialog by remember { mutableStateOf<BackupDialog?>(null) }
+    val scope = rememberCoroutineScope()
+
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        scope.launch {
+            val incoming = try {
+                readBackup(context, uri)
+            } catch (e: BackupException.NewerVersion) {
+                backupDialog = BackupDialog.Notice("앱을 업데이트한 뒤 다시 가져와 주세요")
+                return@launch
+            } catch (e: Exception) {
+                backupDialog = BackupDialog.Notice("Flick 데이터 파일이 아니에요")
+                return@launch
+            }
+            val result = state.previewImport(incoming)
+            if (result.added == 0) {
+                state.showToast("이미 모두 들어 있어요")
+            } else {
+                backupDialog = BackupDialog.ImportConfirm(result)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -115,6 +143,29 @@ fun SettingsScreen(state: FlickAppState, onClose: () -> Unit) {
             SectionHeader("1:1 문의하기", "누르면 메일 앱으로 이동합니다.")
         }
 
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    val content = state.exportContent()
+                    if (content.isEmpty) {
+                        state.showToast("내보낼 항목이 없어요")
+                    } else {
+                        backupDialog = BackupDialog.ExportWarning(content)
+                    }
+                },
+        ) {
+            SectionHeader("데이터 내보내기", "할 일과 아카이브를 파일로 저장합니다.")
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { importLauncher.launch(BackupMimeTypes) },
+        ) {
+            SectionHeader("데이터 가져오기", "파일의 할 일을 지금 데이터에 합칩니다.")
+        }
+
         Spacer(Modifier.height(30.dp))
         Text(
             "Flick ${BuildConfig.VERSION_NAME}",
@@ -126,6 +177,38 @@ fun SettingsScreen(state: FlickAppState, onClose: () -> Unit) {
                 .padding(bottom = 40.dp),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
         )
+    }
+
+    when (val dialog = backupDialog) {
+        is BackupDialog.ExportWarning -> FlickDialogOverlay(
+            message = "파일은 암호화되지 않아요",
+            detail = "공유할 곳을 확인한 뒤 보내주세요.",
+            confirmLabel = "계속",
+            onCancel = { backupDialog = null },
+            onConfirm = {
+                backupDialog = null
+                scope.launch {
+                    runCatching { shareBackup(context, dialog.content) }
+                        .onFailure { state.showToast("내보내지 못했어요") }
+                }
+            },
+        )
+        is BackupDialog.ImportConfirm -> FlickDialogOverlay(
+            message = "새 항목 ${dialog.result.added}개를 추가할게요.\n이미 있는 ${dialog.result.skipped}개는 건너뛰어요.",
+            confirmLabel = "가져오기",
+            onCancel = { backupDialog = null },
+            onConfirm = {
+                backupDialog = null
+                state.applyImport(dialog.result)
+                state.showToast("${dialog.result.added}개를 추가했어요")
+            },
+        )
+        is BackupDialog.Notice -> FlickDialogOverlay(
+            message = dialog.message,
+            confirmLabel = "확인",
+            onConfirm = { backupDialog = null },
+        )
+        null -> Unit
     }
 
     if (showMailFallback) {

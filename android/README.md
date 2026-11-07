@@ -7,7 +7,7 @@ iOS 3.0 스펙(`docs/android-handoff.md`)과 3.0.1 변경분(`docs/3.0.1-plan.md
 ```bash
 cd android
 ./gradlew assembleDebug          # APK: app/build/outputs/apk/debug/
-./gradlew :app:testDebugUnitTest # 유닛 테스트 37개 (TodoStore 23 + 위젯 규칙 6 + 링크 감지 8)
+./gradlew :app:testDebugUnitTest # 유닛 테스트 55개 (TodoStore 23 + 백업 18 + 위젯 규칙 6 + 링크 감지 8)
 ```
 
 요구사항: JDK 17, Android SDK 36. `local.properties`에 `sdk.dir` 지정.
@@ -33,7 +33,7 @@ keytool -genkeypair -v -keystore ~/flick-upload.jks -alias flick-upload -keyalg 
 
 ```
 app/src/main/java/com/qodhrkawk/flick/
-├── data/       TodoData·TodoStore(순수 Kotlin, iOS 로직 포팅)·저장소·위젯 규칙·링크 감지
+├── data/       TodoData·TodoStore(순수 Kotlin, iOS 로직 포팅)·저장소·위젯 규칙·링크 감지·백업(FlickBackup·BackupMerger)
 ├── ui/         FlickAppState(상태 홀더)·TodoScreen·ArchiveScreen·SettingsScreen·테마
 ├── widget/     Glance 위젯 3종(홈·오늘·소형) + 갱신 동기화
 └── MainActivity.kt  페이저(메인↔아카이브) + 설정 오버레이
@@ -44,3 +44,7 @@ app/src/main/java/com/qodhrkawk/flick/
 - 제스처 구현의 함정 3가지는 `docs/android-spike-findings.md` 참고 (셀 레벨 감지기,
   onDragCancel 처리, scrollToItem 보정). 수정 전에 반드시 읽을 것.
 - QA: `docs/android-qa-checklist.md`
+- 데이터 내보내기/가져오기는 iOS 3.1과 같은 파일 형식이다. 설계는 `feature/3.1`의
+  `docs/superpowers/specs/2026-11-07-flick-3.1-data-transfer-design.md`. 테스트 샘플
+  `app/src/test/resources/flick-backup-v1.json`은 iOS `TDT/Tests/fixtures/flick-backup-v1.json`과 같은 파일이며,
+  형식을 바꾸면 두 곳을 함께 고친다.

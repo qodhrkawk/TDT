@@ -215,13 +215,44 @@ fun FlickActionMenu(
     }
 }
 
-/** iOS deleteCheckView: 폭 301, 문구 영역 + 취소/삭제 버튼 */
+/** 딤 배경 위 화면 중앙 확인 창. 떠 있는 동안 뒤쪽 화면을 누를 수 없다 */
+@Composable
+fun FlickDialogOverlay(
+    message: String,
+    onConfirm: () -> Unit,
+    onCancel: (() -> Unit)? = null,
+    detail: String? = null,
+    confirmLabel: String = "삭제",
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.6f))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) {},
+        contentAlignment = Alignment.Center,
+    ) {
+        ConfirmDialog(
+            message = message,
+            detail = detail,
+            confirmLabel = confirmLabel,
+            onCancel = onCancel,
+            onConfirm = onConfirm,
+        )
+    }
+}
+
+/** iOS deleteCheckView: 폭 301, 문구 영역 + 취소/확인 버튼. onCancel이 없으면 확인 버튼만 */
 @Composable
 fun ConfirmDialog(
     message: String,
-    onCancel: () -> Unit,
+    onCancel: (() -> Unit)?,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
+    detail: String? = null,
+    confirmLabel: String = "삭제",
 ) {
     val colors = Flick.colors
     Column(
@@ -237,30 +268,44 @@ fun ConfirmDialog(
                 .padding(vertical = 16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Text(
-                message,
-                fontSize = 16.sp,
-                fontFamily = GmarketSans,
-                color = colors.mainText,
-                textAlign = TextAlign.Center,
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    message,
+                    fontSize = 16.sp,
+                    fontFamily = GmarketSans,
+                    color = colors.mainText,
+                    textAlign = TextAlign.Center,
+                )
+                if (detail != null) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        detail,
+                        fontSize = 14.sp,
+                        fontFamily = GmarketSans,
+                        color = colors.subText,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
         }
-        DialogButtons(confirmLabel = "삭제", onCancel = onCancel, onConfirm = onConfirm)
+        DialogButtons(confirmLabel = confirmLabel, onCancel = onCancel, onConfirm = onConfirm)
     }
 }
 
 @Composable
-private fun DialogButtons(confirmLabel: String, onCancel: () -> Unit, onConfirm: () -> Unit) {
+private fun DialogButtons(confirmLabel: String, onCancel: (() -> Unit)?, onConfirm: () -> Unit) {
     val colors = Flick.colors
     Row {
-        ConfirmButton(
-            "취소",
-            textColor = colors.mainText,
-            bg = colors.typingText.copy(alpha = 0.08f),
-            modifier = Modifier.weight(1f),
-            onClick = onCancel,
-        )
-        Spacer(Modifier.width(8.dp))
+        if (onCancel != null) {
+            ConfirmButton(
+                "취소",
+                textColor = colors.mainText,
+                bg = colors.typingText.copy(alpha = 0.08f),
+                modifier = Modifier.weight(1f),
+                onClick = onCancel,
+            )
+            Spacer(Modifier.width(8.dp))
+        }
         ConfirmButton(
             confirmLabel,
             textColor = Color.White,

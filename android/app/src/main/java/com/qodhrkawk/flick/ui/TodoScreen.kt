@@ -382,23 +382,11 @@ fun EmptyPlaceholder(imageRes: Int, text: String) {
 
 @Composable
 private fun BatchDeleteConfirm(count: Int, onCancel: () -> Unit, onConfirm: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f))
-            // 뒤쪽 목록과 선택 바로 터치가 새지 않게 막는다
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) {},
-        contentAlignment = Alignment.Center,
-    ) {
-        ConfirmDialog(
-            message = "선택한 ${count}개를 삭제할까요?\n삭제하면 되돌릴 수 없어요.",
-            onCancel = onCancel,
-            onConfirm = onConfirm,
-        )
-    }
+    FlickDialogOverlay(
+        message = "선택한 ${count}개를 삭제할까요?\n삭제하면 되돌릴 수 없어요.",
+        onCancel = onCancel,
+        onConfirm = onConfirm,
+    )
 }
 
 @Composable

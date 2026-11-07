@@ -4,6 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.qodhrkawk.flick.data.BackupContent
+import com.qodhrkawk.flick.data.BackupMergeResult
+import com.qodhrkawk.flick.data.BackupMerger
+import com.qodhrkawk.flick.data.FlickBackup
 import com.qodhrkawk.flick.data.Position
 import com.qodhrkawk.flick.data.SettingsStore
 import com.qodhrkawk.flick.data.TodoData
@@ -231,6 +235,20 @@ class FlickAppState(
     fun archiveToggleImportant(id: String) {
         val position = archivePositionOf(id) ?: return
         store.archiveToggleImportant(position)
+        refresh()
+    }
+
+    // 백업 (설계: feature/3.1 docs/superpowers/specs/2026-11-07-flick-3.1-data-transfer-design.md)
+
+    /** 내보낼 내용. 옛 값은 정리해서 파일에는 항상 올바른 값만 담는다 */
+    fun exportContent(): BackupContent = FlickBackup.sanitized(store.backupContent(), todayString())
+
+    /** 합친 결과를 미리 계산만 한다. 저장은 [applyImport]에서 한 번에 한다 */
+    fun previewImport(incoming: BackupContent): BackupMergeResult =
+        BackupMerger.merge(store.backupContent(), incoming, todayString())
+
+    fun applyImport(result: BackupMergeResult) {
+        store.replaceAll(result.merged)
         refresh()
     }
 

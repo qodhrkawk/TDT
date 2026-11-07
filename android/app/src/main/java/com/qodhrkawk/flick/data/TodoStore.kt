@@ -248,6 +248,34 @@ class TodoStore(private val storage: KeyValueStore) {
         storage.putString(Keys.ARCHIVE_DATES, json.encodeToString<List<String>>(archiveDates))
     }
 
+    // 백업 연결
+
+    /** 저장된 값을 정리 없이 그대로 백업 값으로 돌려준다 */
+    fun backupContent(): BackupContent {
+        fun backupItem(item: TodoData) = BackupItem(item.date, item.todo, item.isImportant)
+        val (archiveDatas, archiveDates) = loadArchive()
+        return BackupContent(
+            todos = dates.zip(sections) { date, items -> BackupSection(date, items.map(::backupItem)) },
+            pinned = pinned.map(::backupItem),
+            archive = archiveDates.zip(archiveDatas) { date, items -> BackupSection(date, items.map(::backupItem)) },
+        )
+    }
+
+    /** 할 일, 고정, 아카이브(항목·날짜)를 한 번에 저장한다. 항목 id는 새로 만든다 */
+    fun replaceAll(content: BackupContent) {
+        fun todoData(item: BackupItem, isPinned: Boolean) =
+            TodoData(date = item.date, todo = item.todo, isImportant = item.isImportant, isPinned = isPinned)
+
+        sections = content.todos.map { section -> section.items.map { todoData(it, false) }.toMutableList() }.toMutableList()
+        dates = content.todos.map { it.date }.toMutableList()
+        pinned = content.pinned.map { todoData(it, true) }.toMutableList()
+        save()
+
+        val archiveDatas = content.archive.map { section -> section.items.map { todoData(it, false) } }
+        storage.putString(Keys.ARCHIVE_TODOS, json.encodeToString<List<List<TodoData>>>(archiveDatas))
+        storage.putString(Keys.ARCHIVE_DATES, json.encodeToString<List<String>>(content.archive.map { it.date }))
+    }
+
     // 일괄 처리 (날짜 섹션)
 
     /** 선택 항목들을 아카이브로 이동 */
