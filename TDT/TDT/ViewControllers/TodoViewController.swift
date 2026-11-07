@@ -52,6 +52,10 @@ class TodoViewController: UIViewController {
     private let pinnedBar = UIView()
     private let pinnedStack = UIStackView()
     private var pinnedBarTopInset: CGFloat = 0
+    /// 키보드가 올라온 만큼 목록 하단에 더하는 여백
+    private var keyboardBottomInset: CGFloat = 0
+    /// 입력창이 최소 높이보다 늘어난 만큼 목록 하단에 더하는 여백
+    private var typingExtraBottomInset: CGFloat = 0
     private var isPinnedBarCollapsed: Bool {
         get { userDefaults.bool(forKey: "pinnedBarCollapsed") }
         set { userDefaults.set(newValue, forKey: "pinnedBarCollapsed") }
@@ -320,8 +324,8 @@ extension TodoViewController {
                 ),
                 animated: false
             )
-            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height - 29, right: 0)
+            self.keyboardBottomInset = keyboardSize.height - 29
+            self.applyTableBottomInset()
 
         })
         
@@ -344,8 +348,8 @@ extension TodoViewController {
             self.currentOffset = self.todoTableView.contentOffset
 
             self.todoTableView.setContentOffset(CGPoint(x: self.currentOffset.x, y: self.currentOffset.y + keyboardSize.height-29), animated: false)
-            self.todoTableView.contentInset = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: self.pinnedBarTopInset, left: 0, bottom: keyboardSize.height-29, right: 0)
+            self.keyboardBottomInset = keyboardSize.height - 29
+            self.applyTableBottomInset()
         })
         
         view.layoutIfNeeded()
@@ -366,13 +370,21 @@ extension TodoViewController {
 
             let goY = self.currentOffset.y > keyboardSize.height-29 ? self.currentOffset.y - (keyboardSize.height - 29) : 0
 
-            self.todoTableView.contentInset = UIEdgeInsets(top: keyboardSize.height-29, left: 0, bottom: 0, right: 0)
+            self.keyboardBottomInset = 0
+            self.applyTableBottomInset()
             self.todoTableView.setContentOffset(CGPoint(x: self.currentOffset.x, y: goY), animated: true)
-            self.todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         })
         view.layoutIfNeeded()
         previousKeyboardSize = CGRect(x: 0, y: 0, width: 0, height: 0)
-        todoTableView.contentInset = UIEdgeInsets(top: pinnedBarTopInset, left: 0, bottom: 0, right: 0)
+        keyboardBottomInset = 0
+        applyTableBottomInset()
+    }
+
+    /// 키보드와 늘어난 입력창이 가리는 만큼 목록 하단 여백을 맞춘다
+    private func applyTableBottomInset() {
+        let bottom = keyboardBottomInset + typingExtraBottomInset
+        todoTableView.contentInset = UIEdgeInsets(top: pinnedBarTopInset, left: 0, bottom: bottom, right: 0)
+        todoTableView.scrollIndicatorInsets = UIEdgeInsets(top: pinnedBarTopInset, left: 0, bottom: bottom, right: 0)
     }
 }
 
@@ -730,6 +742,17 @@ extension TodoViewController: UITextViewDelegate {
         // 스토리보드 기본: 컨테이너 90 = 입력창 40 + 상하 여백 50
         editViewHeightConstraint.constant = newHeight + 50
         view.layoutIfNeeded()
+
+        // 목록 맨 아래를 보고 있었다면 늘어난 만큼 따라 올려 마지막 항목을 계속 보이게 한다
+        let table = todoTableView!
+        let maxOffsetY = table.contentSize.height - table.bounds.height + table.contentInset.bottom
+        let wasAtBottom = maxOffsetY > -table.contentInset.top && table.contentOffset.y >= maxOffsetY - 1
+        let previousExtra = typingExtraBottomInset
+        typingExtraBottomInset = newHeight - minHeight
+        applyTableBottomInset()
+        if wasAtBottom {
+            table.contentOffset.y += typingExtraBottomInset - previousExtra
+        }
     }
 }
 
