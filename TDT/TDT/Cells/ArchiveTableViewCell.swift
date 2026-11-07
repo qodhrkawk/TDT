@@ -76,6 +76,8 @@ extension ArchiveTableViewCell {
         $isToday.sink(receiveValue: { [weak self] isToday in
             if isToday {
                 self?.todoLabel.textColor = Design.todayTextColor
+                // textColor는 attributedText의 글자색 전체를 덮어 링크 색이 사라지므로 다시 입힌다
+                self?.todoLabel.highlightContainedLinks()
             }
         })
         .store(in: &cancellables)
