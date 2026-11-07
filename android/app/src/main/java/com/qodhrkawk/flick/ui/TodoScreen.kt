@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,9 +35,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
@@ -87,6 +91,18 @@ fun TodoScreen(
     val selectedIds = remember { mutableStateListOf<String>() }
     var menuTarget by remember { mutableStateOf<MenuTarget?>(null) }
     var showBatchDeleteConfirm by remember { mutableStateOf(false) }
+    var inputFocused by remember { mutableStateOf(false) }
+
+    // 키보드나 입력창 확장으로 목록이 줄어들면 그만큼 올려 오늘 항목이 가려지지 않게 한다 (iOS keyboardSizeChanged)
+    LaunchedEffect(listState) {
+        var previousHeight = 0
+        snapshotFlow { listState.layoutInfo.viewportSize.height }.collect { height ->
+            if (inputFocused && height < previousHeight) {
+                listState.scrollBy((previousHeight - height).toFloat())
+            }
+            previousHeight = height
+        }
+    }
 
     fun exitSelection() {
         selectionMode = false
@@ -96,6 +112,7 @@ fun TodoScreen(
     fun openMenu(id: String) {
         val todo = state.find(id) ?: return
         val pinned = state.isPinned(id)
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         menuTarget = MenuTarget(
             id = id,
             text = todo.todo,
@@ -203,6 +220,7 @@ fun TodoScreen(
                 selectionMode = selectionMode,
                 onTapBubble = { id ->
                     val todo = state.find(id) ?: return@PinnedBar
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     menuTarget = MenuTarget(id, todo.todo, showPin = true, isPinned = true)
                 },
             )
@@ -222,7 +240,7 @@ fun TodoScreen(
                             modifier = Modifier
                                 .animateItem()
                                 .fillMaxWidth()
-                                .height(if (sectionIndex == 0) 80.dp else 30.dp),
+                                .height(30.dp),
                             contentAlignment = Alignment.BottomStart,
                         ) {
                             EnterSlide(active, sectionIndex, 0, fromRight = true) {
@@ -255,7 +273,10 @@ fun TodoScreen(
                                     if (selectedIds.contains(id)) selectedIds.remove(id) else selectedIds.add(id)
                                 },
                                 onTap = { openMenu(it) },
-                                onDoubleTap = { state.toggleImportant(it) },
+                                onDoubleTap = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    state.toggleImportant(it)
+                                },
                                 onComplete = { state.complete(it) },
                                 onDragStart = onCellDragStart,
                                 onDragBy = onCellDragBy,
@@ -274,9 +295,10 @@ fun TodoScreen(
                 count = selectedIds.size,
                 onCancel = { exitSelection() },
                 onComplete = {
+                    val count = selectedIds.size
                     state.batchComplete(selectedIds.toList())
                     exitSelection()
-                    state.showToast("완료되었어요")
+                    state.showToast("${count}개를 완료했어요.")
                 },
                 onDelete = { showBatchDeleteConfirm = true },
             )
@@ -284,6 +306,7 @@ fun TodoScreen(
             InputBar(
                 text = inputText,
                 onTextChange = { inputText = it },
+                onFocusChange = { inputFocused = it },
                 onSend = {
                     if (inputText.isNotBlank()) {
                         state.add(inputText)
@@ -302,7 +325,15 @@ fun TodoScreen(
     FlickActionMenu(
         target = menuTarget,
         onDismiss = { menuTarget = null },
-        onPinToggle = { id -> if (state.isPinned(id)) state.unpin(id) else state.pin(id) },
+        onPinToggle = { id ->
+            if (state.isPinned(id)) {
+                state.unpin(id)
+                state.showToast("고정이 해제되었어요.")
+            } else {
+                state.pin(id)
+                state.showToast("위에 고정했어요.")
+            }
+        },
         onSelect = { id ->
             selectionMode = true
             selectedIds.clear()
@@ -325,10 +356,11 @@ fun TodoScreen(
             count = selectedIds.size,
             onCancel = { showBatchDeleteConfirm = false },
             onConfirm = {
+                val count = selectedIds.size
                 showBatchDeleteConfirm = false
                 state.batchDelete(selectedIds.toList())
                 exitSelection()
-                state.showToast("삭제되었어요.")
+                state.showToast("${count}개를 삭제했어요.")
             },
         )
     }
@@ -350,43 +382,22 @@ fun EmptyPlaceholder(imageRes: Int, text: String) {
 
 @Composable
 private fun BatchDeleteConfirm(count: Int, onCancel: () -> Unit, onConfirm: () -> Unit) {
-    val colors = Flick.colors
-    Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f))) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(20.dp)
-                .background(colors.box, BubbleShape)
-                .padding(20.dp),
-        ) {
-            Text(
-                "${count}개의 메모를 삭제할까요?",
-                fontSize = 16.sp,
-                fontFamily = GmarketSans,
-                color = colors.mainText,
-                modifier = Modifier.padding(vertical = 16.dp),
-            )
-            Row {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp)
-                        .background(colors.typingText.copy(alpha = 0.08f), BubbleShape)
-                        .clickable { onCancel() },
-                    contentAlignment = Alignment.Center,
-                ) { Text("취소", fontSize = 15.sp, fontFamily = GmarketSans, color = colors.mainText) }
-                Spacer(Modifier.width(10.dp))
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp)
-                        .background(colors.theme, BubbleShape)
-                        .clickable { onConfirm() },
-                    contentAlignment = Alignment.Center,
-                ) { Text("삭제", fontSize = 15.sp, fontFamily = GmarketSans, color = androidx.compose.ui.graphics.Color.White) }
-            }
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f))
+            // 뒤쪽 목록과 선택 바로 터치가 새지 않게 막는다
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) {},
+        contentAlignment = Alignment.Center,
+    ) {
+        ConfirmDialog(
+            message = "선택한 ${count}개를 삭제할까요?\n삭제하면 되돌릴 수 없어요.",
+            onCancel = onCancel,
+            onConfirm = onConfirm,
+        )
     }
 }
 
@@ -428,24 +439,22 @@ private fun PinnedBar(
                     gradientColor = colors.theme,
                     onAction = { state.complete(it) },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                ) { gestureModifier ->
-                    Box(modifier = gestureModifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier
-                                .pointerInput(todo.id) {
-                                    detectTapGestures(onTap = { onTapBubble(todo.id) })
-                                }
-                                .background(colors.box, BubbleShape)
-                                .border(1.dp, colors.theme, BubbleShape)
-                                .padding(horizontal = 12.dp, vertical = 11.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(Modifier.size(12.dp).graphicsLayer { rotationZ = 45f }) {
-                                PinIcon(colors.theme, modifier = Modifier.size(12.dp))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .pointerInput(todo.id) {
+                                detectTapGestures(onTap = { onTapBubble(todo.id) })
                             }
-                            Spacer(Modifier.width(7.dp))
-                            LinkedText(todo.todo, 14.sp, GmarketSans, colors.mainText)
+                            .background(colors.box, BubbleShape)
+                            .border(1.dp, colors.theme, BubbleShape)
+                            .padding(horizontal = 12.dp, vertical = 11.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(Modifier.size(12.dp).graphicsLayer { rotationZ = 45f }) {
+                            PinIcon(colors.theme, modifier = Modifier.size(12.dp))
                         }
+                        Spacer(Modifier.width(7.dp))
+                        LinkedText(todo.todo, 14.sp, GmarketSans, colors.mainText)
                     }
                 }
             }
@@ -494,9 +503,9 @@ private fun TodoCell(
             gradientColor = colors.theme,
             onAction = onComplete,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-        ) { gestureModifier ->
+        ) {
             Box(
-                modifier = gestureModifier
+                modifier = Modifier
                     .pointerInput(todo.id, selectionMode) {
                         if (!selectionMode) {
                             detectTapGestures(
@@ -527,7 +536,13 @@ private fun TodoCell(
                     )
                     .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
             ) {
-                LinkedText(todo.todo, 15.sp, GmarketSans, colors.mainText)
+                LinkedText(
+                    todo.todo,
+                    15.sp,
+                    GmarketSans,
+                    colors.mainText,
+                    modifier = Modifier.widthIn(max = MemoMaxTextWidth),
+                )
             }
         }
         if (selectionMode) {
@@ -548,19 +563,23 @@ private val InputMaxTextHeight = 94.dp
 
 /** 리턴은 줄바꿈, 전송은 전송 버튼으로만 (iOS 3.0.1) */
 @Composable
-private fun InputBar(text: String, onTextChange: (String) -> Unit, onSend: () -> Unit) {
+private fun InputBar(
+    text: String,
+    onTextChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
+    onSend: () -> Unit,
+) {
     val colors = Flick.colors
     val active = text.isNotBlank()
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(colors.box)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.Bottom,
+            .padding(horizontal = 23.dp, vertical = 10.dp),
     ) {
         Box(
             modifier = Modifier
-                .weight(1f)
+                .fillMaxWidth()
                 .background(colors.textBox, BubbleShape)
                 .border(1.dp, colors.bg, BubbleShape)
                 .padding(start = 14.dp, end = 44.dp, top = 13.dp, bottom = 13.dp),
@@ -583,15 +602,19 @@ private fun InputBar(text: String, onTextChange: (String) -> Unit, onSend: () ->
                 ),
                 cursorBrush = SolidColor(colors.theme),
                 // 내용에 따라 늘어나고, 최대 높이를 넘으면 내부 스크롤 (iOS 최대 120 = 글자 영역 + 상하 패딩 26)
-                modifier = Modifier.fillMaxWidth().heightIn(max = InputMaxTextHeight),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = InputMaxTextHeight)
+                    .onFocusChanged { onFocusChange(it.isFocused) },
             )
         }
-        Spacer(Modifier.width(10.dp))
+        // iOS처럼 입력창 안쪽 오른쪽 아래에 얹는다
         Image(
             painterResource(R.drawable.btn_send_inactive),
             contentDescription = "전송",
             colorFilter = ColorFilter.tint(if (active) colors.theme else colors.inactive),
             modifier = Modifier
+                .align(Alignment.BottomEnd)
                 .size(40.dp)
                 .clickable(
                     enabled = active,

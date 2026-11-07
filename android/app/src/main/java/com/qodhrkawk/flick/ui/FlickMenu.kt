@@ -18,8 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
@@ -32,11 +31,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qodhrkawk.flick.R
@@ -59,6 +63,8 @@ private enum class MenuMode { MENU, DELETE_CONFIRM, EDIT }
 
 const val LinkOpenFailedMessage = "링크를 열 수 없어요"
 
+private val DialogWidth = 301.dp
+
 /**
  * iOS AlertViewController 이식: 하단에서 올라오는 버튼 스택 + 취소.
  * 삭제 → 확인 뷰로 교체, 수정 → 텍스트 편집 뷰.
@@ -76,9 +82,17 @@ fun FlickActionMenu(
     val colors = Flick.colors
     val uriHandler = LocalUriHandler.current
     var mode by remember(target?.id) { mutableStateOf(MenuMode.MENU) }
-    var editText by remember(target?.id) { mutableStateOf(target?.text ?: "") }
+    var editText by remember(target?.id) {
+        val text = target?.text.orEmpty()
+        mutableStateOf(TextFieldValue(text, TextRange(text.length)))
+    }
+    val focusRequester = remember { FocusRequester() }
 
     if (target == null) return
+
+    LaunchedEffect(mode) {
+        if (mode == MenuMode.EDIT) focusRequester.requestFocus()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         // 딤 배경 — 바깥 탭으로 닫기 (편집 중에는 유지)
@@ -92,16 +106,14 @@ fun FlickActionMenu(
                 ) { if (mode != MenuMode.EDIT) onDismiss() },
         )
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .imePadding()
-                .navigationBarsPadding()
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-        ) {
-            when (mode) {
-                MenuMode.MENU -> {
+        when (mode) {
+            MenuMode.MENU -> {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -129,8 +141,11 @@ fun FlickActionMenu(
                             }
                             MenuSeparator()
                         }
-                        MenuRow("수정", colors.mainText) { mode = MenuMode.EDIT }
-                        MenuSeparator()
+                        // 아카이브에서는 수정할 수 없다 (iOS AlertViewController fromArchive)
+                        if (!target.fromArchive) {
+                            MenuRow("수정", colors.mainText) { mode = MenuMode.EDIT }
+                            MenuSeparator()
+                        }
                         MenuRow("삭제", colors.theme) { mode = MenuMode.DELETE_CONFIRM }
                     }
                     Spacer(Modifier.height(10.dp))
@@ -142,88 +157,117 @@ fun FlickActionMenu(
                         MenuRow("취소", colors.mainText) { onDismiss() }
                     }
                 }
+            }
 
-                MenuMode.DELETE_CONFIRM -> {
-                    Column(
+            MenuMode.DELETE_CONFIRM -> {
+                ConfirmDialog(
+                    message = "메모를 삭제할까요?",
+                    onCancel = onDismiss,
+                    onConfirm = { onDismiss(); onDelete(target.id) },
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
+
+            MenuMode.EDIT -> {
+                // iOS: 키보드 위 75 지점에 뜨는 높이 228 모달
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 75.dp)
+                        .width(DialogWidth)
+                        .background(colors.box, BubbleShape)
+                        .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 16.dp),
+                ) {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .height(128.dp)
                             .background(colors.box, BubbleShape)
-                            .padding(20.dp),
+                            .border(1.dp, colors.typingText.copy(alpha = 0.08f), BubbleShape)
+                            .padding(horizontal = 18.dp, vertical = 13.dp),
                     ) {
-                        Text(
-                            "메모를 삭제할까요?",
-                            fontSize = 16.sp,
-                            fontFamily = GmarketSans,
-                            color = colors.mainText,
-                            modifier = Modifier.padding(vertical = 16.dp),
-                        )
-                        Row {
-                            ConfirmButton(
-                                "취소",
-                                textColor = colors.mainText,
-                                bg = colors.typingText.copy(alpha = 0.08f),
-                                modifier = Modifier.weight(1f),
-                            ) { onDismiss() }
-                            Spacer(Modifier.width(10.dp))
-                            ConfirmButton(
-                                "삭제",
-                                textColor = Color.White,
-                                bg = colors.theme,
-                                modifier = Modifier.weight(1f),
-                            ) { onDismiss(); onDelete(target.id) }
-                        }
-                    }
-                }
-
-                MenuMode.EDIT -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colors.box, BubbleShape)
-                            .padding(16.dp),
-                    ) {
-                        Box(
+                        BasicTextField(
+                            value = editText,
+                            onValueChange = { editText = it },
+                            textStyle = TextStyle(
+                                fontSize = 15.sp,
+                                fontFamily = GmarketSans,
+                                color = colors.mainText,
+                            ),
+                            cursorBrush = SolidColor(colors.theme),
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(colors.box, BubbleShape)
-                                .border(1.dp, colors.typingText.copy(alpha = 0.08f), BubbleShape)
-                                .padding(horizontal = 18.dp, vertical = 13.dp),
-                        ) {
-                            BasicTextField(
-                                value = editText,
-                                onValueChange = { editText = it },
-                                textStyle = TextStyle(
-                                    fontSize = 15.sp,
-                                    fontFamily = GmarketSans,
-                                    color = colors.mainText,
-                                ),
-                                cursorBrush = SolidColor(colors.theme),
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                        }
-                        Spacer(Modifier.height(12.dp))
-                        Row {
-                            ConfirmButton(
-                                "취소",
-                                textColor = colors.mainText,
-                                bg = colors.typingText.copy(alpha = 0.08f),
-                                modifier = Modifier.weight(1f),
-                            ) { onDismiss() }
-                            Spacer(Modifier.width(10.dp))
-                            ConfirmButton(
-                                "수정",
-                                textColor = Color.White,
-                                bg = colors.theme,
-                                modifier = Modifier.weight(1f),
-                            ) {
-                                onDismiss()
-                                if (editText.isNotBlank()) onEdit(target.id, editText)
-                            }
-                        }
+                                .fillMaxSize()
+                                .focusRequester(focusRequester),
+                        )
                     }
+                    Spacer(Modifier.height(16.dp))
+                    DialogButtons(
+                        confirmLabel = "수정",
+                        onCancel = onDismiss,
+                        onConfirm = {
+                            onDismiss()
+                            if (editText.text.isNotBlank()) onEdit(target.id, editText.text)
+                        },
+                    )
                 }
             }
         }
+    }
+}
+
+/** iOS deleteCheckView: 폭 301, 문구 영역 + 취소/삭제 버튼 */
+@Composable
+fun ConfirmDialog(
+    message: String,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = Flick.colors
+    Column(
+        modifier = modifier
+            .width(DialogWidth)
+            .background(colors.box, BubbleShape)
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 95.dp)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                message,
+                fontSize = 16.sp,
+                fontFamily = GmarketSans,
+                color = colors.mainText,
+                textAlign = TextAlign.Center,
+            )
+        }
+        DialogButtons(confirmLabel = "삭제", onCancel = onCancel, onConfirm = onConfirm)
+    }
+}
+
+@Composable
+private fun DialogButtons(confirmLabel: String, onCancel: () -> Unit, onConfirm: () -> Unit) {
+    val colors = Flick.colors
+    Row {
+        ConfirmButton(
+            "취소",
+            textColor = colors.mainText,
+            bg = colors.typingText.copy(alpha = 0.08f),
+            modifier = Modifier.weight(1f),
+            onClick = onCancel,
+        )
+        Spacer(Modifier.width(8.dp))
+        ConfirmButton(
+            confirmLabel,
+            textColor = Color.White,
+            bg = colors.theme,
+            modifier = Modifier.weight(1f),
+            onClick = onConfirm,
+        )
     }
 }
 

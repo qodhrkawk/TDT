@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -27,7 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +49,7 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
     val colors = Flick.colors
     val listState = rememberLazyListState()
     var menuTarget by remember { mutableStateOf<MenuTarget?>(null) }
+    val haptic = LocalHapticFeedback.current
 
     Box(modifier = Modifier.fillMaxSize()) {
     Column(modifier = Modifier.fillMaxSize().background(colors.bg)) {
@@ -90,7 +94,7 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(if (sectionIndex == 0) 80.dp else 30.dp),
+                                .height(30.dp),
                             contentAlignment = Alignment.BottomStart,
                         ) {
                             EnterSlide(active, sectionIndex, 0, fromRight = false) {
@@ -112,9 +116,13 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
                                 isToday = isTodaySection,
                                 menuOpen = menuTarget?.id == todo.id,
                                 onRestore = { state.restore(it) },
-                                onDoubleTap = { state.archiveToggleImportant(it) },
+                                onDoubleTap = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    state.archiveToggleImportant(it)
+                                },
                                 onTap = { id ->
                                     val item = state.findInArchive(id) ?: return@ArchiveCell
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     menuTarget = MenuTarget(id, item.todo, fromArchive = true)
                                 },
                             )
@@ -131,10 +139,7 @@ fun ArchiveScreen(state: FlickAppState, active: Boolean, onBack: () -> Unit) {
         onDismiss = { menuTarget = null },
         onPinToggle = {},
         onSelect = {},
-        onEdit = { id, text ->
-            state.archiveUpdateText(id, text)
-            state.showToast("수정되었어요")
-        },
+        onEdit = { _, _ -> },
         onDelete = { id ->
             state.archiveDelete(id)
             state.showToast("삭제되었어요.")
@@ -160,9 +165,9 @@ private fun ArchiveCell(
         gradientColor = colors.theme,
         onAction = onRestore,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-    ) { gestureModifier ->
+    ) {
         Box(
-            modifier = gestureModifier
+            modifier = Modifier
                 .pointerInput(todo.id) {
                     detectTapGestures(
                         onTap = { onTap(todo.id) },
@@ -177,7 +182,13 @@ private fun ArchiveCell(
                 )
                 .padding(horizontal = BubblePaddingH, vertical = BubblePaddingV),
         ) {
-            LinkedText(todo.todo, 15.sp, GmarketSans, if (isToday) colors.mainText else colors.doneText)
+            LinkedText(
+                todo.todo,
+                15.sp,
+                GmarketSans,
+                if (isToday) colors.mainText else colors.doneText,
+                modifier = Modifier.widthIn(max = MemoMaxTextWidth),
+            )
         }
     }
 }

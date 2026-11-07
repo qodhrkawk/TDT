@@ -47,6 +47,9 @@ import com.qodhrkawk.flick.ui.theme.GmarketSans
 import com.qodhrkawk.flick.ui.theme.ThemeColors
 import com.qodhrkawk.flick.ui.theme.ThemeNames
 
+/** img_check는 여백 포함 40 — iOS와 같은 크기로 보이는 값 */
+private val SelectedCheckSize = 40.dp
+
 private const val INQUIRY_MAIL = "qodhrkawk@gmail.com"
 private const val INQUIRY_SUBJECT = "Flick 1:1 문의하기"
 
@@ -190,10 +193,10 @@ private fun TraitRow(label: String, value: String, imageRes: Int, state: FlickAp
         Spacer(Modifier.weight(1f))
         if (state.trait == value) {
             Image(
-                painterResource(R.drawable.icn_done),
+                painterResource(R.drawable.img_check),
                 contentDescription = "선택됨",
-                colorFilter = ColorFilter.tint(colors.theme),
-                modifier = Modifier.size(20.dp),
+                colorFilter = ColorFilter.tint(colors.mainText),
+                modifier = Modifier.size(SelectedCheckSize),
             )
         }
     }
@@ -224,10 +227,10 @@ private fun ThemeRow(index: Int, name: String, state: FlickAppState) {
         Spacer(Modifier.weight(1f))
         if (state.themeIndex == index) {
             Image(
-                painterResource(R.drawable.icn_done),
+                painterResource(R.drawable.img_check),
                 contentDescription = "선택됨",
-                colorFilter = ColorFilter.tint(colors.theme),
-                modifier = Modifier.size(20.dp),
+                colorFilter = ColorFilter.tint(colors.mainText),
+                modifier = Modifier.size(SelectedCheckSize),
             )
         }
     }

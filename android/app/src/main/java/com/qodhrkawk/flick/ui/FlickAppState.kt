@@ -228,12 +228,6 @@ class FlickAppState(
         refresh()
     }
 
-    fun archiveUpdateText(id: String, text: String) {
-        val position = archivePositionOf(id) ?: return
-        store.archiveUpdateText(position, text)
-        refresh()
-    }
-
     fun archiveToggleImportant(id: String) {
         val position = archivePositionOf(id) ?: return
         store.archiveToggleImportant(position)
